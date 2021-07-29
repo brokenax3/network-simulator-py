@@ -25,8 +25,7 @@ class AccessPoint:
         self.id = id
         self.location = location
         self.energy_store = energy_start
-        self.energy_consumed = 0
-        self.service_counter = 0
+        self.energy_use = 0
 
         """ ap_userlist item
         List of connected Users and the distance between the User and the Access Point.
@@ -54,12 +53,6 @@ class AccessPoint:
         else:
             self.energy_store = self.energy_store + energy_gen
 
-        if self.energy_store >= self.calcEnergyUse()[0]:
-            self.state = 1
-            print("Access Point {} tried to turn on.".format(self.id))
-        else:
-            self.state = 0
-
     def discharge(self):
         """ Discharges the Access Point
 
@@ -71,14 +64,9 @@ class AccessPoint:
         self.energy_consumed, service_counter = self.calcEnergyUse()
         self.service_counter = self.service_counter + service_counter
 
-        if self.state == 0:
-            self.energy_consumed = 0
-            return
-
         if self.energy_store - self.energy_consumed > 0:
             self.energy_store = self.energy_store - self.energy_consumed
         else:
-            self.energy_store = 0
             self.state = 0
 
     def calcEnergyUse(self):
@@ -89,7 +77,6 @@ class AccessPoint:
 
         service_counter increments for each User the Access Point is able to service.
         """
-
         energy_consumed = envs.ENERGY_USE_BASE
         service_counter = 0
         for user in self.ap_userlist:
@@ -111,30 +98,25 @@ class AccessPoint:
         self.ap_userlist.append(temp_user)
 
 
-    def disconnectUser(self):
+    def disconnnectUser(self):
         """ Disconnects a User from the Access Point
 
         When the Access Point power offs, remove the Users associated with it.
         """
-        for user in self.ap_userlist:
-            usrlist[user[0]].connected_ap = ["Not Connected", "No Distance"]
-            self.ap_userlist.pop()
+        if self.state == 0:
+            for user in self.ap_userlist:
+                if self.ap_userlist:
+                    self.ap_userlist.pop()
 
     def stateSwitch(self):
         """ Handle the state of the Access Point
 
         Switch on the Access Point if there is sufficient energy to service Users.
         """
-        if self.energy_store >= self.energy_consumed:
+        if self.energy_store >= self.energy_use:
             self.state = 1
         else:
             self.state = 0
-
-    def info(self):
-        """ Prints info about the Access Point
-
-        """
-        print('AP: {} \n\tLocation: ({}, {}) \n\tEnergy Stored: {} \n\tState: {} \n\tServiced Users: {}\n\tEnergy Use: {} \n\tUser List: {}'.format(self.id, self.location.x, self.location.y, self.energy_store, self.state, self.service_counter, self.energy_consumed, self.ap_userlist))
 
 class User:
     def __init__(self, id, location):
@@ -156,14 +138,12 @@ class User:
         If an empty list is returned, this signifies that no Access Point is online.
         A User will not do anything.
         """
-
-        if self.connected_ap == ["Not Connected", "No Distance"]:
-            status = self.calcAPDistance()
-            if not status:
-                self.connected_ap = ["Not Connected", "No Distance"]
-            else:
-                self.connected_ap = status
-                aplist[self.connected_ap[0]].connectUser(self.id, self.connected_ap[1])
+        status = self.calcAPDistance()
+        if not status:
+            self.connected_ap = ["Not Connected", "No Distance"]
+        else:
+            self.connected_ap = status
+            aplist[self.connected_ap[0]].connectUser(self.id, self.connected_ap[1])
 
 
     def calcAPDistance(self):
@@ -180,9 +160,8 @@ class User:
         for ap in aplist:
             if ap.state == 1:
                 active_ap_list.append([ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)])
-                print(active_ap_list)
 
-        if active_ap_list == []:
+        if not active_ap_list:
             print("Access Points are all offline")
             return active_ap_list
         else:
@@ -202,7 +181,7 @@ def initialiseEnv(init_vars):
 
     TODO : Allocate energy arrival with discretet markov chain
     """
-    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX
+    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX
     global usrlist, aplist
     
 
@@ -213,7 +192,6 @@ def initialiseEnv(init_vars):
     USR_TOTAL = init_vars["USR_TOTAL"]
     POWER_RECEIVED_REQUIRED = init_vars["POWER_RECEIVED_REQUIRED"]
     DIST_MOVEUSER_MAX = init_vars["DIST_MOVEUSER_MAX"]
-    TIME_MAX =init_vars["TIME_MAX"]
 
     usrlist = []
     aplist = []
@@ -238,22 +216,22 @@ def simulator(init_vars):
 
     initialiseEnv(init_vars)
 
-    for time_unit in range(0, TIME_MAX):
+    for time_unit in range(0, envs.TIME_MAX):
         if time_unit == 0:
             for ap in aplist:
                 # ap.info()
                 continue
 
         for user in usrlist:
-            # moveUser(user)
+            moveUser(user)
             user.connectAP()
 
         for ap in aplist:
             ap.discharge()
-            ap.info()
             ap.disconnectUser()
+            # ap.info()
             tmpenergy = randint(0, ENERGY_GEN_MAX)
-            print('Energy Generated: {}'.format(tmpenergy))
+            # print('Energy Generated: {}'.format(tmpenergy))
             ap.charge(tmpenergy)
 
     sim_service_counter = 0

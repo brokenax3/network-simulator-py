@@ -18,39 +18,41 @@ def initVariable():
 
     init_vars = {
         "GRID_SIZE" : 30,
-        "ENERGY_STORE_MAX" : 500,
+        "ENERGY_STORE_MAX" : 50,
         "ENERGY_GEN_MAX" : 5,
         "ENERGY_USE_BASE" : 5.3,
-        "AP_TOTAL" : 5,
+        "AP_TOTAL" : 1,
         "USR_TOTAL" : 15,
         "POWER_RECEIVED_DBM" : -70 ,
         "TIME_MAX" : 10,
         "DIST_MOVEUSER_MAX" : 5,
     }
-    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10)
+    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 60
     return init_vars
 
 
 if __name__ == '__main__':
 
     # Create empty lists to store collected data
-    serviced_user_sim_arr_usernumber = []
     serviced_user_sim_arr_apnumber = []
-    serviced_user_sim_arr_energyarrival = []
-    serviced_user_sim_arr_usermovedist = []
-    serviced_user_sim_arr_gridsize = []
-    serviced_user_sim_arr_userenergyuse = []
-    serviced_user_sim_arr_energystore = []
+    # serviced_user_sim_arr_usernumber = []
+    # serviced_user_sim_arr_energyarrival = []
+    # serviced_user_sim_arr_usermovedist = []
+    # serviced_user_sim_arr_gridsize = []
+    # serviced_user_sim_arr_userenergyuse = []
+    # serviced_user_sim_arr_energystore = []
     
     #######################
     #  Simulator Section  #
     #######################
     # Number of Access Points
-    range_AP_total = range(1, 30, 5)
-    for AP_TOTAL in range_AP_total:
-        init_vars = initVariable()
-        init_vars["AP_TOTAL"] = AP_TOTAL
-        serviced_user_sim_arr_apnumber.append(simulator(init_vars))
+    # range_AP_total = range(1, 30, 5)
+    # for AP_TOTAL in range_AP_total:
+    #     init_vars = initVariable()
+    #     init_vars["AP_TOTAL"] = AP_TOTAL
+    #     serviced_user_sim_arr_apnumber.append(simulator(init_vars))
+    init_vars = initVariable()
+    serviced_user_sim_arr_apnumber.append(simulator(init_vars))
 
     # # Number of Users
     # range_usr_total = range(1, 30, 5)
@@ -108,12 +110,12 @@ if __name__ == '__main__':
     # plt.legend()
     # plt.savefig('scatterAPUser.png')
 
-    plot2 = plt.figure(2)
-    plt.plot(range_AP_total, serviced_user_sim_arr_apnumber)
-    plt.xlabel('Total Number of APs')
-    plt.ylabel('Total Number of Serviced Users')
-    plt.title('Total Number of APs against Total Number of Serviced users')
-    plt.savefig('totalnumberap.png')
+    # plot2 = plt.figure(2)
+    # plt.plot(range_AP_total, serviced_user_sim_arr_apnumber)
+    # plt.xlabel('Total Number of APs')
+    # plt.ylabel('Total Number of Serviced Users')
+    # plt.title('Total Number of APs against Total Number of Serviced users')
+    # plt.savefig('totalnumberap.png')
 
     # plot3 = plt.figure(3)
     # plt.plot(range_usr_total, serviced_user_sim_arr_usernumber)
