@@ -2,6 +2,8 @@ from random import randint
 import envs
 from helpers import calcDistance
 from helpers import calcPowerTransmit
+from discreteMarkov import energyArrivalStates
+from discreteMarkov import energyArrivalOutput
 
 class Location:
     def __init__(self, x, y):
@@ -26,6 +28,7 @@ class AccessPoint:
         self.location = location
         self.energy_store = energy_start
         self.energy_consumed = 0
+        self.energy_consumed_prev = 0
         self.service_counter = 0
 
         """ ap_userlist item
@@ -35,6 +38,7 @@ class AccessPoint:
         ap_userlist[i][1] : Distance between the User and the Access Point
         """
         self.ap_userlist = []
+        self.ap_userlist_prev = []
 
         if self.energy_store >= envs.ENERGY_USE_BASE:
             self.state = 1
@@ -47,7 +51,7 @@ class AccessPoint:
         Energy generated is added into the energy_store of the Access Point.
         This is limited by ENERGY_STORE_MAX.
 
-        TODO : Store some meaningful metric about how often energy saturation is acheived.
+        TODO: Store some meaningful metric about how often energy saturation is acheived.
         """
         if self.energy_store + energy_gen >= ENERGY_STORE_MAX:
             self.energy_store = ENERGY_STORE_MAX
@@ -56,7 +60,7 @@ class AccessPoint:
 
         if self.energy_store >= self.calcEnergyUse()[0]:
             self.state = 1
-            print("Access Point {} tried to turn on.".format(self.id))
+            # print("Access Point {} tried to turn on.".format(self.id))
         else:
             self.state = 0
 
@@ -68,6 +72,9 @@ class AccessPoint:
         Sends service_counter to the Access Point Class.
         If energy_consumed is larger than energy_store, switch the Access Point off.
         """
+        self.energy_consumed_prev = self.energy_consumed
+        self.ap_userlist_prev = self.ap_userlist
+
         self.energy_consumed, service_counter = self.calcEnergyUse()
         self.service_counter = self.service_counter + service_counter
 
@@ -118,7 +125,9 @@ class AccessPoint:
         """
         for user in self.ap_userlist:
             usrlist[user[0]].connected_ap = ["Not Connected", "No Distance"]
-            self.ap_userlist.pop()
+            self.ap_userlist = []
+
+        # print("Kicking users resulted in {} ".format(self.ap_userlist))
 
     def stateSwitch(self):
         """ Handle the state of the Access Point
@@ -134,7 +143,7 @@ class AccessPoint:
         """ Prints info about the Access Point
 
         """
-        print('AP: {} \n\tLocation: ({}, {}) \n\tEnergy Stored: {} \n\tState: {} \n\tServiced Users: {}\n\tEnergy Use: {} \n\tUser List: {}'.format(self.id, self.location.x, self.location.y, self.energy_store, self.state, self.service_counter, self.energy_consumed, self.ap_userlist))
+        print('AP: {} \n\tLocation: ({}, {}) \n\tEnergy Stored: {} \n\tState: {} \n\tServiced Users: {}\n\tEnergy Use: {} \n\tUser List: {}'.format(self.id, self.location.x, self.location.y, self.energy_store, self.state, self.service_counter, self.energy_consumed, self.ap_userlist_prev))
 
 class User:
     def __init__(self, id, location):
@@ -180,10 +189,10 @@ class User:
         for ap in aplist:
             if ap.state == 1:
                 active_ap_list.append([ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)])
-                print(active_ap_list)
+                # print(active_ap_list)
 
         if active_ap_list == []:
-            print("Access Points are all offline")
+            # print("Access Points are all offline")
             return active_ap_list
         else:
             for distance in active_ap_list:
@@ -199,12 +208,11 @@ def initialiseEnv(init_vars):
     Declare global variables and constants for simulation.
 
     Create aplist and usrlist.
-
-    TODO : Allocate energy arrival with discretet markov chain
+    TODO: Allocate energy arrival with discretet markov chain
     """
+
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX
-    global usrlist, aplist
-    
+    global usrlist, aplist, markovstates
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
@@ -213,7 +221,7 @@ def initialiseEnv(init_vars):
     USR_TOTAL = init_vars["USR_TOTAL"]
     POWER_RECEIVED_REQUIRED = init_vars["POWER_RECEIVED_REQUIRED"]
     DIST_MOVEUSER_MAX = init_vars["DIST_MOVEUSER_MAX"]
-    TIME_MAX =init_vars["TIME_MAX"]
+    TIME_MAX = init_vars["TIME_MAX"]
 
     usrlist = []
     aplist = []
@@ -229,6 +237,9 @@ def initialiseEnv(init_vars):
         tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
         tmpusr = User(index, tmploc) 
         usrlist.append(tmpusr)
+
+    # Create Markov states
+    markovstates = energyArrivalStates(TIME_MAX)
 
 def simulator(init_vars):
     """ Main simulator loop
@@ -250,20 +261,19 @@ def simulator(init_vars):
 
         for ap in aplist:
             ap.discharge()
-            ap.info()
             ap.disconnectUser()
-            tmpenergy = randint(0, ENERGY_GEN_MAX)
-            print('Energy Generated: {}'.format(tmpenergy))
+            ap.info()
+            tmpenergy = energyArrivalOutput(markovstates[time_unit])
+            if tmpenergy < 0:
+                tmpenergy = 0
+
+            # print('Energy Generated: {}'.format(tmpenergy))
             ap.charge(tmpenergy)
+
 
     sim_service_counter = 0
     for ap in aplist:
         sim_service_counter = ap.service_counter + sim_service_counter
 
     return sim_service_counter
-
-
-
-
-
 
