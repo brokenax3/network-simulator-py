@@ -1,33 +1,27 @@
 import matplotlib.pyplot as plt
 from random import randint
 from components import simulator
+from progress.bar import Bar
 
 def initVariable():
+    """ Initilise starting variables
 
-    # Define starting variables
-    # GRID_SIZE = 30
-    # ENERGY_STORE_MAX = 500
-    # ENERGY_GEN_MAX = 5
-    # ENERGY_USE_BASE = 5.3
-    # AP_TOTAL = 5
-    # USR_TOTAL = 15
-    # POWER_RECEIVED_DBM = -70 
-    # POWER_RECEIVED_REQUIRED = 1 * pow(10, POWER_RECEIVED_DBM/10)
-    # TIME_MAX = 1440 
-    # DIST_MOVEUSER_MAX = 5
+    A dict is generated and modified as needed. This modified dict is passed into the simulator.
+    Time unit 5 minutes.
+    """
 
     init_vars = {
         "GRID_SIZE" : 30,
-        "ENERGY_STORE_MAX" : 200,
-        "ENERGY_GEN_MAX" : 5,
-        "ENERGY_USE_BASE" : 5.3,
+        "ENERGY_STORE_MAX" : 576, # Watt 5 minutes
+        "ENERGY_GEN_MAX" : 0.75, # Watt  
+        "ENERGY_USE_BASE" : 0.4417, # Watt per 5 minutes
         "AP_TOTAL" : 5,
-        "USR_TOTAL" : 15,
-        "POWER_RECEIVED_DBM" : -70,
-        "TIME_MAX" : 1000,
+        "USR_TOTAL" : 500,
+        "POWER_RECEIVED_DBM" : -65, 
+        "TIME_MAX" : 288,
         "DIST_MOVEUSER_MAX" : 5,
     }
-    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 60 * 60 * 60
+    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) / 1000 * 60 * 5
     return init_vars
 
 def plotGraphs():
@@ -36,8 +30,10 @@ def plotGraphs():
     """
 if __name__ == '__main__':
 
+    total_runs = range(1, 10)
+
     # Create empty lists to store collected data
-    serviced_user_sim_arr_apnumber = []
+    avg_serviced_user_sim_arr_apnumber = []
     # serviced_user_sim_arr_usernumber = []
     # serviced_user_sim_arr_energyarrival = []
     # serviced_user_sim_arr_usermovedist = []
@@ -49,13 +45,23 @@ if __name__ == '__main__':
     #  Simulator Section  #
     #######################
     # Number of Access Points
-    range_AP_total = range(1, 30, 5)
-    for AP_TOTAL in range_AP_total:
-        init_vars = initVariable()
-        init_vars["AP_TOTAL"] = AP_TOTAL
-        serviced_user_sim_arr_apnumber.append(simulator(init_vars))
-    # init_vars = initVariable()
-    # serviced_user_sim_arr_apnumber.append(simulator(init_vars))
+    bar = Bar('Running simulation', max=total_runs[-1])
+    for run in total_runs:
+        range_AP_total = range(1, 30, 5)
+        serviced_user_sim_arr_apnumber = []
+        for AP_TOTAL in range_AP_total:
+            init_vars = initVariable()
+            init_vars["AP_TOTAL"] = AP_TOTAL
+            serviced_user_sim_arr_apnumber.append(simulator(init_vars))
+        avg_serviced_user_sim_arr_apnumber.append(serviced_user_sim_arr_apnumber)
+        bar.next()
+    bar.finish()
+    sum_arr = map(sum, zip(*avg_serviced_user_sim_arr_apnumber))
+
+    new_arr = []
+    for item in sum_arr:
+        new_arr.append(item / total_runs[-1] )
+
 
     # print(serviced_user_sim_arr_apnumber)
 
@@ -116,7 +122,7 @@ if __name__ == '__main__':
     # plt.savefig('scatterAPUser.png')
 
     plot2 = plt.figure(2)
-    plt.plot(range_AP_total, serviced_user_sim_arr_apnumber)
+    plt.plot(range_AP_total, new_arr)
     plt.xlabel('Total Number of APs')
     plt.ylabel('Total Number of Serviced Users')
     plt.title('Total Number of APs against Total Number of Serviced users')

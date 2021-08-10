@@ -201,6 +201,31 @@ class User:
                 if item[1] == min(distances):
                     return item
 
+    # Move the user to a new location
+    def moveUser(self):
+        # Generate two random movement numbers
+        n1 = randint(-DIST_MOVEUSER_MAX, DIST_MOVEUSER_MAX)
+        n2 = randint(-DIST_MOVEUSER_MAX, DIST_MOVEUSER_MAX)
+
+        # Store the old location
+        # oldloc = self.location
+
+        # Attempt to move the self to the new location
+        # For x coordinate
+        if(self.location.x + n1 > GRID_SIZE):
+            self.location.x = -(GRID_SIZE - self.location.x + n1 - GRID_SIZE)
+        elif(self.location.x + n1 < 0):
+            self.location.x = -(self.location.x + n1)
+        else:
+            self.location.x = self.location.x + n1
+        # For y coordinate
+        if(self.location.y + n2 > GRID_SIZE):
+            self.location.y = -(GRID_SIZE - self.location.y + n2 - GRID_SIZE)
+        elif(self.location.y + n2 < 0):
+            self.location.y = -(self.location.y + n2)
+        else:
+            self.location.y = self.location.y + n2
+
 def initialiseEnv(init_vars):
     """ Initialise the simulation environment
 
@@ -256,13 +281,13 @@ def simulator(init_vars):
                 continue
 
         for user in usrlist:
-            # moveUser(user)
+            user.moveUser()
             user.connectAP()
 
         for ap in aplist:
             ap.discharge()
             ap.disconnectUser()
-            ap.info()
+            # ap.info()
             tmpenergy = energyArrivalOutput(markovstates[time_unit])
             if tmpenergy < 0:
                 tmpenergy = 0

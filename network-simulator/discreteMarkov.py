@@ -34,7 +34,7 @@ def energyArrivalOutput(state):
     }
     
     vars = states[state]
-    normaldist = np.random.normal(vars[0], sqrt(vars[1]), 1)
+    normaldist = np.random.normal(vars[0], sqrt(vars[1]), 1) * 8 / 300 / 60 * 5
 
     return normaldist
 
