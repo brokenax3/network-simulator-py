@@ -1,14 +1,22 @@
 from random import randint
+from operator import itemgetter
 import envs
 from helpers import calcDistance
 from helpers import calcPowerTransmit
 from discreteMarkov import energyArrivalStates
 from discreteMarkov import energyArrivalOutput
+from poissonPointProcess import generateUsersPPP
 
 class Location:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
 
     def info(self):
         print("X: [{}] Y: [{}]".format(self.x, self.y))
@@ -114,9 +122,7 @@ class AccessPoint:
         Access Points do not deny User connections but will only service the users
         prioritising index.
         """
-        temp_user = [id, distance]
-        self.ap_userlist.append(temp_user)
-
+        self.ap_userlist.append([id, distance])
 
     def disconnectUser(self):
         """ Disconnects a User from the Access Point
@@ -125,25 +131,28 @@ class AccessPoint:
         """
         for user in self.ap_userlist:
             usrlist[user[0]].connected_ap = ["Not Connected", "No Distance"]
-            self.ap_userlist = []
+        self.ap_userlist = []
 
         # print("Kicking users resulted in {} ".format(self.ap_userlist))
 
-    def stateSwitch(self):
-        """ Handle the state of the Access Point
+    # def stateSwitch(self):
+    #     """ Handle the state of the Access Point
 
-        Switch on the Access Point if there is sufficient energy to service Users.
-        """
-        if self.energy_store >= self.energy_consumed:
-            self.state = 1
-        else:
-            self.state = 0
+    #     Switch on the Access Point if there is sufficient energy to service Users.
+    #     """
+    #     if self.energy_store >= self.energy_consumed:
+    #         self.state = 1
+    #     else:
+    #         self.state = 0
 
     def info(self):
         """ Prints info about the Access Point
 
         """
         print('AP: {} \n\tLocation: ({}, {}) \n\tEnergy Stored: {} \n\tState: {} \n\tServiced Users: {}\n\tEnergy Use: {} \n\tUser List: {}'.format(self.id, self.location.x, self.location.y, self.energy_store, self.state, self.service_counter, self.energy_consumed, self.ap_userlist_prev))
+
+    def getLoc(self):
+        return [self.location.x, self.location.y]
 
 class User:
     def __init__(self, id, location):
@@ -174,7 +183,6 @@ class User:
                 self.connected_ap = status
                 aplist[self.connected_ap[0]].connectUser(self.id, self.connected_ap[1])
 
-
     def calcAPDistance(self):
         """ Find the nearest Access Point
 
@@ -183,23 +191,24 @@ class User:
         return an empty list if the list is empty otherwise the id and the distance of the
         closest Access Point is returned.
         """
-        active_ap_list = []
-        distances = []
+        active_ap_list = [[ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)] for ap in aplist if ap.state == 1]
 
-        for ap in aplist:
-            if ap.state == 1:
-                active_ap_list.append([ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)])
+        # for ap in aplist:
+        #     if ap.state == 1:
+        #         active_ap_list.append([ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)])
                 # print(active_ap_list)
 
         if active_ap_list == []:
             # print("Access Points are all offline")
             return active_ap_list
         else:
-            for distance in active_ap_list:
-                distances.append(distance[1])
-            for item in active_ap_list:
-                if item[1] == min(distances):
-                    return item
+            closest = min(active_ap_list, key=itemgetter(1))
+            return closest
+        # for distance in active_ap_list:
+            #     distances.append(distance[1])
+            # for item in active_ap_list:
+            #     if item[1] == min(distances):
+            #         return item
 
     # Move the user to a new location
     def moveUser(self):
@@ -226,17 +235,19 @@ class User:
         else:
             self.location.y = self.location.y + n2
 
-def initialiseEnv(init_vars):
+    def getLoc(self):
+        return [self.location.x, self.location.y]
+
+def initialiseEnv(init_vars, ppp):
     """ Initialise the simulation environment
 
     Unpack init_vars from simulator.py.
     Declare global variables and constants for simulation.
 
     Create aplist and usrlist.
-    TODO: Allocate energy arrival with discretet markov chain
     """
 
-    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX
+    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE
     global usrlist, aplist, markovstates
 
     GRID_SIZE = init_vars["GRID_SIZE"]
@@ -247,37 +258,44 @@ def initialiseEnv(init_vars):
     POWER_RECEIVED_REQUIRED = init_vars["POWER_RECEIVED_REQUIRED"]
     DIST_MOVEUSER_MAX = init_vars["DIST_MOVEUSER_MAX"]
     TIME_MAX = init_vars["TIME_MAX"]
+    PANEL_SIZE = init_vars["PANEL_SIZE"]
+    markovstates = init_vars["markov"]
 
     usrlist = []
     aplist = []
 
-    for index in range(AP_TOTAL):
-        tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-        tmpenergy = randint(0, ENERGY_STORE_MAX)
-        tmpap = AccessPoint(index, tmploc, tmpenergy)
-        aplist.append(tmpap)
-
+    # for index in range(AP_TOTAL):
+    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
+    #     tmpenergy = randint(0, ENERGY_STORE_MAX)
+    #     tmpap = AccessPoint(index, tmploc, tmpenergy)
+    #     aplist.append(tmpap)
+    aplist = [ AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL) ]
     # Initialise Users
-    for index in range(USR_TOTAL):
-        tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-        tmpusr = User(index, tmploc) 
-        usrlist.append(tmpusr)
+    # for index in range(USR_TOTAL):
+    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
+    #     tmpusr = User(index, tmploc) 
+    #     usrlist.append(tmpusr)
+    if ppp == 1:
+        usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
+        for i in range(len(usr_x)):
+            usrlist.append(User(i, Location(usr_x[i], usr_y[i])))
+
+    else:
+        usrlist = [ User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL) ]
 
     # Create Markov states
-    markovstates = energyArrivalStates(TIME_MAX)
+    # markovstates = energyArrivalStates(TIME_MAX)
 
-def simulator(init_vars):
+def simulator(init_vars, apuserplot, ppp):
     """ Main simulator loop
 
     returns the total number of clients serviced
     """
 
-    initialiseEnv(init_vars)
+    initialiseEnv(init_vars, ppp)
 
     for time_unit in range(0, TIME_MAX):
         if time_unit == 0:
-            for ap in aplist:
-                # ap.info()
                 continue
 
         for user in usrlist:
@@ -288,17 +306,14 @@ def simulator(init_vars):
             ap.discharge()
             ap.disconnectUser()
             # ap.info()
-            tmpenergy = energyArrivalOutput(markovstates[time_unit])
-            if tmpenergy < 0:
-                tmpenergy = 0
+            tmpenergy = energyArrivalOutput(markovstates[time_unit]) * PANEL_SIZE * 0.2 / 300 / 60 * 5
 
             # print('Energy Generated: {}'.format(tmpenergy))
-            ap.charge(tmpenergy)
+            ap.charge(tmpenergy if tmpenergy < 0 else 0)
 
+    if apuserplot == 1:
+        aploc = map(AccessPoint.getLoc, aplist)
+        usrloc = map(User.getLoc, usrlist)
 
-    sim_service_counter = 0
-    for ap in aplist:
-        sim_service_counter = ap.service_counter + sim_service_counter
-
-    return sim_service_counter
-
+    # sim_service_counter = sum([ap.service_counter for ap in aplist])
+    return [aploc, usrloc, sum([ap.service_counter for ap in aplist])] if apuserplot == 1 else sum([ap.service_counter for ap in aplist])

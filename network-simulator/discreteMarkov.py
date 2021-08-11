@@ -34,13 +34,13 @@ def energyArrivalOutput(state):
     }
     
     vars = states[state]
-    normaldist = np.random.normal(vars[0], sqrt(vars[1]), 1) * 8 / 300 / 60 * 5
+    normaldist = np.random.normal(vars[0], sqrt(vars[1]), 1)
 
     return normaldist
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    for state in energyArrivalStates(10):
-        print(state)
-        print(energyArrivalOutput(state))
+#     for state in energyArrivalStates(10):
+#         print(state)
+#         print(energyArrivalOutput(state, panelsize))
