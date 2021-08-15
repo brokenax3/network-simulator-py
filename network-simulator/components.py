@@ -262,26 +262,23 @@ def initialiseEnv(init_vars, ppp):
     PANEL_SIZE = init_vars["PANEL_SIZE"]
     markovstates = init_vars["markov"]
 
-    usrlist = []
-    aplist = []
+    
+    aplist = np.empty(shape=(AP_TOTAL,), dtype=object)
 
-    # for index in range(AP_TOTAL):
-    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-    #     tmpenergy = randint(0, ENERGY_STORE_MAX)
-    #     tmpap = AccessPoint(index, tmploc, tmpenergy)
-    #     aplist.append(tmpap)
-    aplist = np.array([ AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL) ])
-    # Initialise Users
-    # for index in range(USR_TOTAL):
-    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-    #     tmpusr = User(index, tmploc) 
-    #     usrlist.append(tmpusr)
+    for i in range(AP_TOTAL):
+        aplist[i] = AccessPoint(i, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX))
+
     if ppp == 1:
         usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
-        usrlist = np.array([User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))])
-    else:
-        usrlist = np.array([User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)])
+        usrlist = np.empty(shape=(len(usr_x),), dtype=object)
 
+        for i in range(len(usr_x)):
+            usrlist[i] = User(i, Location(usr_x[i], usr_y[i]))
+    else:
+        usrlist = np.empty(shape=(USR_TOTAL,), dtype=object)
+
+        for i in range(USR_TOTAL):
+            usrlist[i] = User(i, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)))
     # Create Markov states
     # markovstates = energyArrivalStates(TIME_MAX)
 
@@ -305,7 +302,6 @@ def simulator(init_vars, apuserplot, ppp):
             ap.discharge()
             ap.disconnectUser()
             # ap.info()
-            # TODO Fix energy arrival
             tmpenergy = energyArrivalOutput(markovstates[time_unit]) * PANEL_SIZE * 0.2
 
             # print('Energy Generated: {}'.format(tmpenergy))
