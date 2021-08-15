@@ -162,14 +162,14 @@ if __name__ == '__main__':
     usr_loc_ppp = list(zip(*usrloc_ppp))
 
     # plt.rcParams["font.family"] = "Iosevka SS16"
-    plot1 = plt.figure(1)
-    plt.scatter(ap_loc[0], ap_loc[1], label='Access Points', color='red', marker='*')
-    plt.scatter(usr_loc[0], usr_loc[1], label='Users', color='blue', marker='o')
-    plt.xlabel('x - axis')
-    plt.ylabel('y - axis')
-    plt.title('Coordinate of APs and Users in the Grid')
-    plt.legend()
-    plt.savefig('scatterAPUser.png')
+    # plot1 = plt.figure(1)
+    # plt.scatter(ap_loc[0], ap_loc[1], label='Access Points', color='red', marker='*')
+    # plt.scatter(usr_loc[0], usr_loc[1], label='Users', color='blue', marker='o')
+    # plt.xlabel('x - axis')
+    # plt.ylabel('y - axis')
+    # plt.title('Coordinate of APs and Users in the Grid')
+    # plt.legend()
+    # plt.savefig('scatterAPUser.png')
     
     # PPP
     # plot2 = plt.figure(2)
