@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from random import randint
 from components import simulator
 from discreteMarkov import energyArrivalStates
@@ -61,13 +62,13 @@ if __name__ == '__main__':
     # bar.finish()
     # avg_sum_serviced_user_apnumber = map(sum, zip(*tmp_serviced_user_apnumber))
 
-    avg_serviced_user_apnumber = []
+    avg_serviced_user_apnumber  = np.empty(shape=(len(range_AP_total),), dtype=int)
     # # for item in avg_sum_serviced_user_apnumber:
     # #     avg_serviced_user_apnumber.append(item / len(total_runs))
-    for AP_TOTAL in range_AP_total:
+    for i, AP_TOTAL in enumerate(range_AP_total):
         init_vars["AP_TOTAL"] = AP_TOTAL
         serviced_user_apnumber = [simulator(init_vars, 0, 0) for run in total_runs]
-        avg_serviced_user_apnumber.append(sum(serviced_user_apnumber) / len(total_runs))
+        avg_serviced_user_apnumber[i] = (sum(serviced_user_apnumber) / len(total_runs))
         bar.next()
     bar.finish()
 
@@ -162,14 +163,14 @@ if __name__ == '__main__':
     usr_loc_ppp = list(zip(*usrloc_ppp))
 
     # plt.rcParams["font.family"] = "Iosevka SS16"
-    plot1 = plt.figure(1)
-    plt.scatter(ap_loc[0], ap_loc[1], label='Access Points', color='red', marker='*')
-    plt.scatter(usr_loc[0], usr_loc[1], label='Users', color='blue', marker='o')
-    plt.xlabel('x - axis')
-    plt.ylabel('y - axis')
-    plt.title('Coordinate of APs and Users in the Grid')
-    plt.legend()
-    plt.savefig('scatterAPUser.png')
+    # plot1 = plt.figure(1)
+    # plt.scatter(ap_loc[0], ap_loc[1], label='Access Points', color='red', marker='*')
+    # plt.scatter(usr_loc[0], usr_loc[1], label='Users', color='blue', marker='o')
+    # plt.xlabel('x - axis')
+    # plt.ylabel('y - axis')
+    # plt.title('Coordinate of APs and Users in the Grid')
+    # plt.legend()
+    # plt.savefig('scatterAPUser.png')
     
     # PPP
     # plot2 = plt.figure(2)

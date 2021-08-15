@@ -1,5 +1,6 @@
 from random import randint
 from operator import itemgetter
+import numpy as np
 import envs
 from helpers import calcDistance
 from helpers import calcPowerTransmit
@@ -269,7 +270,7 @@ def initialiseEnv(init_vars, ppp):
     #     tmpenergy = randint(0, ENERGY_STORE_MAX)
     #     tmpap = AccessPoint(index, tmploc, tmpenergy)
     #     aplist.append(tmpap)
-    aplist = [ AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL) ]
+    aplist = np.array([ AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL) ])
     # Initialise Users
     # for index in range(USR_TOTAL):
     #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
@@ -277,11 +278,9 @@ def initialiseEnv(init_vars, ppp):
     #     usrlist.append(tmpusr)
     if ppp == 1:
         usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
-        for i in range(len(usr_x)):
-            usrlist.append(User(i, Location(usr_x[i], usr_y[i])))
-
+        usrlist = np.array([User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))])
     else:
-        usrlist = [ User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL) ]
+        usrlist = np.array([User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)])
 
     # Create Markov states
     # markovstates = energyArrivalStates(TIME_MAX)
@@ -306,7 +305,8 @@ def simulator(init_vars, apuserplot, ppp):
             ap.discharge()
             ap.disconnectUser()
             # ap.info()
-            tmpenergy = energyArrivalOutput(markovstates[time_unit]) * PANEL_SIZE * 0.2 / 300 / 60 * 5
+            # TODO Fix energy arrival
+            tmpenergy = energyArrivalOutput(markovstates[time_unit]) * PANEL_SIZE * 0.2
 
             # print('Energy Generated: {}'.format(tmpenergy))
             ap.charge(tmpenergy if tmpenergy < 0 else 0)
