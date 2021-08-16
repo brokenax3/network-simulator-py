@@ -6,6 +6,7 @@ from helpers import calcPowerTransmit
 from discreteMarkov import energyArrivalStates
 from discreteMarkov import energyArrivalOutput
 from poissonPointProcess import generateUsersPPP
+from energyPolicy import energyPolicy
 
 class Location:
     def __init__(self, x, y):
@@ -95,26 +96,6 @@ class AccessPoint:
         else:
             self.energy_store = 0
             self.state = 0
-
-    def calcEnergyUse(self):
-        """ Return the total energy consumption of the Access Point
-
-        Iterates each User in self.ap_userlist and calls calcPowerTransmit with 
-        the Access Point <-> User distance.
-
-        service_counter increments for each User the Access Point is able to service.
-        """
-
-        energy_consumed = envs.ENERGY_USE_BASE
-        service_counter = 0
-        for user in self.ap_userlist:
-            if self.energy_store > energy_consumed:
-                energy_consumed = energy_consumed + calcPowerTransmit(user[1])
-                service_counter = service_counter + 1
-            else:
-                break
-
-        return energy_consumed, service_counter
 
     def connectUser(self, id, distance):
         """ Connects a User to the Access Point

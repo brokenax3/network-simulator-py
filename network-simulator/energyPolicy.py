@@ -5,8 +5,8 @@
 
 returns energy consumption, energy shared and number of users serviced
 """
-import envs
-from helpers import calcPowerTransmit
+import .envs
+from .helpers import calcPowerTransmit
 
 def noEnergyShare(userlist, energystore):
     """ No energy sharing
