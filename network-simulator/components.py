@@ -119,8 +119,7 @@ class AccessPoint:
     def connectUser(self, id, distance):
         """ Connects a User to the Access Point
 
-        Access Points do not deny User connections but will only service the users
-        prioritising index.
+        Access Points do not deny User connections.
         """
         self.ap_userlist.append([id, distance])
 
@@ -134,16 +133,6 @@ class AccessPoint:
         self.ap_userlist = []
 
         # print("Kicking users resulted in {} ".format(self.ap_userlist))
-
-    # def stateSwitch(self):
-    #     """ Handle the state of the Access Point
-
-    #     Switch on the Access Point if there is sufficient energy to service Users.
-    #     """
-    #     if self.energy_store >= self.energy_consumed:
-    #         self.state = 1
-    #     else:
-    #         self.state = 0
 
     def info(self):
         """ Prints info about the Access Point
@@ -193,22 +182,11 @@ class User:
         """
         active_ap_list = [[ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)] for ap in aplist if ap.state == 1]
 
-        # for ap in aplist:
-        #     if ap.state == 1:
-        #         active_ap_list.append([ap.id, calcDistance(self.location.x, self.location.y, ap.location.x, ap.location.y)])
-                # print(active_ap_list)
-
         if active_ap_list == []:
-            # print("Access Points are all offline")
             return active_ap_list
         else:
             closest = min(active_ap_list, key=itemgetter(1))
             return closest
-        # for distance in active_ap_list:
-            #     distances.append(distance[1])
-            # for item in active_ap_list:
-            #     if item[1] == min(distances):
-            #         return item
 
     # Move the user to a new location
     def moveUser(self):
@@ -247,7 +225,7 @@ def initialiseEnv(init_vars, ppp):
     Create aplist and usrlist.
     """
 
-    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE
+    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, ENERGY_SHARE
     global usrlist, aplist, markovstates
 
     GRID_SIZE = init_vars["GRID_SIZE"]
@@ -259,28 +237,21 @@ def initialiseEnv(init_vars, ppp):
     DIST_MOVEUSER_MAX = init_vars["DIST_MOVEUSER_MAX"]
     TIME_MAX = init_vars["TIME_MAX"]
     PANEL_SIZE = init_vars["PANEL_SIZE"]
+    ENERGY_SHARE = init_vars["ENERGY_SHARE"]
     markovstates = init_vars["markov"]
 
     aplist = [AccessPoint]*AP_TOTAL
 
-    # for index in range(AP_TOTAL):
-    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-    #     tmpenergy = randint(0, ENERGY_STORE_MAX)
-    #     tmpap = AccessPoint(index, tmploc, tmpenergy)
-    #     aplist.append(tmpap)
     aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
+
     # Initialise Users
-    # for index in range(USR_TOTAL):
-    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-    #     tmpusr = User(index, tmploc) 
-    #     usrlist.append(tmpusr)
     if ppp == 1:
         usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
 
-        usrlist = [User]*len(usr_x)
+        usrlist = [None]*len(usr_x)
         usrlist = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
     else:
-        usrlist = [User]*USR_TOTAL
+        usrlist = [None]*USR_TOTAL
         usrlist = [User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)]
 
     # Create Markov states

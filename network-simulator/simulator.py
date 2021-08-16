@@ -9,6 +9,9 @@ def initVariable():
 
     A dict is generated and modified as needed. This modified dict is passed into the simulator.
     Time unit 5 minutes.
+
+    Energy Share:
+        0 : No energy sharing
     """
 
     init_vars = {
@@ -22,6 +25,7 @@ def initVariable():
         "POWER_RECEIVED_DBM" : -65, 
         "TIME_MAX" : 288,
         "DIST_MOVEUSER_MAX" : 5,
+        "ENERGY_SHARE" : 0,
     }
     init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) / 1000 * 60 * 5
     return init_vars
