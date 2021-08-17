@@ -1,9 +1,15 @@
+from random import randint
 import matplotlib.pyplot as plt
 from network_simulator.components import simulator
+from network_simulator.components import Location
+from network_simulator.components import AccessPoint
+from network_simulator.components import User
+from network_simulator.poissonPointProcess import generateUsersPPP
 from network_simulator.discreteMarkov import energyArrivalStates
+from network_simulator.testPolicy import energyPolicyTest
 from progress.bar import Bar
 
-def initVariable():
+def initVariable(ppp):
     """ Initilise starting variables
 
     A dict is generated and modified as needed. This modified dict is passed into the simulator.
@@ -16,16 +22,31 @@ def initVariable():
         "ENERGY_GEN_MAX" : 0.75, # Watt  
         "PANEL_SIZE" : 5, # cm^2
         "ENERGY_USE_BASE" : 0.4417, # Watt per 5 minutes 5.3/60*5
-        "AP_TOTAL" : 1,
-        "USR_TOTAL" : 20,
+        "AP_TOTAL" : 5,
+        "USR_TOTAL" : 100,
         "POWER_RECEIVED_DBM" : -60, 
-        "TIME_MAX" : 10,
+        "TIME_MAX" : 10000,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
     }
     init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 60 * 5 * 0.001 # Watts per 5 minutes
-    return init_vars
+
+    GRID_SIZE = init_vars["GRID_SIZE"]
+    ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
+    AP_TOTAL = init_vars["AP_TOTAL"]
+    USR_TOTAL = init_vars["USR_TOTAL"]
+
+    # Generate fixed User and AP list
+    aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
+
+    if ppp == 1:
+        usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
+
+        usrlist = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
+    else:
+        usrlist = [User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)]
+    return init_vars, aplist, usrlist
 
 if __name__ == '__main__':
 
@@ -43,11 +64,15 @@ if __name__ == '__main__':
     #######################
     #  Simulator Section  #
     #######################
-    init_vars = initVariable()
+    init_vars, aplist, usrlist = initVariable(1)
+    # Retain the same list for passing into the simulator
+    tmp_init_vars = init_vars
+    tmp_aplist = aplist
+    tmp_usrlist = usrlist
     markovstates = energyArrivalStates(init_vars["TIME_MAX"])
     init_vars["markov"] = markovstates
 
-    [aploc, usrloc, serviced] = simulator(init_vars, 1, 0)
+    # [aploc, usrloc, serviced] = simulator(init_vars, 1, 0)
     # [aploc_ppp, usrloc_ppp, serviced] = simulator(init_vars, 1, 1)
     # Number of Access Points
     # range_AP_total = range(1, 50, 5)
@@ -233,5 +258,6 @@ if __name__ == '__main__':
     # plt.savefig('energystorage.png')
     # plt.show()
 
-# Energy Stored is after the time slot
-# Energy Use is the energy used within the time slot
+    plt = energyPolicyTest(tmp_init_vars, tmp_aplist, tmp_usrlist)
+    
+    plt.savefig('energypolicyppp.png')

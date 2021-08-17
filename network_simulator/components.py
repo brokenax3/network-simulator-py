@@ -240,18 +240,6 @@ def initialiseEnv(init_vars):
 
     markovstates = init_vars["markov"]
 
-    # Reset Counters
-    for ap in aplist:
-        ap.energy_consumed = 0
-        ap.energy_consumed_prev = 0
-        # Non zero energy consumption
-        ap.energy_consumed_prev_nz = 0
-        ap.service_counter = 0
-        ap.energy_shared = 0
-
-    for user in usrlist:
-        user.connected_ap = ["Not Connected", "No Distance"]
-
     # Create Markov states
     # markovstates = energyArrivalStates(TIME_MAX)
 

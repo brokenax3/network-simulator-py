@@ -57,9 +57,7 @@ if __name__ == "__main__":
     init_vars, aplist, usrlist = initVariable(1)
     markovstates = energyArrivalStates(init_vars["TIME_MAX"])
     init_vars["markov"] = markovstates
-
-
-
+    
     """ Test Policy 1:
             - No Energy Share
             - No PPP
@@ -69,7 +67,10 @@ if __name__ == "__main__":
 
     init_vars["ENERGY_POLICY"] = 0
     for run in total_runs:
-        serviced_noshare.append(simulator(init_vars, aplist, usrlist))
+        tmp_init_vars = init_vars
+        tmp_aplist = aplist
+        tmp_usrlist = usrlist
+        serviced_noshare.append(simulator(tmp_init_vars, tmp_aplist, tmp_usrlist))
         bar.next()
     bar.finish()
     avg_serviced_noshare = sum(serviced_noshare) / len(total_runs)
@@ -85,7 +86,10 @@ if __name__ == "__main__":
 
     init_vars["ENERGY_POLICY"] = 1
     for run in total_runs:
-        serviced_cheapest.append(simulator(init_vars, aplist, usrlist))
+        tmp_init_vars = init_vars
+        tmp_aplist = aplist
+        tmp_usrlist = usrlist
+        serviced_cheapest.append(simulator(tmp_init_vars, tmp_aplist, tmp_usrlist))
         bar.next()
     bar.finish()
     avg_serviced_cheapest = sum(serviced_cheapest) / len(total_runs)
@@ -101,7 +105,10 @@ if __name__ == "__main__":
 
     init_vars["ENERGY_POLICY"] = 2
     for run in total_runs:
-        serviced_cheapestusers.append(simulator(init_vars, aplist, usrlist))
+        tmp_init_vars = init_vars
+        tmp_aplist = aplist
+        tmp_usrlist = usrlist
+        serviced_cheapestusers.append(simulator(tmp_init_vars, tmp_aplist, tmp_usrlist))
         bar.next()
     bar.finish()
     avg_serviced_cheapestusers = sum(serviced_cheapestusers) / len(total_runs)
