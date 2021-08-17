@@ -6,6 +6,7 @@ from .helpers import calcPowerTransmit
 from .discreteMarkov import energyArrivalStates
 from .discreteMarkov import energyArrivalOutput
 from .poissonPointProcess import generateUsersPPP
+from .energyPolicy import energyPolicy
 
 class Location:
     def __init__(self, x, y):
@@ -37,7 +38,10 @@ class AccessPoint:
         self.energy_store = energy_start
         self.energy_consumed = 0
         self.energy_consumed_prev = 0
+        # Non zero energy consumption
+        self.energy_consumed_prev_nz = 0
         self.service_counter = 0
+        self.energy_shared = 0
 
         """ ap_userlist item
         List of connected Users and the distance between the User and the Access Point.
@@ -66,7 +70,7 @@ class AccessPoint:
         else:
             self.energy_store = self.energy_store + energy_gen
 
-        if self.energy_store >= self.calcEnergyUse()[0]:
+        if self.energy_store >= self.energy_consumed_prev:
             self.state = 1
             # print("Access Point {} tried to turn on.".format(self.id))
         else:
@@ -80,41 +84,22 @@ class AccessPoint:
         Sends service_counter to the Access Point Class.
         If energy_consumed is larger than energy_store, switch the Access Point off.
         """
-        self.energy_consumed_prev = self.energy_consumed
         self.ap_userlist_prev = self.ap_userlist
 
-        self.energy_consumed, service_counter = self.calcEnergyUse()
-        self.service_counter = self.service_counter + service_counter
+        if self.state == 1:
+            self.energy_consumed_prev = self.energy_consumed
+            energy_consumed, energy_shared, serviced_users = energyPolicy(ENERGY_POLICY, self.ap_userlist, self.energy_store, SHARE_ENERGY)
 
-        if self.state == 0:
-            self.energy_consumed = 0
-            return
-
-        if self.energy_store - self.energy_consumed > 0:
-            self.energy_store = self.energy_store - self.energy_consumed
-        else:
-            self.energy_store = 0
-            self.state = 0
-
-    def calcEnergyUse(self):
-        """ Return the total energy consumption of the Access Point
-
-        Iterates each User in self.ap_userlist and calls calcPowerTransmit with 
-        the Access Point <-> User distance.
-
-        service_counter increments for each User the Access Point is able to service.
-        """
-
-        energy_consumed = envs.ENERGY_USE_BASE
-        service_counter = 0
-        for user in self.ap_userlist:
-            if self.energy_store > energy_consumed:
-                energy_consumed = energy_consumed + calcPowerTransmit(user[1])
-                service_counter = service_counter + 1
+            self.energy_consumed = energy_consumed
+            self.energy_shared = self.energy_shared + energy_shared
+            self.service_counter = self.service_counter + serviced_users
+            if energy_consumed >= self.energy_store:
+                self.energy_store = 0
+                self.state = 0
             else:
-                break
-
-        return energy_consumed, service_counter
+                self.energy_store = self.energy_store - energy_consumed
+        else:
+            self.energy_consumed = 0
 
     def connectUser(self, id, distance):
         """ Connects a User to the Access Point
@@ -228,7 +213,7 @@ class User:
         self.connected_ap = ["Not Connected", "No Distance"]
 
 
-def initialiseEnv(init_vars, ppp):
+def initialiseEnv(init_vars):
     """ Initialise the simulation environment
 
     Unpack init_vars from simulator.py.
@@ -238,6 +223,7 @@ def initialiseEnv(init_vars, ppp):
     """
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE
+    global ENERGY_POLICY, SHARE_ENERGY
     global usrlist, aplist, markovstates
 
     GRID_SIZE = init_vars["GRID_SIZE"]
@@ -249,29 +235,39 @@ def initialiseEnv(init_vars, ppp):
     DIST_MOVEUSER_MAX = init_vars["DIST_MOVEUSER_MAX"]
     TIME_MAX = init_vars["TIME_MAX"]
     PANEL_SIZE = init_vars["PANEL_SIZE"]
+    ENERGY_POLICY = init_vars["ENERGY_POLICY"]
+    SHARE_ENERGY = init_vars["SHARE_ENERGY"]
+
     markovstates = init_vars["markov"]
 
-    aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
+    # Reset Counters
+    for ap in aplist:
+        ap.energy_consumed = 0
+        ap.energy_consumed_prev = 0
+        # Non zero energy consumption
+        ap.energy_consumed_prev_nz = 0
+        ap.service_counter = 0
+        ap.energy_shared = 0
 
-    if ppp == 1:
-        usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
-
-        usrlist = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
-    else:
-        usrlist = [User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)]
+    for user in usrlist:
+        user.connected_ap = ["Not Connected", "No Distance"]
 
     # Create Markov states
     # markovstates = energyArrivalStates(TIME_MAX)
 
-def simulator(init_vars, apuserplot, ppp):
+def simulator(init_vars, _aplist, userlist):
     """ Main simulator loop
 
     returns the total number of clients serviced
     """
+    global usrlist, aplist
+    usrlist = userlist
+    aplist = _aplist
 
-    initialiseEnv(init_vars, ppp)
+    initialiseEnv(init_vars)
+    service_count = []
 
-    for time_unit in range(0, TIME_MAX):
+    for time_unit in range(0, TIME_MAX + 1):
         if time_unit == 0:
                 continue
 
@@ -283,17 +279,10 @@ def simulator(init_vars, apuserplot, ppp):
             ap.discharge()
             ap.disconnectUser()
             # ap.info()
-            tmpenergy = energyArrivalOutput(markovstates[time_unit]) * PANEL_SIZE * 0.2 / 300 / 60 * 5
-
+            tmpenergy = energyArrivalOutput(markovstates[time_unit])[0] * PANEL_SIZE * 0.2 * 0.01
             # print('Energy Generated: {}'.format(tmpenergy))
-            ap.charge(tmpenergy if tmpenergy < 0 else 0)
+            ap.charge(tmpenergy if tmpenergy > 0 else 0)
 
-    if apuserplot == 1:
-        aploc = map(AccessPoint.getLoc, aplist)
-        usrloc = map(User.getLoc, usrlist)
-    else:
-        aploc = 0
-        usrloc = 0
+    [service_count.append(ap.service_counter) for ap in aplist]
 
-    # sim_service_counter = sum([ap.service_counter for ap in aplist])
-    return [aploc, usrloc, sum([ap.service_counter for ap in aplist])] if apuserplot == 1 else sum([ap.service_counter for ap in aplist])
+    return sum(service_count)

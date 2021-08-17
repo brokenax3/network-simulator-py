@@ -15,14 +15,16 @@ def initVariable():
         "ENERGY_STORE_MAX" : 576, # Watt 5 minutes
         "ENERGY_GEN_MAX" : 0.75, # Watt  
         "PANEL_SIZE" : 5, # cm^2
-        "ENERGY_USE_BASE" : 0.4417, # Watt per 5 minutes
-        "AP_TOTAL" : 15,
-        "USR_TOTAL" : 200,
-        "POWER_RECEIVED_DBM" : -65, 
-        "TIME_MAX" : 288,
+        "ENERGY_USE_BASE" : 0.4417, # Watt per 5 minutes 5.3/60*5
+        "AP_TOTAL" : 1,
+        "USR_TOTAL" : 20,
+        "POWER_RECEIVED_DBM" : -60, 
+        "TIME_MAX" : 10,
         "DIST_MOVEUSER_MAX" : 5,
+        "ENERGY_POLICY" : 0,
+        "SHARE_ENERGY" : 0,
     }
-    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) / 1000 * 60 * 5
+    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 60 * 5 * 0.001 # Watts per 5 minutes
     return init_vars
 
 if __name__ == '__main__':
@@ -44,11 +46,12 @@ if __name__ == '__main__':
     init_vars = initVariable()
     markovstates = energyArrivalStates(init_vars["TIME_MAX"])
     init_vars["markov"] = markovstates
+
     [aploc, usrloc, serviced] = simulator(init_vars, 1, 0)
-    [aploc_ppp, usrloc_ppp, serviced] = simulator(init_vars, 1, 1)
+    # [aploc_ppp, usrloc_ppp, serviced] = simulator(init_vars, 1, 1)
     # Number of Access Points
-    range_AP_total = range(1, 50, 5)
-    bar = Bar('Running simulation (Number of APs)', max=len(range_AP_total))
+    # range_AP_total = range(1, 50, 5)
+    # bar = Bar('Running simulation (Number of APs)', max=len(range_AP_total))
 
     # for run in total_runs:
     #     serviced_user_apnumber = []
@@ -60,15 +63,15 @@ if __name__ == '__main__':
     # bar.finish()
     # avg_sum_serviced_user_apnumber = map(sum, zip(*tmp_serviced_user_apnumber))
 
-    avg_serviced_user_apnumber = []
+    # avg_serviced_user_apnumber = []
     # # for item in avg_sum_serviced_user_apnumber:
     # #     avg_serviced_user_apnumber.append(item / len(total_runs))
-    for AP_TOTAL in range_AP_total:
-        init_vars["AP_TOTAL"] = AP_TOTAL
-        serviced_user_apnumber = [simulator(init_vars, 0, 0) for run in total_runs]
-        avg_serviced_user_apnumber.append(sum(serviced_user_apnumber) / len(total_runs))
-        bar.next()
-    bar.finish()
+    # for AP_TOTAL in range_AP_total:
+    #     init_vars["AP_TOTAL"] = AP_TOTAL
+    #     serviced_user_apnumber = [simulator(init_vars, 0, 0) for run in total_runs]
+    #     avg_serviced_user_apnumber.append(sum(serviced_user_apnumber) / len(total_runs))
+    #     bar.next()
+    # bar.finish()
 
     # # Number of Users
     # bar = Bar('Running simulation (Number of Users)', max=len(total_runs))
@@ -154,11 +157,11 @@ if __name__ == '__main__':
 
     # print(ap_arr)
 
-    ap_loc = list(zip(*aploc))
-    usr_loc = list(zip(*usrloc))
+    # ap_loc = list(zip(*aploc))
+    # usr_loc = list(zip(*usrloc))
     
-    ap_loc_ppp = list(zip(*aploc_ppp))
-    usr_loc_ppp = list(zip(*usrloc_ppp))
+    # ap_loc_ppp = list(zip(*aploc_ppp))
+    # usr_loc_ppp = list(zip(*usrloc_ppp))
 
     # plt.rcParams["font.family"] = "Iosevka SS16"
     # plot1 = plt.figure(1)
@@ -180,12 +183,12 @@ if __name__ == '__main__':
     # plt.legend()
     # plt.savefig('scatterAPUser_ppp.png')
 
-    plot2 = plt.figure(2)
-    plt.plot(range_AP_total, avg_serviced_user_apnumber)
-    plt.xlabel('Total Number of APs')
-    plt.ylabel('Total Number of Serviced Users')
-    plt.title('Total Number of Serviced users against Total Number of APs')
-    plt.savefig('totalnumberap.png')
+    # plot2 = plt.figure(2)
+    # plt.plot(range_AP_total, avg_serviced_user_apnumber)
+    # plt.xlabel('Total Number of APs')
+    # plt.ylabel('Total Number of Serviced Users')
+    # plt.title('Total Number of Serviced users against Total Number of APs')
+    # plt.savefig('totalnumberap.png')
 
     # plot3 = plt.figure(3)
     # plt.plot(range_USR_total, avg_serviced_user_usernumber)
