@@ -1,5 +1,5 @@
 from math import sqrt
-import envs
+from . import envs
 
 def calcDistance(x1, y1, x2, y2):
     """ Calculate the distance between two points 

@@ -1,11 +1,11 @@
 from random import randint
 from operator import itemgetter
-import envs
-from helpers import calcDistance
-from helpers import calcPowerTransmit
-from discreteMarkov import energyArrivalStates
-from discreteMarkov import energyArrivalOutput
-from poissonPointProcess import generateUsersPPP
+from . import envs
+from .helpers import calcDistance
+from .helpers import calcPowerTransmit
+from .discreteMarkov import energyArrivalStates
+from .discreteMarkov import energyArrivalOutput
+from .poissonPointProcess import generateUsersPPP
 
 class Location:
     def __init__(self, x, y):
@@ -122,7 +122,10 @@ class AccessPoint:
         Access Points do not deny User connections but will only service the users
         prioritising index.
         """
-        self.ap_userlist.append([id, distance])
+        if id != None and distance != None:
+            self.ap_userlist.append([id, distance])
+        else:
+            print("id and distance not passed")
 
     def disconnectUser(self):
         """ Disconnects a User from the Access Point
@@ -130,7 +133,7 @@ class AccessPoint:
         When the Access Point power offs, remove the Users associated with it.
         """
         for user in self.ap_userlist:
-            usrlist[user[0]].connected_ap = ["Not Connected", "No Distance"]
+            usrlist[user[0]].removeConnected()
         self.ap_userlist = []
 
         # print("Kicking users resulted in {} ".format(self.ap_userlist))
@@ -179,9 +182,12 @@ class User:
             status = self.calcAPDistance()
             if not status:
                 self.connected_ap = ["Not Connected", "No Distance"]
-            else:
-                self.connected_ap = status
-                aplist[self.connected_ap[0]].connectUser(self.id, self.connected_ap[1])
+                return
+
+            self.connected_ap = status
+            apid = self.connected_ap[0][0]
+            distance = self.connected_ap[0][1]
+            aplist[apid].connectUser(self.id, distance)
 
     def calcAPDistance(self):
         """ Find the nearest Access Point
@@ -203,12 +209,7 @@ class User:
             return active_ap_list
         else:
             closest = min(active_ap_list, key=itemgetter(1))
-            return closest
-        # for distance in active_ap_list:
-            #     distances.append(distance[1])
-            # for item in active_ap_list:
-            #     if item[1] == min(distances):
-            #         return item
+            return [closest]
 
     # Move the user to a new location
     def moveUser(self):
@@ -238,6 +239,10 @@ class User:
     def getLoc(self):
         return [self.location.x, self.location.y]
 
+    def removeConnected(self):
+        self.connected_ap = ["Not Connected", "No Distance"]
+
+
 def initialiseEnv(init_vars, ppp):
     """ Initialise the simulation environment
 
@@ -261,26 +266,13 @@ def initialiseEnv(init_vars, ppp):
     PANEL_SIZE = init_vars["PANEL_SIZE"]
     markovstates = init_vars["markov"]
 
-    aplist = [AccessPoint]*AP_TOTAL
-
-    # for index in range(AP_TOTAL):
-    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-    #     tmpenergy = randint(0, ENERGY_STORE_MAX)
-    #     tmpap = AccessPoint(index, tmploc, tmpenergy)
-    #     aplist.append(tmpap)
     aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
-    # Initialise Users
-    # for index in range(USR_TOTAL):
-    #     tmploc = Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))
-    #     tmpusr = User(index, tmploc) 
-    #     usrlist.append(tmpusr)
+
     if ppp == 1:
         usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
 
-        usrlist = [User]*len(usr_x)
         usrlist = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
     else:
-        usrlist = [User]*USR_TOTAL
         usrlist = [User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)]
 
     # Create Markov states
@@ -314,6 +306,9 @@ def simulator(init_vars, apuserplot, ppp):
     if apuserplot == 1:
         aploc = map(AccessPoint.getLoc, aplist)
         usrloc = map(User.getLoc, usrlist)
+    else:
+        aploc = 0
+        usrloc = 0
 
     # sim_service_counter = sum([ap.service_counter for ap in aplist])
     return [aploc, usrloc, sum([ap.service_counter for ap in aplist])] if apuserplot == 1 else sum([ap.service_counter for ap in aplist])

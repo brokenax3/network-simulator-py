@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
-from random import randint
-from components import simulator
-from discreteMarkov import energyArrivalStates
+from network_simulator.components import simulator
+from network_simulator.discreteMarkov import energyArrivalStates
 from progress.bar import Bar
 
 def initVariable():
