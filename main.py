@@ -21,9 +21,9 @@ def initVariable():
         "ENERGY_STORE_MAX" : 120000, # Joules
         "ENERGY_GEN_MAX" : 0.75, # Not used atm
         "PANEL_SIZE" : 5, # cm^2
-        "ENERGY_USE_BASE" : 1590, # Joules every 5 minutes
-        "AP_TOTAL" : 1,
-        "USR_TOTAL" : 20,
+        "ENERGY_USE_BASE" : 1000, # Joules every 5 minutes
+        "AP_TOTAL" : 5,
+        "USR_TOTAL" : 50,
         "POWER_RECEIVED_DBM" : -80, 
         "TIME_MAX" : 8064,
         "DIST_MOVEUSER_MAX" : 5,
