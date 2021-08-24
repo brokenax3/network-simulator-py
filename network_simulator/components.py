@@ -226,7 +226,7 @@ def initialiseEnv(init_vars):
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE
     global ENERGY_POLICY, SHARE_ENERGY
-    global markovstates
+    global markovstates, descendunit_arr
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
@@ -241,6 +241,7 @@ def initialiseEnv(init_vars):
     SHARE_ENERGY = init_vars["SHARE_ENERGY"]
 
     markovstates = init_vars["markov"]
+    descendunit_arr = init_vars["descendunit_arr"]
 
     # Create Markov states
     # markovstates = energyArrivalStates(TIME_MAX)
@@ -277,12 +278,14 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
-        if SHARE_ENERGY == 1:
-            energydistributed = energyDistributeSel(aplist, 0)
+        if SHARE_ENERGY > 0:
+            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr)
 
             for i, ap in enumerate(aplist):
-                ap.energy_store = energydistributed[i][2]
+                # ap.info()
+                ap.energy_store = 0
                 ap.charge(energydistributed[i][1])
+                # ap.info()
 
     [service_count.append(ap.service_counter) for ap in aplist]
 

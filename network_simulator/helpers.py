@@ -1,4 +1,5 @@
 from math import sqrt
+import datetime
 from . import envs
 
 def calcDistance(x1, y1, x2, y2):
@@ -26,7 +27,28 @@ def calcPowerTransmit(distance):
 def writeDataToFile(input):
     f = open("collected_data.txt", "a")
 
+    input = str(datetime.datetime.now()) + "\n" + input
+
     f.write(input)
     f.close()
 
-    
+def genDescendUnitArray(llength, sel):
+
+    array = []
+    if sel == 0:
+        for length in range(1, llength + 1):
+            array = [2*x/(length * (length + 1)) for x in range(length,0,-1)]
+
+        return array
+    elif sel == 1:
+        if llength == 1:
+            return [1]
+        else:
+            constant = 1
+            for x in range(llength - 2):
+                constant /= 2
+                array.append(constant)
+
+            return array + [2*constant/3, constant/3]
+
+

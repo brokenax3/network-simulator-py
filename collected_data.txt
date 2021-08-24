@@ -1,0 +1,28 @@
+2021-08-25 00:32:00.079317
+
+    serviced_nopolicy = [14734, 15216, 14881, 14828, 14881]
+    serviced_cheapest = [802, 802, 804, 804, 804]
+    serviced_cheapestusers = [14830, 14278, 15098, 14890, 15198]
+
+    serviced_nopolicy_shareeven = [5123, 5123, 5123, 5123, 5104]
+    serviced_cheapest_shareeven = [804, 805, 804, 803, 804]
+    serviced_cheapestusers_shareeven = [5123, 5123, 5123, 5104, 5075]
+    2021-08-25 00:34:51.931599
+
+    serviced_nopolicy = [14428, 14529, 14185, 14667, 14738]
+    serviced_cheapest = [774, 777, 776, 774, 776]
+    serviced_cheapestusers = [14355, 14460, 14151, 14722, 14540]
+
+    serviced_nopolicy_shareeven = [4635, 4582, 4635, 4634, 4558]
+    serviced_cheapest_shareeven = [773, 767, 766, 774, 768]
+    serviced_cheapestusers_shareeven = [4630, 4614, 4633, 4619, 4614]
+    2021-08-25 00:37:34.259422
+
+    serviced_nopolicy = [14838, 14791, 14751, 14806, 14435]
+    serviced_cheapest = [806, 804, 804, 806, 804]
+    serviced_cheapestusers = [14740, 14483, 14836, 14682, 14602]
+
+    serviced_nopolicy_shareeven = [4905, 4884, 4905, 4905, 4905]
+    serviced_cheapest_shareeven = [801, 803, 799, 802, 803]
+    serviced_cheapestusers_shareeven = [4905, 4895, 4905, 4905, 4908]
+    

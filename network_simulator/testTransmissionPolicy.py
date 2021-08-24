@@ -14,42 +14,41 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
             - No Transmission Policy
             - No Energy Sharing
     """
-    bar = Bar('Running simulation (Energy Policy: No Transmission Policy)', max=len(total_runs))
+    bar = Bar('Energy Policy: No Transmission Policy', max=len(total_runs))
     serviced_nopolicy = []
 
     init_vars["ENERGY_POLICY"] = 0
+    init_vars["SHARE_ENERGY"] = 0
     for run in total_runs:
         serviced_nopolicy.append(simulator(init_vars, aplist, usrlist))
         bar.next()
     bar.finish()
     avg_serviced_nopolicy = sum(serviced_nopolicy) / len(total_runs)
 
-
-
     """ Test Policy 2:
             - Only servicing the cheapest user
             - No Energy Sharing
     """
-    bar = Bar('Running simulation (Energy Policy: Cheapest User)', max=len(total_runs))
+    bar = Bar('Energy Policy: Cheapest User', max=len(total_runs))
     serviced_cheapest = []
 
     init_vars["ENERGY_POLICY"] = 1
+    init_vars["SHARE_ENERGY"] = 0
     for run in total_runs:
         serviced_cheapest.append(simulator(init_vars, aplist, usrlist))
         bar.next()
     bar.finish()
     avg_serviced_cheapest = sum(serviced_cheapest) / len(total_runs)
 
-
-
     """ Test Policy 3:
             - Only servicing the cheapest users (More than one)
             - No Energy Sharing
     """
-    bar = Bar('Running simulation (Energy Policy: Cheapest Users)', max=len(total_runs))
+    bar = Bar('Energy Policy: Cheapest Users', max=len(total_runs))
     serviced_cheapestusers = []
 
     init_vars["ENERGY_POLICY"] = 2
+    init_vars["SHARE_ENERGY"] = 0
     for run in total_runs:
         serviced_cheapestusers.append(simulator(init_vars, aplist, usrlist))
         bar.next()
@@ -57,11 +56,12 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     avg_serviced_cheapestusers = sum(serviced_cheapestusers) / len(total_runs)
 
 
+
     """ Test Policy 1 and Energy Sharing:
             - No Transmission Policy
             - Energy Sharing
     """
-    bar = Bar('Running simulation (Energy Policy: No Transmission Policy and Energy Share Even)', max=len(total_runs))
+    bar = Bar('Energy Policy: No Transmission Policy and Energy Share Even', max=len(total_runs))
     serviced_nopolicy_shareeven = []
 
     init_vars["ENERGY_POLICY"] = 0
@@ -72,13 +72,11 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     bar.finish()
     avg_serviced_nopolicy_shareeven = sum(serviced_nopolicy_shareeven) / len(total_runs)
 
-
-
     """ Test Policy 2 and Energy Sharing:
             - Only servicing the cheapest user
             - Energy Sharing
     """
-    bar = Bar('Running simulation (Energy Policy: Cheapest User and Energy Share Even)', max=len(total_runs))
+    bar = Bar('Energy Policy: Cheapest User and Energy Share Even', max=len(total_runs))
     serviced_cheapest_shareeven = []
 
     init_vars["ENERGY_POLICY"] = 1
@@ -89,13 +87,11 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     bar.finish()
     avg_serviced_cheapest_shareeven = sum(serviced_cheapest_shareeven) / len(total_runs)
 
-
-
     """ Test Policy 3 and Energy Sharing:
             - Only servicing the cheapest users (More than one)
             - Energy Sharing
     """
-    bar = Bar('Running simulation (Energy Policy: Cheapest Users and Energy Share Even)', max=len(total_runs))
+    bar = Bar('Energy Policy: Cheapest Users and Energy Share Even', max=len(total_runs))
     serviced_cheapestusers_shareeven = []
 
     init_vars["ENERGY_POLICY"] = 2
@@ -106,6 +102,54 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     bar.finish()
     avg_serviced_cheapestusers_shareeven = sum(serviced_cheapestusers_shareeven) / len(total_runs)
 
+
+
+    """ Test Policy 1 and Energy Sharing:
+            - No Transmission Policy
+            - Energy Sharing (Distributed based on cumulative energy use)
+    """
+    bar = Bar('Energy Policy: No Transmission Policy and Energy Share Use', max=len(total_runs))
+    serviced_nopolicy_shareuse = []
+
+    init_vars["ENERGY_POLICY"] = 0
+    init_vars["SHARE_ENERGY"] = 3
+    for run in total_runs:
+        serviced_nopolicy_shareuse.append(simulator(init_vars, aplist, usrlist))
+        bar.next()
+    bar.finish()
+    avg_serviced_nopolicy_shareuse = sum(serviced_nopolicy_shareuse) / len(total_runs)
+
+    """ Test Policy 2 and Energy Sharing:
+            - Only servicing the cheapest user
+            - Energy Sharing (Distributed based on cumulative energy use)
+    """
+    bar = Bar('Energy Policy: Cheapest User and Energy Share Use', max=len(total_runs))
+    serviced_cheapest_shareuse = []
+
+    init_vars["ENERGY_POLICY"] = 1
+    init_vars["SHARE_ENERGY"] = 3
+    for run in total_runs:
+        serviced_cheapest_shareuse.append(simulator(init_vars, aplist, usrlist))
+        bar.next()
+    bar.finish()
+    avg_serviced_cheapest_shareuse = sum(serviced_cheapest_shareuse) / len(total_runs)
+
+    """ Test Policy 3 and Energy Sharing:
+            - Only servicing the cheapest users (More than one)
+            - Energy Sharing (Distributed based on cumulative energy use)
+    """
+    bar = Bar('Energy Policy: Cheapest Users and Energy Share Use', max=len(total_runs))
+    serviced_cheapestusers_shareuse = []
+
+    init_vars["ENERGY_POLICY"] = 2
+    init_vars["SHARE_ENERGY"] = 3
+    for run in total_runs:
+        serviced_cheapestusers_shareuse.append(simulator(init_vars, aplist, usrlist))
+        bar.next()
+    bar.finish()
+    avg_serviced_cheapestusers_shareuse = sum(serviced_cheapestusers_shareuse) / len(total_runs)
+
+
     print("Total Serviced Users (No Transmission Policy): {}".format(avg_serviced_nopolicy))
     print("Total Serviced Users (Cheapest): {}".format(avg_serviced_cheapest))
     print("Total Serviced Users (Cheapest Users): {}".format(avg_serviced_cheapestusers))
@@ -114,30 +158,38 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     print("Total Serviced Users (Cheapest) (Share Even): {}".format(avg_serviced_cheapest_shareeven))
     print("Total Serviced Users (Cheapest Users) (Share Even): {}".format(avg_serviced_cheapestusers_shareeven))
 
+    print("Total Serviced Users (No Transmission Policy) (Share Use): {}".format(avg_serviced_nopolicy_shareuse))
+    print("Total Serviced Users (Cheapest) (Share Use): {}".format(avg_serviced_cheapest_shareuse))
+    print("Total Serviced Users (Cheapest Users) (Share Use): {}".format(avg_serviced_cheapestusers_shareuse))
+
     plot = plt.figure(1)
     plt.plot(range(len(serviced_nopolicy)), serviced_nopolicy, label="No Transmission Policy")
     plt.plot(range(len(serviced_cheapest)), serviced_cheapest, label="Cheapest User")
     plt.plot(range(len(serviced_cheapestusers)), serviced_cheapestusers, label="Cheapest Users")
 
-    plt.plot(range(len(serviced_nopolicy_shareeven)), serviced_nopolicy_shareeven, label="No Transmission Policy (Share Even)", alpha=0.8)
-    plt.plot(range(len(serviced_cheapest_shareeven)), serviced_cheapest_shareeven, label="Cheapest User (Share Even)", alpha=0.8)
-    plt.plot(range(len(serviced_cheapestusers_shareeven)), serviced_cheapestusers_shareeven, label="Cheapest Users (Share Even)", alpha=0.8)
+    plt.plot(range(len(serviced_nopolicy_shareeven)), serviced_nopolicy_shareeven, label="No Transmission Policy (Share Even)", marker='o', linestyle='dashed')
+    plt.plot(range(len(serviced_cheapest_shareeven)), serviced_cheapest_shareeven, label="Cheapest User (Share Even)", marker='o', linestyle='dashed')
+    plt.plot(range(len(serviced_cheapestusers_shareeven)), serviced_cheapestusers_shareeven, label="Cheapest Users (Share Even)", marker='o', linestyle='dashed')
+
+    plt.plot(range(len(serviced_nopolicy_shareuse)), serviced_nopolicy_shareuse, label="No Transmission Policy (Share Use)", marker='*', linestyle='dashed')
+    plt.plot(range(len(serviced_cheapest_shareuse)), serviced_cheapest_shareuse, label="Cheapest User (Share Use)", marker='*', linestyle='dashed')
+    plt.plot(range(len(serviced_cheapestusers_shareuse)), serviced_cheapestusers_shareuse, label="Cheapest Users (Share Use)", marker='*', linestyle='dashed')
 
     plt.legend()
     plt.xlabel('Index of Simulation')
     plt.ylabel('Total Number of Serviced Users')
     plt.title('Total Number of Serviced users on Transmission Policies')
 
-    savedOutput = """
-    serviced_nopolicy = {}
-    serviced_cheapest = {}
-    serviced_cheapestusers = {}
+    # savedOutput = """
+    # serviced_nopolicy = {}
+    # serviced_cheapest = {}
+    # serviced_cheapestusers = {}
 
-    serviced_nopolicy_shareeven = {}
-    serviced_cheapest_shareeven = {}
-    serviced_cheapestusers_shareeven = {}
-    """.format(serviced_nopolicy, serviced_cheapest, serviced_cheapestusers, serviced_nopolicy_shareeven, serviced_cheapest_shareeven, serviced_cheapestusers_shareeven)
+    # serviced_nopolicy_shareeven = {}
+    # serviced_cheapest_shareeven = {}
+    # serviced_cheapestusers_shareeven = {}
+    # """.format(serviced_nopolicy, serviced_cheapest, serviced_cheapestusers, serviced_nopolicy_shareeven, serviced_cheapest_shareeven, serviced_cheapestusers_shareeven)
 
-    writeDataToFile(savedOutput)
+    # writeDataToFile(savedOutput)
     
     return plt

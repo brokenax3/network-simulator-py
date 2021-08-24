@@ -7,6 +7,7 @@ from network_simulator.components import User
 from network_simulator.poissonPointProcess import generateUsersPPP
 from network_simulator.discreteMarkov import energyArrivalStates
 from network_simulator.testTransmissionPolicy import transmissionPolicyTest
+from network_simulator.helpers import genDescendUnitArray
 from progress.bar import Bar
 
 def initVariable():
@@ -37,6 +38,7 @@ def initVariable():
     AP_TOTAL = init_vars["AP_TOTAL"]
     USR_TOTAL = init_vars["USR_TOTAL"]
     init_vars["markov"] = energyArrivalStates(init_vars["TIME_MAX"])
+    init_vars["descendunit_arr"] = genDescendUnitArray(init_vars["AP_TOTAL"], 1)
 
     # Generate fixed User and AP list
     gen_aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(ENERGY_STORE_MAX * 0.4, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
@@ -254,7 +256,7 @@ def main():
     # plt.savefig('energystorage.png')
     # plt.show()
 
-    plt.figure(1, dpi=300, figsize=[10, 10])
+    plt.figure(1, dpi=600, figsize=[10, 12])
     plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
     plt_poltest.savefig('transmissionpolicy.png')
 
