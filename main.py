@@ -6,7 +6,7 @@ from network_simulator.components import AccessPoint
 from network_simulator.components import User
 from network_simulator.poissonPointProcess import generateUsersPPP
 from network_simulator.discreteMarkov import energyArrivalStates
-from network_simulator.testPolicy import energyPolicyTest
+from network_simulator.testTransmissionPolicy import transmissionPolicyTest
 from progress.bar import Bar
 
 def initVariable():
@@ -20,8 +20,8 @@ def initVariable():
         "GRID_SIZE" : 50,
         "ENERGY_STORE_MAX" : 120000, # Joules
         "ENERGY_GEN_MAX" : 0.75, # Not used atm
-        "PANEL_SIZE" : 5, # cm^2
-        "ENERGY_USE_BASE" : 1000, # Joules every 5 minutes
+        "PANEL_SIZE" : 8, # cm^2
+        "ENERGY_USE_BASE" : 1950, # Joules every 5 minutes
         "AP_TOTAL" : 5,
         "USR_TOTAL" : 50,
         "POWER_RECEIVED_DBM" : -80, 
@@ -54,13 +54,13 @@ def main():
     total_runs = range(5)
 
     # Create empty lists to store collected data
-    tmp_serviced_user_apnumber = []
+    tmp_serviced_user_apnssssssumber = []
     tmp_serviced_user_usernumber = []
     tmp_serviced_user_panelsize = []
     # serviced_user_usermovedist = []
     # serviced_user_gridsize = []
     # serviced_user_userenergyuse = []
-    # serviced_user_energystore = []
+    # serviced_user_enersgystore = []
     #######################
     #  Simulator Section  #
     #######################
@@ -69,10 +69,10 @@ def main():
     # Retain the same list for passing into the simulator
 
     # [aploc, usrloc, serviced] = simulator(init_vars, 1, 0)
-    # [aploc_ppp, usrloc_ppp, serviced] = simulator(init_vars, 1, 1)
+    # [aploc_ppp, usrlosc_ppp, serviced] = simulator(init_vars, 1, 1)
     # Number of Access Points
     # range_AP_total = range(1, 50, 5)
-    # bar = Bar('Running simulation (Number of APs)', max=len(range_AP_total))
+    # bar = Bar('Runnisng simulation (Number of APs)', max=len(range_AP_total))
 
     # for run in total_runs:
     #     serviced_user_apnumber = []
@@ -84,7 +84,7 @@ def main():
     # bar.finish()
     # avg_sum_serviced_user_apnumber = map(sum, zip(*tmp_serviced_user_apnumber))
 
-    # avg_serviced_user_apnumber = []
+    # avg_serviced_use_apnumber = []
     # # for item in avg_sum_serviced_user_apnumber:
     # #     avg_serviced_user_apnumber.append(item / len(total_runs))
     # for AP_TOTAL in range_AP_total:
@@ -254,8 +254,9 @@ def main():
     # plt.savefig('energystorage.png')
     # plt.show()
 
-    plt_energypol = energyPolicyTest(init_vars, aplist, usrlist_ppp)
-    plt_energypol.savefig('energypolicyppp.png')
+    plt.figure(1, dpi=300, figsize=[10, 10])
+    plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
+    plt_poltest.savefig('transmissionpolicy.png')
 
 if __name__ == '__main__':
     main()

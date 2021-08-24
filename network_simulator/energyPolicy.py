@@ -8,7 +8,7 @@ returns energy consumption, energy shared and number of users serviced
 from . import envs
 from .helpers import calcPowerTransmit
 
-def noEnergyShare(userlist, energystore):
+def noTransmitPolicy(userlist, energystore):
     """ No energy sharing
     """
     energyuselist = [calcPowerTransmit(user[1]) for user in userlist]
@@ -21,9 +21,9 @@ def noEnergyShare(userlist, energystore):
 
     serviced = len(energyuse) - 1
 
-    return sum(energyuse), 0, serviced
+    return sum(energyuse), serviced
 
-def pickCheapTransmitOnce(userlist, energystore, boolshare):
+def pickCheapTransmitOnce(userlist, energystore):
     """ Picking the cheapest user and only transmitting once
     """
     energyuselist = [calcPowerTransmit(user[1]) for user in userlist]
@@ -31,15 +31,15 @@ def pickCheapTransmitOnce(userlist, energystore, boolshare):
     cheapest = [envs.ENERGY_USE_BASE]
 
     if energyuselist == []:
-        return 0, 0, 0
+        return 0, 0
 
     if energystore > min(energyuselist):
         cheapest.append(min(energyuselist))
         serviced = 1
 
-    return sum(cheapest), 0, serviced
+    return sum(cheapest), serviced
 
-def pickCheapTransmitGreedy(userlist, energystore, boolshare):
+def pickCheapTransmitGreedy(userlist, energystore):
     """Picking the cheapest users and transmitting until there is no more energy (Greedy)
     """
     energyuselist = [calcPowerTransmit(user[1]) for user in userlist]
@@ -53,25 +53,24 @@ def pickCheapTransmitGreedy(userlist, energystore, boolshare):
 
     serviced = len(energyuse) - 1
 
-    return sum(energyuse), 0, serviced
+    return sum(energyuse), serviced
 
 def pickSmartTransmit():
     """ Smart energy usage
     """
     pass
 
-def energyPolicy(sel, userlist, energystore, boolshare):
+def energyPolicy(sel, userlist, energystore):
     """ Calls the respective function for energy usage policy
     """
     if sel == 0:
-        out = noEnergyShare(userlist, energystore)
+        out = noTransmitPolicy(userlist, energystore)
     elif sel == 1:
-        out = pickCheapTransmitOnce(userlist, energystore, boolshare)
+        out = pickCheapTransmitOnce(userlist, energystore)
     elif sel == 2:
-        out = pickCheapTransmitGreedy(userlist, energystore, boolshare)
+        out = pickCheapTransmitGreedy(userlist, energystore)
     else:
-        out = [0, 0, 0]
+        out = [0, 0]
         print("Energy consumption policy not selected")
 
     return out
-

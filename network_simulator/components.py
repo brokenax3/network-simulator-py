@@ -3,11 +3,9 @@ from copy import deepcopy
 from operator import itemgetter
 from . import envs
 from .helpers import calcDistance
-from .helpers import calcPowerTransmit
-from .discreteMarkov import energyArrivalStates
 from .discreteMarkov import energyArrivalOutput
-from .poissonPointProcess import generateUsersPPP
 from .energyPolicy import energyPolicy
+from .energyDistribution import energyDistributeSel
 
 class Location:
     def __init__(self, x, y):
@@ -42,7 +40,11 @@ class AccessPoint:
         # Non zero energy consumption
         self.energy_consumed_prev_nz = 0
         self.service_counter = 0
-        self.energy_shared = 0
+
+        # Logging
+        self.data_energyarrival = []
+        self.data_energyuse = []
+        self.data_energy_shared = []
 
         """ ap_userlist item
         List of connected Users and the distance between the User and the Access Point.
@@ -89,10 +91,9 @@ class AccessPoint:
 
         if self.state == 1:
             self.energy_consumed_prev = self.energy_consumed
-            energy_consumed, energy_shared, serviced_users = energyPolicy(ENERGY_POLICY, self.ap_userlist, self.energy_store, SHARE_ENERGY)
+            [energy_consumed, serviced_users] = energyPolicy(ENERGY_POLICY, self.ap_userlist, self.energy_store)
 
             self.energy_consumed = energy_consumed
-            self.energy_shared = self.energy_shared + energy_shared
             self.service_counter = self.service_counter + serviced_users
             if energy_consumed >= self.energy_store:
                 self.energy_store = 0
@@ -266,11 +267,22 @@ def simulator(init_vars, in_aplist, in_usrlist):
 
         for ap in aplist:
             ap.discharge()
-            ap.disconnectUser(usrlist)
             # ap.info()
+            ap.disconnectUser(usrlist)
             tmpenergy = energyArrivalOutput(markovstates[time_unit])[0] * PANEL_SIZE * 0.8 * 0.001 * 60 * 5
             # print('Energy Generated: {}'.format(tmpenergy))
             ap.charge(tmpenergy if tmpenergy > 0 else 0)
+
+            # Logging
+            ap.data_energyuse.append(ap.energy_consumed)
+            ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
+
+        if SHARE_ENERGY == 1:
+            energydistributed = energyDistributeSel(aplist, 0)
+
+            for i, ap in enumerate(aplist):
+                ap.energy_store = energydistributed[i][2]
+                ap.charge(energydistributed[i][1])
 
     [service_count.append(ap.service_counter) for ap in aplist]
 

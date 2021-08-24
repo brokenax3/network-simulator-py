@@ -86,4 +86,5 @@ Access points which do not use any energy consumption policy performs similarly 
 
 When Idle Energy Consumption is low, number of serviced users are affected more by the energy consumption policy.
 
+An Access Point which is powered on has a more significant energy consumption. A energy consumption policy might be to let an Access Point determine when it will be able to service the most users and turn on.
 

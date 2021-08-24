@@ -22,3 +22,11 @@ def calcPowerTransmit(distance):
     Pu = envs.POWER_RECEIVED_REQUIRED * (distance ** alpha)
 
     return Pu * 60 * 5
+
+def writeDataToFile(input):
+    f = open("collected_data.txt", "a")
+
+    f.write(input)
+    f.close()
+
+    
