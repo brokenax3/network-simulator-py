@@ -9,7 +9,7 @@ from network_simulator.discreteMarkov import energyArrivalStates
 from network_simulator.testPolicy import energyPolicyTest
 from progress.bar import Bar
 
-def initVariable(ppp):
+def initVariable():
     """ Initilise starting variables
 
     A dict is generated and modified as needed. This modified dict is passed into the simulator.
@@ -18,37 +18,38 @@ def initVariable(ppp):
 
     init_vars = {
         "GRID_SIZE" : 50,
-        "ENERGY_STORE_MAX" : 576, # Watt 5 minutes
-        "ENERGY_GEN_MAX" : 0.75, # Watt  
+        "ENERGY_STORE_MAX" : 120000, # Joules
+        "ENERGY_GEN_MAX" : 0.75, # Not used atm
         "PANEL_SIZE" : 5, # cm^2
-        "ENERGY_USE_BASE" : 0.4417, # Watt per 5 minutes 5.3/60*5
-        "AP_TOTAL" : 5,
-        "USR_TOTAL" : 100,
-        "POWER_RECEIVED_DBM" : -60, 
-        "TIME_MAX" : 10000,
+        "ENERGY_USE_BASE" : 1590, # Joules every 5 minutes
+        "AP_TOTAL" : 1,
+        "USR_TOTAL" : 20,
+        "POWER_RECEIVED_DBM" : -80, 
+        "TIME_MAX" : 8064,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
     }
-    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 60 * 5 * 0.001 # Watts per 5 minutes
+    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 0.001
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
     AP_TOTAL = init_vars["AP_TOTAL"]
     USR_TOTAL = init_vars["USR_TOTAL"]
+    init_vars["markov"] = energyArrivalStates(init_vars["TIME_MAX"])
 
     # Generate fixed User and AP list
-    aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(0, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
+    gen_aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(ENERGY_STORE_MAX * 0.4, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
 
-    if ppp == 1:
-        usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
+    # Generating Users using Possion Point Process Placment
+    usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
+    gen_usrlist_ppp = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
 
-        usrlist = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
-    else:
-        usrlist = [User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)]
-    return init_vars, aplist, usrlist
+    # Generating Users using Randint Placment
+    gen_usrlist = [User(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE))) for index in range(USR_TOTAL)]
+    return init_vars, gen_aplist, gen_usrlist, gen_usrlist_ppp
 
-if __name__ == '__main__':
+def main():
 
     total_runs = range(5)
 
@@ -60,17 +61,12 @@ if __name__ == '__main__':
     # serviced_user_gridsize = []
     # serviced_user_userenergyuse = []
     # serviced_user_energystore = []
-    
     #######################
     #  Simulator Section  #
     #######################
-    init_vars, aplist, usrlist = initVariable(1)
+    init_vars, aplist, usrlist, usrlist_ppp = initVariable()
+
     # Retain the same list for passing into the simulator
-    tmp_init_vars = init_vars
-    tmp_aplist = aplist
-    tmp_usrlist = usrlist
-    markovstates = energyArrivalStates(init_vars["TIME_MAX"])
-    init_vars["markov"] = markovstates
 
     # [aploc, usrloc, serviced] = simulator(init_vars, 1, 0)
     # [aploc_ppp, usrloc_ppp, serviced] = simulator(init_vars, 1, 1)
@@ -258,6 +254,8 @@ if __name__ == '__main__':
     # plt.savefig('energystorage.png')
     # plt.show()
 
-    plt = energyPolicyTest(tmp_init_vars, tmp_aplist, tmp_usrlist)
-    
-    plt.savefig('energypolicyppp.png')
+    plt_energypol = energyPolicyTest(init_vars, aplist, usrlist_ppp)
+    plt_energypol.savefig('energypolicyppp.png')
+
+if __name__ == '__main__':
+    main()

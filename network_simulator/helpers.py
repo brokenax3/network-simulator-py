@@ -21,4 +21,4 @@ def calcPowerTransmit(distance):
     # Pu = envs.POWER_RECEIVED_REQUIRED * (pow(distance, alpha))
     Pu = envs.POWER_RECEIVED_REQUIRED * (distance ** alpha)
 
-    return Pu
+    return Pu * 60 * 5

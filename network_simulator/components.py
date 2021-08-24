@@ -1,4 +1,5 @@
 from random import randint
+from copy import deepcopy
 from operator import itemgetter
 from . import envs
 from .helpers import calcDistance
@@ -112,7 +113,7 @@ class AccessPoint:
         else:
             print("id and distance not passed")
 
-    def disconnectUser(self):
+    def disconnectUser(self, usrlist):
         """ Disconnects a User from the Access Point
 
         When the Access Point power offs, remove the Users associated with it.
@@ -146,7 +147,7 @@ class User:
         self.location = location
         self.connected_ap = ["Not Connected", "No Distance"]
 
-    def connectAP(self):
+    def connectAP(self, aplist):
         """ Connect to the nearest active Access Point
 
         If an empty list is returned, this signifies that no Access Point is online.
@@ -154,7 +155,7 @@ class User:
         """
 
         if self.connected_ap == ["Not Connected", "No Distance"]:
-            status = self.calcAPDistance()
+            status = self.calcAPDistance(aplist)
             if not status:
                 self.connected_ap = ["Not Connected", "No Distance"]
                 return
@@ -164,7 +165,7 @@ class User:
             distance = self.connected_ap[0][1]
             aplist[apid].connectUser(self.id, distance)
 
-    def calcAPDistance(self):
+    def calcAPDistance(self, aplist):
         """ Find the nearest Access Point
 
         Create a list which only consists of active Access Points.
@@ -224,7 +225,7 @@ def initialiseEnv(init_vars):
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE
     global ENERGY_POLICY, SHARE_ENERGY
-    global usrlist, aplist, markovstates
+    global markovstates
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
@@ -243,14 +244,14 @@ def initialiseEnv(init_vars):
     # Create Markov states
     # markovstates = energyArrivalStates(TIME_MAX)
 
-def simulator(init_vars, _aplist, userlist):
+def simulator(init_vars, in_aplist, in_usrlist):
     """ Main simulator loop
 
     returns the total number of clients serviced
     """
-    global usrlist, aplist
-    usrlist = userlist
-    aplist = _aplist
+    # global usrlist, aplist
+    usrlist = deepcopy(in_usrlist)
+    aplist = deepcopy(in_aplist)
 
     initialiseEnv(init_vars)
     service_count = []
@@ -261,13 +262,13 @@ def simulator(init_vars, _aplist, userlist):
 
         for user in usrlist:
             user.moveUser()
-            user.connectAP()
+            user.connectAP(aplist)
 
         for ap in aplist:
             ap.discharge()
-            ap.disconnectUser()
+            ap.disconnectUser(usrlist)
             # ap.info()
-            tmpenergy = energyArrivalOutput(markovstates[time_unit])[0] * PANEL_SIZE * 0.2 * 0.01
+            tmpenergy = energyArrivalOutput(markovstates[time_unit])[0] * PANEL_SIZE * 0.8 * 0.001 * 60 * 5
             # print('Energy Generated: {}'.format(tmpenergy))
             ap.charge(tmpenergy if tmpenergy > 0 else 0)
 

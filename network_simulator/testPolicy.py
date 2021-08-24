@@ -7,11 +7,7 @@ from progress.bar import Bar
 
 def energyPolicyTest(init_vars, aplist, usrlist):
     # Initilise environment variables
-    total_runs = range(3)
-
-    init_vars_store = init_vars
-    aplist_store = aplist
-    usrlist_store = usrlist
+    total_runs = range(20)
     
     """ Test Policy 1:
             - No Energy Share
@@ -22,11 +18,7 @@ def energyPolicyTest(init_vars, aplist, usrlist):
 
     init_vars["ENERGY_POLICY"] = 0
     for run in total_runs:
-        tmp_init_vars = init_vars_store
-        tmp_aplist = aplist_store
-        tmp_usrlist = usrlist_store
-
-        serviced_noshare.append(simulator(tmp_init_vars, tmp_aplist, tmp_usrlist))
+        serviced_noshare.append(simulator(init_vars, aplist, usrlist))
         bar.next()
     bar.finish()
     avg_serviced_noshare = sum(serviced_noshare) / len(total_runs)
@@ -42,11 +34,7 @@ def energyPolicyTest(init_vars, aplist, usrlist):
 
     init_vars["ENERGY_POLICY"] = 1
     for run in total_runs:
-        tmp_init_vars = init_vars_store
-        tmp_aplist = aplist_store
-        tmp_usrlist = usrlist_store
-
-        serviced_cheapest.append(simulator(tmp_init_vars, tmp_aplist, tmp_usrlist))
+        serviced_cheapest.append(simulator(init_vars, aplist, usrlist))
         bar.next()
     bar.finish()
     avg_serviced_cheapest = sum(serviced_cheapest) / len(total_runs)
@@ -62,11 +50,7 @@ def energyPolicyTest(init_vars, aplist, usrlist):
 
     init_vars["ENERGY_POLICY"] = 2
     for run in total_runs:
-        tmp_init_vars = init_vars_store
-        tmp_aplist = aplist_store
-        tmp_usrlist = usrlist_store
-
-        serviced_cheapestusers.append(simulator(tmp_init_vars, tmp_aplist, tmp_usrlist))
+        serviced_cheapestusers.append(simulator(init_vars, aplist, usrlist))
         bar.next()
     bar.finish()
     avg_serviced_cheapestusers = sum(serviced_cheapestusers) / len(total_runs)
@@ -87,6 +71,3 @@ def energyPolicyTest(init_vars, aplist, usrlist):
     plt.title('Total Number of Serviced users on Energy Policies')
 
     return plt
-
-
-    
