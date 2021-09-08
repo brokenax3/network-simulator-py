@@ -30,6 +30,7 @@ def initVariable():
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
+        "LOAD_BALANCE" : 0,
     }
     init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 0.001
 

@@ -367,4 +367,25 @@
     serviced_nopolicy_efficiency = [16846]
     serviced_cheapest_efficiency = [520]
     serviced_cheapestusers_efficiency = [16998]
+    2021-09-08 17:26:10.754570
+
+    serviced_nopolicy = [17789]
+    serviced_cheapest = [794]
+    serviced_cheapestusers = [17875]
+
+    serviced_nopolicy_shareeven = [11793]
+    serviced_cheapest_shareeven = [516]
+    serviced_cheapestusers_shareeven = [11795]
+
+    serviced_nopolicy_shareuse = [11793]
+    serviced_cheapest_shareuse = [516]
+    serviced_cheapestusers_shareuse = [11795]
+
+    serviced_nopolicy_efficiency = [16322]
+    serviced_cheapest_efficiency = [518]
+    serviced_cheapestusers_efficiency = [16216]
+
+    serviced_nopolicy_efficiency = [16284]
+    serviced_cheapest_efficiency = [518]
+    serviced_cheapestusers_efficiency = [16143]
     

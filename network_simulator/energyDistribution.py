@@ -47,7 +47,7 @@ def energyUseDistribute(energystats, array):
 
     for item in energystats:
         totalenergy = totalenergy + item[1]
-        energyusestats.append([item[0],  item[3][-1]])
+        energyusestats.append([item[0],  item[3]])
     # print("USE STATS: {}".format(energyusestats))
 
     energyusestats.sort(key=itemgetter(1), reverse=True)
