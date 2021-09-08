@@ -62,7 +62,6 @@ and also equal to $0.02105 W$ which is $0.02105 J/s$. Thus over the 5 minutes, t
 - [x] Transmission Policy
     - [x] Picking cheapest user and only transmitting once
     - [x] Picking cheapest users and transmitting until there is no more energy
-    - [ ] Reinforced learning
 - [o] Energy Sharing
     - [X] AP Efficiency Ranking
     - [X] AP Energy Use Ranking
@@ -72,6 +71,12 @@ and also equal to $0.02105 W$ which is $0.02105 J/s$. Thus over the 5 minutes, t
         - [ ] Prioritising total of users serviced as a whole
         - [ ] Prioritising users connected to it
         - Borrowing scheme
+    - [ ] Geometric Series for ranking access points
+        - [ ] Test different ratio, r
+    - [ ] Sanity Check for Energy Arrival and Sum at the End
+- [ ] Load Balancing 
+- [ ] Reinforced learning
+    - [ ] Multi-arm Bandit
 
 # Plots
 

@@ -282,7 +282,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
             energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr)
 
             for i, ap in enumerate(aplist):
-                ap.energy_store = 0
+                # ap.energy_store = 0
                 tmpenergy = energydistributed[i][1]
                 ap.energy_store = tmpenergy
 

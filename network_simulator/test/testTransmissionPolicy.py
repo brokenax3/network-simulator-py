@@ -8,7 +8,7 @@ from network_simulator.helpers import writeDataToFile
 
 def transmissionPolicyTest(init_vars, aplist, usrlist):
     # Initilise environment variables
-    total_runs = range(100)
+    total_runs = range(1)
 
     """ Test Policy 1:
             - No Transmission Policy
@@ -287,13 +287,13 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     plt.plot(range(len(serviced_cheapest_shareuse)), serviced_cheapest_shareuse, label="Cheapest User (Share Use)", marker='*', linestyle='dashdot', linewidth=1.5)
     plt.plot(range(len(serviced_cheapestusers_shareuse)), serviced_cheapestusers_shareuse, label="Cheapest Users (Share Use)", marker='*', linestyle='dashdot', linewidth=1.5)
 
-    plt.plot(range(len(serviced_nopolicy_efficiency)), serviced_nopolicy_efficiency, label="No Transmission Policy (AP Efficiency)", marker='x', linestyle='dashdot', linewidth=2)
-    plt.plot(range(len(serviced_cheapest_efficiency)), serviced_cheapest_efficiency, label="Cheapest User (AP Efficiency)", marker='x', linestyle='dashdot', linewidth=2)
-    plt.plot(range(len(serviced_cheapestusers_efficiency)), serviced_cheapestusers_efficiency, label="Cheapest Users (AP Efficiency)", marker='x', linestyle='dashdot', linewidth=2)
+    plt.plot(range(len(serviced_nopolicy_efficiency)), serviced_nopolicy_efficiency, label="No Transmission Policy (AP Efficiency)", marker='x', linestyle='dashdot', linewidth=1)
+    plt.plot(range(len(serviced_cheapest_efficiency)), serviced_cheapest_efficiency, label="Cheapest User (AP Efficiency)", marker='x', linestyle='dashdot', linewidth=1)
+    plt.plot(range(len(serviced_cheapestusers_efficiency)), serviced_cheapestusers_efficiency, label="Cheapest Users (AP Efficiency)", marker='x', linestyle='dashdot', linewidth=1)
 
-    plt.plot(range(len(serviced_nopolicy_arrival)), serviced_nopolicy_arrival, label="No Transmission Policy (AP Energy Arrival)", marker='s', linestyle='dashdot', linewidth=2)
-    plt.plot(range(len(serviced_cheapest_arrival)), serviced_cheapest_arrival, label="Cheapest User (AP Energy Arrival)", marker='s', linestyle='dashdot', linewidth=2)
-    plt.plot(range(len(serviced_cheapestusers_arrival)), serviced_cheapestusers_arrival, label="Cheapest Users (AP Energy Arrival)", marker='s', linestyle='dashdot', linewidth=2)
+    plt.plot(range(len(serviced_nopolicy_arrival)), serviced_nopolicy_arrival, label="No Transmission Policy (AP Energy Arrival)", marker='s', linestyle='dashdot', linewidth=1)
+    plt.plot(range(len(serviced_cheapest_arrival)), serviced_cheapest_arrival, label="Cheapest User (AP Energy Arrival)", marker='s', linestyle='dashdot', linewidth=1)
+    plt.plot(range(len(serviced_cheapestusers_arrival)), serviced_cheapestusers_arrival, label="Cheapest Users (AP Energy Arrival)", marker='s', linestyle='dashdot', linewidth=1)
 
 
     plt.legend()

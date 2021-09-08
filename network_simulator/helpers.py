@@ -32,11 +32,18 @@ def writeDataToFile(input):
     f.write(input)
     f.close()
 
-def genDescendUnitArray(llength, sel):
+def genDescendUnitArray(llength, sel, ratio):
 
-    array = []
     if sel == 0:
         for length in range(1, llength + 1):
             array = [2*x/(length * (length + 1)) for x in range(length,0,-1)]
+    elif sel == 1:
+        
+        """ Allocation based on Geometric Series
+        """
+        r = ratio
+        tmp_array = [r ** length for length in range(llength)]
+        sum_tmp_array = sum(tmp_array)
+        array = [item / sum_tmp_array for item in tmp_array]
 
         return array

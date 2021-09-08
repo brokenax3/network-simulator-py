@@ -199,4 +199,172 @@
     serviced_nopolicy_efficiency = [13490, 13286, 13536, 13088, 13435, 12605, 13081, 13398, 13138, 13389, 12883, 13383, 12886, 13141, 12680, 12736, 12576, 13188, 12885, 12683, 12832, 13031, 12979, 12783, 13234, 13181, 13491, 13133, 13239, 12724, 13438, 12933, 13381, 12626, 12985, 13185, 13285, 12832, 12681, 12981, 13236, 13285, 13435, 13080, 12627, 13133, 13238, 12630, 13258, 12783, 13083, 13634, 12981, 13484, 13688, 12732, 12982, 12934, 12681, 13188, 12829, 12832, 13482, 13282, 12960, 13387, 13233, 12733, 13005, 13385, 13335, 12729, 13538, 12834, 13435, 12781, 12937, 13182, 12570, 13335, 13436, 12938, 13208, 12834, 13382, 12830, 13082, 12831, 13536, 13030, 12733, 13332, 13033, 13333, 13031, 13487, 12882, 12832, 13387, 13082]
     serviced_cheapest_efficiency = [565, 565, 565, 567, 567, 565, 565, 565, 567, 566, 565, 565, 565, 565, 565, 565, 565, 565, 565, 565, 565, 565, 567, 565, 567, 565, 565, 565, 564, 565, 568, 565, 565, 565, 565, 567, 565, 565, 565, 567, 565, 565, 565, 565, 565, 565, 565, 565, 571, 567, 564, 565, 565, 566, 565, 565, 565, 565, 569, 565, 565, 565, 568, 570, 569, 565, 565, 569, 566, 565, 569, 565, 565, 565, 565, 565, 566, 565, 565, 569, 563, 565, 565, 565, 565, 565, 565, 565, 565, 562, 565, 565, 565, 565, 565, 567, 565, 567, 564, 565]
     serviced_cheapestusers_efficiency = [12633, 13186, 13133, 13289, 13437, 13389, 12835, 12931, 13381, 12831, 12834, 13188, 13283, 13434, 13535, 13237, 12784, 13031, 12630, 12731, 13638, 13287, 13090, 13434, 13374, 12733, 13035, 13318, 12725, 12835, 13085, 13283, 13333, 12681, 13091, 13288, 12687, 12883, 12583, 12530, 13184, 12982, 12832, 13237, 13282, 12735, 13285, 13185, 12786, 13235, 13186, 12932, 13438, 13335, 12828, 13282, 13335, 12834, 12930, 12687, 12985, 13188, 13136, 13131, 12681, 13335, 13184, 13341, 12983, 13590, 13191, 13483, 12636, 13034, 12582, 13235, 13340, 13233, 12626, 13036, 12982, 13136, 12783, 12983, 13084, 12782, 13183, 13184, 12782, 12884, 13084, 12886, 13233, 12832, 12826, 13287, 12983, 13338, 13332, 12581]
+    2021-09-08 13:14:13.517128
+
+    serviced_nopolicy = [14232]
+    serviced_cheapest = [809]
+    serviced_cheapestusers = [14453]
+
+    serviced_nopolicy_shareeven = [9360]
+    serviced_cheapest_shareeven = [565]
+    serviced_cheapestusers_shareeven = [9284]
+
+    serviced_nopolicy_shareuse = [9360]
+    serviced_cheapest_shareuse = [565]
+    serviced_cheapestusers_shareuse = [9284]
+
+    serviced_nopolicy_efficiency = [9360]
+    serviced_cheapest_efficiency = [564]
+    serviced_cheapestusers_efficiency = [9315]
+
+    serviced_nopolicy_efficiency = [9360]
+    serviced_cheapest_efficiency = [564]
+    serviced_cheapestusers_efficiency = [9360]
+    2021-09-08 13:22:34.735395
+
+    serviced_nopolicy = [13128]
+    serviced_cheapest = [799]
+    serviced_cheapestusers = [12773]
+
+    serviced_nopolicy_shareeven = [8221]
+    serviced_cheapest_shareeven = [563]
+    serviced_cheapestusers_shareeven = [8232]
+
+    serviced_nopolicy_shareuse = [8221]
+    serviced_cheapest_shareuse = [563]
+    serviced_cheapestusers_shareuse = [8232]
+
+    serviced_nopolicy_efficiency = [10526]
+    serviced_cheapest_efficiency = [565]
+    serviced_cheapestusers_efficiency = [10936]
+
+    serviced_nopolicy_efficiency = [10894]
+    serviced_cheapest_efficiency = [562]
+    serviced_cheapestusers_efficiency = [10695]
+    2021-09-08 13:55:43.985268
+
+    serviced_nopolicy = [14334]
+    serviced_cheapest = [769]
+    serviced_cheapestusers = [14278]
+
+    serviced_nopolicy_shareeven = [9179]
+    serviced_cheapest_shareeven = [519]
+    serviced_cheapestusers_shareeven = [9143]
+
+    serviced_nopolicy_shareuse = [9179]
+    serviced_cheapest_shareuse = [519]
+    serviced_cheapestusers_shareuse = [9143]
+
+    serviced_nopolicy_efficiency = [12737]
+    serviced_cheapest_efficiency = [521]
+    serviced_cheapestusers_efficiency = [12621]
+
+    serviced_nopolicy_efficiency = [12560]
+    serviced_cheapest_efficiency = [515]
+    serviced_cheapestusers_efficiency = [12608]
+    2021-09-08 13:58:32.141196
+
+    serviced_nopolicy = [15262]
+    serviced_cheapest = [822]
+    serviced_cheapestusers = [14811]
+
+    serviced_nopolicy_shareeven = [9532]
+    serviced_cheapest_shareeven = [584]
+    serviced_cheapestusers_shareeven = [9517]
+
+    serviced_nopolicy_shareuse = [9532]
+    serviced_cheapest_shareuse = [584]
+    serviced_cheapestusers_shareuse = [9517]
+
+    serviced_nopolicy_efficiency = [11472]
+    serviced_cheapest_efficiency = [596]
+    serviced_cheapestusers_efficiency = [11535]
+
+    serviced_nopolicy_efficiency = [11625]
+    serviced_cheapest_efficiency = [588]
+    serviced_cheapestusers_efficiency = [11527]
+    2021-09-08 13:59:17.177040
+
+    serviced_nopolicy = [12832]
+    serviced_cheapest = [745]
+    serviced_cheapestusers = [12758]
+
+    serviced_nopolicy_shareeven = [8029]
+    serviced_cheapest_shareeven = [532]
+    serviced_cheapestusers_shareeven = [8042]
+
+    serviced_nopolicy_shareuse = [8029]
+    serviced_cheapest_shareuse = [532]
+    serviced_cheapestusers_shareuse = [8042]
+
+    serviced_nopolicy_efficiency = [9826]
+    serviced_cheapest_efficiency = [533]
+    serviced_cheapestusers_efficiency = [9778]
+
+    serviced_nopolicy_efficiency = [9903]
+    serviced_cheapest_efficiency = [531]
+    serviced_cheapestusers_efficiency = [9946]
+    2021-09-08 13:59:51.656696
+
+    serviced_nopolicy = [11622]
+    serviced_cheapest = [765]
+    serviced_cheapestusers = [12261]
+
+    serviced_nopolicy_shareeven = [9196]
+    serviced_cheapest_shareeven = [544]
+    serviced_cheapestusers_shareeven = [9221]
+
+    serviced_nopolicy_shareuse = [9196]
+    serviced_cheapest_shareuse = [544]
+    serviced_cheapestusers_shareuse = [9221]
+
+    serviced_nopolicy_efficiency = [10921]
+    serviced_cheapest_efficiency = [525]
+    serviced_cheapestusers_efficiency = [10822]
+
+    serviced_nopolicy_efficiency = [10717]
+    serviced_cheapest_efficiency = [525]
+    serviced_cheapestusers_efficiency = [10727]
+    2021-09-08 15:42:43.997513
+
+    serviced_nopolicy = [11051]
+    serviced_cheapest = [770]
+    serviced_cheapestusers = [10987]
+
+    serviced_nopolicy_shareeven = [7089]
+    serviced_cheapest_shareeven = [520]
+    serviced_cheapestusers_shareeven = [7084]
+
+    serviced_nopolicy_shareuse = [7089]
+    serviced_cheapest_shareuse = [520]
+    serviced_cheapestusers_shareuse = [7084]
+
+    serviced_nopolicy_efficiency = [9646]
+    serviced_cheapest_efficiency = [521]
+    serviced_cheapestusers_efficiency = [9547]
+
+    serviced_nopolicy_efficiency = [9720]
+    serviced_cheapest_efficiency = [517]
+    serviced_cheapestusers_efficiency = [9586]
+    2021-09-08 15:47:53.930640
+
+    serviced_nopolicy = [17714]
+    serviced_cheapest = [775]
+    serviced_cheapestusers = [18340]
+
+    serviced_nopolicy_shareeven = [12363]
+    serviced_cheapest_shareeven = [519]
+    serviced_cheapestusers_shareeven = [12325]
+
+    serviced_nopolicy_shareuse = [12363]
+    serviced_cheapest_shareuse = [519]
+    serviced_cheapestusers_shareuse = [12325]
+
+    serviced_nopolicy_efficiency = [16851]
+    serviced_cheapest_efficiency = [523]
+    serviced_cheapestusers_efficiency = [16781]
+
+    serviced_nopolicy_efficiency = [16846]
+    serviced_cheapest_efficiency = [520]
+    serviced_cheapestusers_efficiency = [16998]
     
