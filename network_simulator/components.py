@@ -260,7 +260,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
 
     for time_unit in range(0, TIME_MAX + 1):
         if time_unit == 0:
-                continue
+            continue
 
         for user in usrlist:
             user.moveUser()
@@ -282,10 +282,9 @@ def simulator(init_vars, in_aplist, in_usrlist):
             energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr)
 
             for i, ap in enumerate(aplist):
-                # ap.info()
                 ap.energy_store = 0
-                ap.charge(energydistributed[i][1])
-                # ap.info()
+                tmpenergy = energydistributed[i][1]
+                ap.energy_store = tmpenergy
 
     [service_count.append(ap.service_counter) for ap in aplist]
 

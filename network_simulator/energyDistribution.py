@@ -12,8 +12,31 @@ energydistributed:
 """
 from operator import itemgetter
 
-def efficiencyDistribute(energystats):
-    pass   
+def efficiencyDistribute(energystats, array):
+    """ Distribute Energy based on efficiency of AP
+    """
+
+    efficiency = list()
+    totalenergy = 0
+
+    for item in energystats:
+        totalenergy = totalenergy + item[1]
+        efficiency_i = [(sum(item[3]) / item[4]) if item[4] != 0 else 0]
+        efficiency.append([item[0], efficiency_i])
+
+    efficiency.sort(key=itemgetter(1), reverse=True)
+
+    if len(efficiency) > 1:
+        energy = list(map(lambda x: x * totalenergy, array))
+        energydistributed = list(zip([item[0] for item in efficiency], energy))
+    else:
+        print("Energy cannot be distributed with one member")
+        energydistributed = [0, totalenergy]
+
+    distribution = sorted(energydistributed, key=itemgetter(0))
+
+    return distribution
+
 
 def energyUseDistribute(energystats, array):
     """ Distribute Energy depending on past energy usage
@@ -37,10 +60,35 @@ def energyUseDistribute(energystats, array):
         energydistributed = [0, totalenergy]
     # print(energydistributed)
 
-    return sorted(energydistributed, key=itemgetter(0))
+    distribution = sorted(energydistributed, key=itemgetter(0))
 
-def energyArrivalDistribute(energystats):
-    pass   
+    return distribution
+
+
+def energyArrivalDistribute(energystats, array):
+    """ Distribute Energy Depending on Past Energy Arrival
+
+    """
+    energyarrival = list()
+    totalenergy = 0
+
+    for item in energystats:
+        totalenergy = totalenergy + item[1]
+        energyarrival.append([item[0],  sum(item[2])])
+
+    energyarrival.sort(key=itemgetter(1))
+
+    if len(energyarrival) > 1:
+        energy = list(map(lambda x: x * totalenergy, array))
+        energydistributed = list(zip([item[0] for item in energyarrival], energy))
+    else:
+        print("Energy cannot be distributed with one member")
+        energydistributed = [0, totalenergy]
+
+    distribution = sorted(energydistributed, key=itemgetter(0))
+
+    return distribution
+
 
 def evenDistribute(energystats):
     """ Even Distribution of Energy
@@ -54,7 +102,6 @@ def evenDistribute(energystats):
     for apstat in energystats:
         totalenergy = totalenergy + apstat[1]
 
-
     each_energy = totalenergy / len(energystats)
 
     # print("The total energy of all Access Points is: {}".format(totalenergy))
@@ -64,6 +111,7 @@ def evenDistribute(energystats):
         energydistributed.append([item[0], each_energy])
 
     return energydistributed
+
 
 def genEnergyStats(aplist):
     
@@ -76,7 +124,8 @@ def genEnergyStats(aplist):
 
     return energystats
 
-def energyDistributeSel(aplist, sel, descendunit_arr):
+
+def energyDistributeSel(aplist, sel, descendunit_arr) -> list[list[int]]:
 
     # Generate energystats
     energystats = genEnergyStats(aplist)
@@ -84,11 +133,11 @@ def energyDistributeSel(aplist, sel, descendunit_arr):
     if sel == 1:
         energydistributed = evenDistribute(energystats)
     elif sel == 2:
-        energydistributed = energyArrivalDistribute(energystats)
+        energydistributed = energyArrivalDistribute(energystats, descendunit_arr)
     elif sel == 3: 
         energydistributed = energyUseDistribute(energystats, descendunit_arr)
     elif sel == 4:
-        energydistributed = efficiencyDistribute(energystats)
+        energydistributed = efficiencyDistribute(energystats, descendunit_arr)
     else:
         energydistributed = [[0, 0]*len(aplist)]
 

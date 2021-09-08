@@ -63,12 +63,11 @@ and also equal to $0.02105 W$ which is $0.02105 J/s$. Thus over the 5 minutes, t
     - [x] Picking cheapest user and only transmitting once
     - [x] Picking cheapest users and transmitting until there is no more energy
     - [ ] Reinforced learning
-- [ ] Energy Sharing
-    - [ ] Sending a fixed amount of energy per slot to the smart grid
-        - Efficiency value
-        - Energy arrival rate
-        - Consumption
-        - Even distribution
+- [o] Energy Sharing
+    - [X] AP Efficiency Ranking
+    - [X] AP Energy Use Ranking
+    - [X] Even Energy Distribution
+    - [ ] Energy Sharing Budget
     - [ ] Collaboration of access points
         - [ ] Prioritising total of users serviced as a whole
         - [ ] Prioritising users connected to it
@@ -88,3 +87,7 @@ When Idle Energy Consumption is low, number of serviced users are affected more 
 
 An Access Point which is powered on has a more significant energy consumption. A energy consumption policy might be to let an Access Point determine when it will be able to service the most users and turn on.
 
+
+Load balancing access points
+
+Energy sharing budget %energy sharing

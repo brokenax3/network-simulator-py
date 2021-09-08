@@ -40,15 +40,3 @@ def genDescendUnitArray(llength, sel):
             array = [2*x/(length * (length + 1)) for x in range(length,0,-1)]
 
         return array
-    elif sel == 1:
-        if llength == 1:
-            return [1]
-        else:
-            constant = 1
-            for x in range(llength - 2):
-                constant /= 2
-                array.append(constant)
-
-            return array + [2*constant/3, constant/3]
-
-

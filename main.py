@@ -38,7 +38,7 @@ def initVariable():
     AP_TOTAL = init_vars["AP_TOTAL"]
     USR_TOTAL = init_vars["USR_TOTAL"]
     init_vars["markov"] = energyArrivalStates(init_vars["TIME_MAX"])
-    init_vars["descendunit_arr"] = genDescendUnitArray(init_vars["AP_TOTAL"], 1)
+    init_vars["descendunit_arr"] = genDescendUnitArray(init_vars["AP_TOTAL"], 0)
 
     # Generate fixed User and AP list
     gen_aplist = [AccessPoint(index, Location(randint(0, GRID_SIZE), randint(0, GRID_SIZE)), randint(ENERGY_STORE_MAX * 0.4, ENERGY_STORE_MAX)) for index in range(AP_TOTAL)]
