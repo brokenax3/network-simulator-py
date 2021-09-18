@@ -67,20 +67,21 @@ and also equal to $0.02105 W$ which is $0.02105 J/s$. Thus over the 5 minutes, t
     - [X] AP Energy Use Ranking
     - [X] Even Energy Distribution
     - [ ] Energy Sharing Budget
+        - [ ] Test with ratio
+        - [ ] Test with load balancing
     - [ ] Collaboration of access points
         - [ ] Prioritising total of users serviced as a whole
         - [ ] Prioritising users connected to it
         - Borrowing scheme
-    - [ ] Geometric Series for ranking access points
-        - [ ] Test different ratio, r
+    - [X] Geometric Series for ranking access points
+        - [X] Test different ratio, r
     - [ ] Sanity Check for Energy Arrival and Sum at the End
-- [ ] Load Balancing 
+- [X] Load Balancing 
 - [ ] Reinforced learning
     - [ ] Multi-arm Bandit
 
-# Plots
 
-## Energy Policy Comparisons
+# Energy Policy Comparisons
 
 ![Base Energy Consumption 1590J](./images/ec-highbasic.png)
 
@@ -92,7 +93,45 @@ When Idle Energy Consumption is low, number of serviced users are affected more 
 
 An Access Point which is powered on has a more significant energy consumption. A energy consumption policy might be to let an Access Point determine when it will be able to service the most users and turn on.
 
+# Load Balancing
 
-Load balancing access points
+The User will connect to the next closest Access Point if the closest one is not available.
 
-Energy sharing budget %energy sharing
+If the energy sharing budget is the entirety of the stored energy, the total number of serviced users will be affected by load balancing. This aggressive energy distribution method ensures that the highest ranked access point has the highest amount of energy after each timeslot. As a consequence, the lowest ranked access point will possess the least amount of energy.
+
+# Energy Allocation
+
+Energy allocation is based on a geometric series with the ratio, r.
+
+# Energy Sharing
+
+When the number of users is low, no energy sharing resulted in the highest number of serviced users.
+
+# Plots
+
+Planned Plots
+
+- Load Balancing Access Points
+    - X: Number of Access Points
+    - X: Number of Users
+- Impact of Geometric Series Ratio Energy Distribution
+    - X: Geometric Series Ratio
+- Poisson Point Process
+    - X: Lambda
+- Impact of Percentage of Energy Shared
+- Energy Distribution
+    - Efficiency
+    - Energy Use
+    - Energy Arrival
+    - Even Distribution
+- Transmission Policy
+    - Cheapest User
+    - Cheapest Users
+    - No Policy
+
+- Energy Share Budget on Total Number of Serviced Users
+    - X: Percentage of Energy Shared
+    - Transmission Policies
+        - No Transmission Policy
+        - Cheapest User
+        - Cheapest Users

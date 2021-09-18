@@ -388,4 +388,218 @@
     serviced_nopolicy_efficiency = [16284]
     serviced_cheapest_efficiency = [518]
     serviced_cheapestusers_efficiency = [16143]
+    2021-09-08 18:53:36.140191
+
+    serviced_nopolicy = [5741, 5738, 5742, 5742, 5753]
+    serviced_cheapest = [782, 782, 782, 782, 784]
+    serviced_cheapestusers = [5752, 5742, 5742, 5741, 5740]
+
+    serviced_nopolicy_shareeven = [3762, 3751, 3762, 3762, 3762]
+    serviced_cheapest_shareeven = [516, 516, 516, 516, 514]
+    serviced_cheapestusers_shareeven = [3762, 3762, 3762, 3762, 3762]
+
+    serviced_nopolicy_shareuse = [3762, 3751, 3762, 3762, 3762]
+    serviced_cheapest_shareuse = [516, 516, 516, 516, 514]
+    serviced_cheapestusers_shareuse = [3762, 3762, 3762, 3762, 3762]
+
+    serviced_nopolicy_efficiency = [3740, 3740, 3740, 3740, 3740]
+    serviced_cheapest_efficiency = [516, 514, 516, 516, 516]
+    serviced_cheapestusers_efficiency = [3740, 3740, 3740, 3740, 3740]
+
+    serviced_nopolicy_efficiency = [3740, 3740, 3740, 3751, 3740]
+    serviced_cheapest_efficiency = [515, 516, 516, 516, 516]
+    serviced_cheapestusers_efficiency = [3740, 3740, 3740, 3740, 3740]
+    2021-09-08 18:57:01.646855
+
+    serviced_nopolicy = [14258, 14127, 14103, 14232, 14194]
+    serviced_cheapest = [808, 808, 810, 810, 810]
+    serviced_cheapestusers = [14215, 14302, 14148, 13584, 14238]
+
+    serviced_nopolicy_shareeven = [9254, 9265, 9261, 9248, 9264]
+    serviced_cheapest_shareeven = [517, 517, 517, 517, 517]
+    serviced_cheapestusers_shareeven = [9256, 9258, 9263, 9270, 9268]
+
+    serviced_nopolicy_shareuse = [9254, 9265, 9261, 9248, 9264]
+    serviced_cheapest_shareuse = [517, 517, 517, 517, 517]
+    serviced_cheapestusers_shareuse = [9256, 9258, 9263, 9270, 9268]
+
+    serviced_nopolicy_efficiency = [12762, 12706, 12622, 12801, 12793]
+    serviced_cheapest_efficiency = [517, 517, 517, 517, 517]
+    serviced_cheapestusers_efficiency = [12766, 12816, 12773, 12706, 12696]
+
+    serviced_nopolicy_efficiency = [12759, 12731, 12689, 12688, 12776]
+    serviced_cheapest_efficiency = [519, 517, 517, 517, 524]
+    serviced_cheapestusers_efficiency = [12928, 12811, 12869, 12844, 12862]
+    2021-09-08 19:01:51.620990
+
+    serviced_nopolicy = [9061, 9066, 9065, 9065, 9063]
+    serviced_cheapest = [777, 777, 777, 777, 777]
+    serviced_cheapestusers = [9040, 9063, 9066, 9064, 9062]
+
+    serviced_nopolicy_shareeven = [5796, 5775, 5778, 5775, 5775]
+    serviced_cheapest_shareeven = [515, 516, 517, 515, 515]
+    serviced_cheapestusers_shareeven = [5778, 5776, 5778, 5776, 5775]
+
+    serviced_nopolicy_shareuse = [5796, 5775, 5778, 5775, 5775]
+    serviced_cheapest_shareuse = [515, 516, 517, 515, 515]
+    serviced_cheapestusers_shareuse = [5778, 5776, 5778, 5776, 5775]
+
+    serviced_nopolicy_efficiency = [5775, 5817, 5775, 5817, 5805]
+    serviced_cheapest_efficiency = [517, 515, 515, 514, 515]
+    serviced_cheapestusers_efficiency = [5861, 5778, 6492, 5798, 5796]
+
+    serviced_nopolicy_efficiency = [5799, 5775, 5796, 5799, 5740]
+    serviced_cheapest_efficiency = [515, 514, 516, 516, 516]
+    serviced_cheapestusers_efficiency = [5820, 5820, 5820, 5775, 5820]
+    2021-09-09 05:34:20.857614
+
+    serviced_nopolicy = [14965, 15175, 15155, 15182, 14873]
+    serviced_cheapest = [772, 771, 769, 771, 769]
+    serviced_cheapestusers = [15200, 15088, 15279, 15055, 15005]
+
+    serviced_nopolicy_shareeven = [10028, 10026, 10033, 10029, 10035]
+    serviced_cheapest_shareeven = [515, 515, 515, 515, 517]
+    serviced_cheapestusers_shareeven = [10036, 10044, 10035, 10029, 10030]
+
+    serviced_nopolicy_shareuse = [10028, 10026, 10033, 10029, 10035]
+    serviced_cheapest_shareuse = [515, 515, 515, 515, 517]
+    serviced_cheapestusers_shareuse = [10036, 10044, 10035, 10029, 10030]
+
+    serviced_nopolicy_efficiency = [13533, 13522, 13525, 13824, 13497]
+    serviced_cheapest_efficiency = [514, 515, 519, 515, 514]
+    serviced_cheapestusers_efficiency = [13500, 13600, 13539, 13448, 13519]
+
+    serviced_nopolicy_efficiency = [13506, 13541, 13625, 13575, 13525]
+    serviced_cheapest_efficiency = [515, 517, 516, 515, 515]
+    serviced_cheapestusers_efficiency = [13612, 13573, 13399, 13548, 13440]
+    2021-09-09 05:37:56.561697
+
+    serviced_nopolicy = [14712, 14672, 14604, 14171, 14736]
+    serviced_cheapest = [752, 752, 754, 752, 752]
+    serviced_cheapestusers = [14720, 14686, 14368, 14426, 14232]
+
+    serviced_nopolicy_shareeven = [12940, 13002, 12864, 13003, 12927]
+    serviced_cheapest_shareeven = [673, 671, 673, 678, 677]
+    serviced_cheapestusers_shareeven = [12934, 12944, 12954, 12920, 12938]
+
+    serviced_nopolicy_shareuse = [12940, 13002, 12864, 13003, 12927]
+    serviced_cheapest_shareuse = [673, 671, 673, 678, 677]
+    serviced_cheapestusers_shareuse = [12934, 12944, 12954, 12920, 12938]
+
+    serviced_nopolicy_efficiency = [14073, 14094, 13980, 14197, 14083]
+    serviced_cheapest_efficiency = [681, 696, 692, 683, 676]
+    serviced_cheapestusers_efficiency = [13956, 14131, 14036, 14131, 14000]
+
+    serviced_nopolicy_efficiency = [14012, 14075, 14061, 14022, 14127]
+    serviced_cheapest_efficiency = [697, 695, 690, 683, 689]
+    serviced_cheapestusers_efficiency = [13959, 13980, 14152, 14080, 14197]
+    2021-09-18 17:03:22.124009
+
+    serviced_nopolicy = [54917, 54200, 55218, 54262, 54432]
+    serviced_cheapest = [1541, 1539, 1541, 1539, 1539]
+    serviced_cheapestusers = [53491, 54919, 55482, 56238, 55476]
+
+    serviced_nopolicy_shareeven = [49033, 49012, 49083, 49014, 49007]
+    serviced_cheapest_shareeven = [1200, 1205, 1205, 1214, 1200]
+    serviced_cheapestusers_shareeven = [49142, 49023, 49014, 48979, 49032]
+
+    serviced_nopolicy_shareuse = [49033, 49012, 49083, 49014, 49007]
+    serviced_cheapest_shareuse = [1200, 1205, 1205, 1214, 1200]
+    serviced_cheapestusers_shareuse = [49142, 49023, 49014, 48979, 49032]
+
+    serviced_nopolicy_efficiency = [54577, 54523, 54743, 54313, 54628]
+    serviced_cheapest_efficiency = [1205, 1198, 1210, 1204, 1204]
+    serviced_cheapestusers_efficiency = [55012, 54748, 54608, 54661, 54688]
+
+    serviced_nopolicy_efficiency = [54813, 54762, 54888, 54545, 54685]
+    serviced_cheapest_efficiency = [1209, 1214, 1197, 1206, 1215]
+    serviced_cheapestusers_efficiency = [54496, 54590, 54642, 54383, 54554]
+    2021-09-18 17:23:14.863649
+
+    serviced_nopolicy = [56767, 56706]
+    serviced_cheapest = [1545, 1547]
+    serviced_cheapestusers = [54914, 58024]
+
+    serviced_nopolicy_shareeven = [51482, 51480]
+    serviced_cheapest_shareeven = [1199, 1197]
+    serviced_cheapestusers_shareeven = [51424, 51280]
+
+    serviced_nopolicy_shareuse = [51482, 51480]
+    serviced_cheapest_shareuse = [1199, 1197]
+    serviced_cheapestusers_shareuse = [51424, 51280]
+
+    serviced_nopolicy_efficiency = [57581, 57505]
+    serviced_cheapest_efficiency = [1203, 1217]
+    serviced_cheapestusers_efficiency = [57686, 57391]
+
+    serviced_nopolicy_efficiency = [57614, 57263]
+    serviced_cheapest_efficiency = [1218, 1217]
+    serviced_cheapestusers_efficiency = [57567, 57580]
+    2021-09-18 17:36:26.000725
+
+    serviced_nopolicy = [50980, 49189, 50002, 50756, 51254, 47237, 51261, 50199, 50468, 50803]
+    serviced_cheapest = [1503, 1503, 1505, 1505, 1503, 1503, 1503, 1505, 1503, 1505]
+    serviced_cheapestusers = [51445, 50165, 51734, 51348, 49271, 50565, 48870, 49673, 49918, 51266]
+
+    serviced_nopolicy_shareeven = [44873, 44879, 44724, 44897, 45065, 44896, 44859, 44995, 44959, 44950]
+    serviced_cheapest_shareeven = [1191, 1192, 1206, 1193, 1189, 1190, 1195, 1201, 1191, 1186]
+    serviced_cheapestusers_shareeven = [44855, 44856, 45062, 44968, 44915, 44961, 45051, 44953, 44717, 45032]
+
+    serviced_nopolicy_shareuse = [44873, 44879, 44724, 44897, 45065, 44896, 44859, 44995, 44959, 44950]
+    serviced_cheapest_shareuse = [1191, 1192, 1206, 1193, 1189, 1190, 1195, 1201, 1191, 1186]
+    serviced_cheapestusers_shareuse = [44855, 44856, 45062, 44968, 44915, 44961, 45051, 44953, 44717, 45032]
+
+    serviced_nopolicy_efficiency = [50308, 50223, 50258, 50160, 50177, 50383, 50363, 50206, 50256, 50318]
+    serviced_cheapest_efficiency = [1210, 1193, 1188, 1192, 1190, 1190, 1193, 1191, 1183, 1199]
+    serviced_cheapestusers_efficiency = [50126, 50298, 50356, 50233, 49963, 50509, 50222, 50177, 50147, 50103]
+
+    serviced_nopolicy_efficiency = [50381, 50156, 50145, 50248, 50356, 50183, 50444, 50329, 50356, 50113]
+    serviced_cheapest_efficiency = [1197, 1189, 1188, 1213, 1187, 1190, 1204, 1206, 1192, 1188]
+    serviced_cheapestusers_efficiency = [50312, 50250, 50193, 50360, 50397, 50171, 50214, 50360, 50334, 50319]
+    2021-09-18 17:51:03.087032
+
+    serviced_nopolicy = [47814, 49865, 50948, 49778, 49847, 49107, 50254, 49482, 49178, 49223]
+    serviced_cheapest = [1460, 1464, 1460, 1460, 1460, 1462, 1460, 1460, 1460, 1463]
+    serviced_cheapestusers = [49885, 50306, 50604, 50706, 49294, 47246, 51048, 48763, 50171, 49978]
+
+    serviced_nopolicy_shareeven = [46053, 46415, 46245, 46342, 46369, 46344, 46457, 45951, 47153, 46281]
+    serviced_cheapest_shareeven = [1106, 1099, 1137, 1090, 1095, 1103, 1105, 1090, 1120, 1102]
+    serviced_cheapestusers_shareeven = [46026, 46600, 46550, 46972, 46402, 46264, 46333, 46087, 46336, 46964]
+
+    serviced_nopolicy_shareuse = [46053, 46415, 46245, 46342, 46369, 46344, 46457, 45951, 47153, 46281]
+    serviced_cheapest_shareuse = [1106, 1099, 1137, 1090, 1095, 1103, 1105, 1090, 1120, 1102]
+    serviced_cheapestusers_shareuse = [46026, 46600, 46550, 46972, 46402, 46264, 46333, 46087, 46336, 46964]
+
+    serviced_nopolicy_efficiency = [47071, 46944, 47044, 47181, 47165, 46926, 47297, 47419, 47091, 47208]
+    serviced_cheapest_efficiency = [1089, 1101, 1104, 1105, 1092, 1108, 1105, 1098, 1107, 1129]
+    serviced_cheapestusers_efficiency = [46901, 46747, 46901, 47296, 46889, 47278, 47579, 47177, 47285, 46873]
+
+    serviced_nopolicy_efficiency = [47066, 47047, 47345, 47430, 47248, 47192, 47351, 47003, 46998, 47319]
+    serviced_cheapest_efficiency = [1100, 1127, 1105, 1107, 1106, 1090, 1095, 1092, 1107, 1100]
+    serviced_cheapestusers_efficiency = [46971, 47030, 47437, 46445, 46697, 46846, 46973, 47077, 47080, 47261]
+    2021-09-18 18:16:57.409707
+
+    serviced_nopolicy = [50846, 46688, 48549]
+    serviced_cheapest = [1511, 1513, 1515]
+    serviced_cheapestusers = [47773, 48548, 50717]
+
+    serviced_nopolicy_shareeven = [46308, 46422, 46119]
+    serviced_cheapest_shareeven = [1128, 1125, 1111]
+    serviced_cheapestusers_shareeven = [46396, 46215, 46268]
+
+    serviced_nopolicy_shareuse = [46308, 46422, 46119]
+    serviced_cheapest_shareuse = [1128, 1125, 1111]
+    serviced_cheapestusers_shareuse = [46396, 46215, 46268]
+
+    serviced_nopolicy_efficiency = [49331, 48648, 48711]
+    serviced_cheapest_efficiency = [1118, 1115, 1133]
+    serviced_cheapestusers_efficiency = [49057, 48746, 48958]
+
+    serviced_nopolicy_efficiency = [48879, 49047, 48756]
+    serviced_cheapest_efficiency = [1132, 1119, 1113]
+    serviced_cheapestusers_efficiency = [49054, 48847, 48740]
+    2021-09-19 04:34:37.213946
+
+    avg_serviced_sharebudget_no_trans_p = [46035.7, 45528.35, 44897.1, 44273.1, 43824.25, 43733.9, 43409.75, 43209.2, 43120.05, 43138.5, 43045.45, 42881.2, 42930.85, 42819.65, 42706.55, 42637.55, 42508.5, 42467.6, 42528.1, 42317.65, 42476.65, 42424.45, 42293.25, 42551.05, 42360.65, 42312.2, 42505.6, 42539.15, 42473.45, 42474.15, 42553.0, 42565.45, 42534.95, 42566.95, 42604.25, 42622.0, 42590.35, 42605.2, 42612.35, 42645.85, 42711.7, 42668.95, 42785.7, 42686.5, 42694.5, 42729.0, 42782.5, 42841.15, 42839.85, 42829.5, 42799.65, 42794.0, 42818.15, 42917.1, 42915.7, 42982.85, 43024.85, 42991.9, 43076.8, 43083.25, 43046.0, 43016.35, 43042.45, 43040.1, 43098.3, 43134.45, 43178.7, 43219.7, 43267.8, 43226.5, 43275.25, 43289.2, 43332.7, 43255.35, 43317.05, 43297.25, 43335.5, 43385.3, 43466.4, 43540.5, 43484.95, 43619.7, 43691.95, 43801.5, 43734.75, 43695.1, 43757.3, 43682.35, 43689.8, 43785.1, 43766.45, 43797.1, 43810.45, 43714.6, 43799.9, 43848.05, 43988.35, 43995.65, 43924.6, 44162.45]
+    avg_serviced_sharebudget_cheapest_users = [46268.9, 45491.8, 44730.95, 44318.4, 43837.1, 43645.0, 43362.45, 43175.2, 43082.3, 42979.3, 42919.05, 42912.0, 42875.15, 42734.65, 42683.75, 42518.85, 42550.3, 42382.8, 42515.05, 42450.1, 42385.7, 42518.1, 42355.25, 42573.85, 42392.2, 42304.1, 42450.9, 42565.95, 42384.75, 42489.45, 42585.5, 42522.65, 42526.7, 42512.75, 42580.75, 42640.65, 42625.8, 42634.75, 42662.55, 42698.8, 42670.3, 42703.25, 42675.55, 42691.25, 42679.75, 42606.8, 42767.3, 42713.95, 42832.95, 42834.45, 42835.45, 42794.65, 42868.15, 42929.3, 42946.6, 43018.6, 43079.0, 42948.3, 43004.2, 43021.65, 42974.6, 42963.35, 43062.6, 43123.65, 43119.75, 43157.55, 43163.4, 43254.45, 43158.05, 43254.75, 43235.0, 43229.8, 43274.65, 43258.35, 43289.5, 43292.1, 43421.2, 43400.1, 43440.45, 43490.75, 43505.85, 43645.5, 43683.3, 43736.8, 43784.45, 43720.15, 43610.0, 43697.35, 43729.65, 43777.1, 43816.95, 43804.85, 43748.05, 43852.35, 43812.35, 43925.7, 43963.8, 44080.9, 44006.4, 44125.75]
     

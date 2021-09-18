@@ -25,4 +25,5 @@ def generateUsersPPP(areasize, lambda0):
     # plt.savefig('ppp.png')
 
 # if __name__ == '__main__':
-#     generateUsersPPP(50, 0.04)
+#      print(generateUsersPPP(50, 0.04))
+

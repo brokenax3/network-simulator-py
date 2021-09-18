@@ -8,7 +8,7 @@ from network_simulator.helpers import writeDataToFile
 
 def transmissionPolicyTest(init_vars, aplist, usrlist):
     # Initilise environment variables
-    total_runs = range(1)
+    total_runs = range(3)
 
     """ Test Policy 1:
             - No Transmission Policy

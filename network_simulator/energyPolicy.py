@@ -46,6 +46,9 @@ def pickCheapTransmitGreedy(userlist, energystore):
     energyuselist.sort()
     energyuse = [envs.ENERGY_USE_BASE]
 
+    # print(energyuse)
+    # print(energystore)
+
     for item in energyuselist:
         if energystore < sum(energyuse):
             break

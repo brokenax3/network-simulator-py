@@ -16,22 +16,26 @@ def efficiencyDistribute(energystats, array):
     """ Distribute Energy based on efficiency of AP
     """
 
-    efficiency = list()
     totalenergy = 0
+    energydistributed = []
+    distribution = []
+    efficiency = []
+    energy = []
 
     for item in energystats:
         totalenergy = totalenergy + item[1]
-        efficiency_i = [(sum(item[3]) / item[4]) if item[4] != 0 else 0]
+        efficiency_i = (sum(item[3]) / item[4]) if item[4] != 0 else 0
         efficiency.append([item[0], efficiency_i])
 
     efficiency.sort(key=itemgetter(1), reverse=True)
 
     if len(efficiency) > 1:
-        energy = list(map(lambda x: x * totalenergy, array))
-        energydistributed = list(zip([item[0] for item in efficiency], energy))
+        energy = [arr_item * totalenergy for arr_item in array]
+        energydistributed = [[efficiency[i][0], energy_item] for i, energy_item in enumerate(energy)]
+
     else:
         print("Energy cannot be distributed with one member")
-        energydistributed = [0, totalenergy]
+        energydistributed = [[0, totalenergy]*len(array)]
 
     distribution = sorted(energydistributed, key=itemgetter(0))
 
@@ -42,22 +46,30 @@ def energyUseDistribute(energystats, array):
     """ Distribute Energy depending on past energy usage
 
     """
-    energyusestats = list()
     totalenergy = 0
+    energydistributed = []
+    energyusestats = []
 
     for item in energystats:
         totalenergy = totalenergy + item[1]
-        energyusestats.append([item[0],  item[3]])
+
+        # Use average of last ten energy use history
+        if len(item[3]) > 10:
+            _data_energyuse = sum(item[3][-10:]) 
+        else:
+            _data_energyuse = sum(item[3])
+
+        energyusestats.append([item[0], _data_energyuse])
     # print("USE STATS: {}".format(energyusestats))
 
     energyusestats.sort(key=itemgetter(1), reverse=True)
 
     if len(energyusestats) > 1:
-        energy = list(map(lambda x: x * totalenergy, array))
-        energydistributed = list(zip([item[0] for item in energyusestats], energy))
+        energy = [arr_item * totalenergy for arr_item in array]
+        energydistributed = [[energyusestats[i][0], energy_item] for i, energy_item in enumerate(energy)]
     else:
         print("Energy cannot be distributed with one member")
-        energydistributed = [0, totalenergy]
+        energydistributed = [[0, totalenergy]*len(array)]
     # print(energydistributed)
 
     distribution = sorted(energydistributed, key=itemgetter(0))
@@ -69,8 +81,9 @@ def energyArrivalDistribute(energystats, array):
     """ Distribute Energy Depending on Past Energy Arrival
 
     """
-    energyarrival = list()
     totalenergy = 0
+    energydistributed = []
+    energyarrival = []
 
     for item in energystats:
         totalenergy = totalenergy + item[1]
@@ -79,11 +92,11 @@ def energyArrivalDistribute(energystats, array):
     energyarrival.sort(key=itemgetter(1))
 
     if len(energyarrival) > 1:
-        energy = list(map(lambda x: x * totalenergy, array))
-        energydistributed = list(zip([item[0] for item in energyarrival], energy))
+        energy = [arr_item * totalenergy for arr_item in array]
+        energydistributed = [[energyarrival[i][0], energy_item] for i, energy_item in enumerate(energy)]
     else:
         print("Energy cannot be distributed with one member")
-        energydistributed = [0, totalenergy]
+        energydistributed = [[0, totalenergy]*len(array)]
 
     distribution = sorted(energydistributed, key=itemgetter(0))
 
@@ -113,22 +126,22 @@ def evenDistribute(energystats):
     return energydistributed
 
 
-def genEnergyStats(aplist):
+def genEnergyStats(aplist, energybudget):
     
     energystats = []
 
     for ap in aplist:
-        energystats.append([ap.id, ap.energy_store, ap.data_energyarrival, ap.data_energyuse, ap.service_counter])
+        energystats.append([ap.id, energybudget[ap.id], ap.data_energyarrival, ap.data_energyuse, ap.service_counter])
 
     # print(energystats)
 
     return energystats
 
 
-def energyDistributeSel(aplist, sel, descendunit_arr) -> list[list[int]]:
+def energyDistributeSel(aplist, sel, descendunit_arr, energybudget) -> list[list[int]]:
 
     # Generate energystats
-    energystats = genEnergyStats(aplist)
+    energystats = genEnergyStats(aplist, energybudget)
 
     if sel == 1:
         energydistributed = evenDistribute(energystats)

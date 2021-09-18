@@ -161,10 +161,23 @@ class User:
                 self.connected_ap = ["Not Connected", "No Distance"]
                 return
 
-            self.connected_ap = status
-            apid = self.connected_ap[0][0]
-            distance = self.connected_ap[0][1]
-            aplist[apid].connectUser(self.id, distance)
+            if LOAD_BALANCE == 1:
+                for item in status:
+                    apid = item[0]
+                    distance = item[1]
+                    
+
+                    if len(aplist[apid].ap_userlist) <= USR_LIMIT:
+                        aplist[apid].connectUser(self.id, distance)
+                        self.connected_ap = [apid, distance]
+                        break
+            else:
+                apid = status[0][0]
+                distance = status[0][1]
+
+                self.connected_ap = [apid, distance]
+                aplist[apid].connectUser(self.id, distance)
+
 
     def calcAPDistance(self, aplist):
         """ Find the nearest Access Point
@@ -180,8 +193,8 @@ class User:
             # print("Access Points are all offline")
             return active_ap_list
         else:
-            closest = min(active_ap_list, key=itemgetter(1))
-            return [closest]
+            active_ap_list_sorted = sorted(active_ap_list, key=itemgetter(1))
+            return active_ap_list_sorted
 
     # Move the user to a new location
     def moveUser(self):
@@ -224,8 +237,8 @@ def initialiseEnv(init_vars):
     Create aplist and usrlist.
     """
 
-    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE
-    global ENERGY_POLICY, SHARE_ENERGY
+    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
+    global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET
     global markovstates, descendunit_arr
 
     GRID_SIZE = init_vars["GRID_SIZE"]
@@ -239,6 +252,10 @@ def initialiseEnv(init_vars):
     PANEL_SIZE = init_vars["PANEL_SIZE"]
     ENERGY_POLICY = init_vars["ENERGY_POLICY"]
     SHARE_ENERGY = init_vars["SHARE_ENERGY"]
+    LOAD_BALANCE = init_vars["LOAD_BALANCE"]
+    USR_LIMIT = init_vars["USR_LIMIT"]
+    ENERGY_BUDGET = init_vars["ENERGY_BUDGET"]
+
 
     markovstates = init_vars["markov"]
     descendunit_arr = init_vars["descendunit_arr"]
@@ -278,13 +295,22 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
-        if SHARE_ENERGY > 0:
-            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr)
+        if SHARE_ENERGY > 0 and ENERGY_BUDGET > 0:
+
+            energybudget_list = []
+            # Allocate Energy Sharing Budget
+            for ap in aplist:
+                energybudget = ap.energy_store * ENERGY_BUDGET
+                energybudget_list.append(energybudget)
+                ap.energy_store = ap.energy_store - energybudget
+            
+            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list)
 
             for i, ap in enumerate(aplist):
                 # ap.energy_store = 0
-                tmpenergy = energydistributed[i][1]
-                ap.energy_store = tmpenergy
+                tmpdistenergy = energydistributed[i][1]
+                # print(tmpdistenergy)
+                ap.energy_store = ap.energy_store + tmpdistenergy
 
     [service_count.append(ap.service_counter) for ap in aplist]
 
