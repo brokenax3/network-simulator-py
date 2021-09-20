@@ -323,6 +323,6 @@ def transmissionPolicyTest(init_vars, aplist, usrlist):
     serviced_cheapestusers_efficiency = {}
     """.format(serviced_nopolicy, serviced_cheapest, serviced_cheapestusers, serviced_nopolicy_shareuse, serviced_cheapest_shareuse, serviced_cheapestusers_shareuse, serviced_nopolicy_shareuse, serviced_cheapest_shareuse, serviced_cheapestusers_shareuse, serviced_nopolicy_efficiency, serviced_cheapest_efficiency, serviced_cheapestusers_efficiency, serviced_nopolicy_arrival, serviced_cheapest_arrival, serviced_cheapestusers_arrival)
 
-    writeDataToFile(savedOutput)
+    # writeDataToFile(savedOutput)
     
     return plt

@@ -10,7 +10,7 @@ def generateUsersPPP(areasize, lambda0):
     # lambda0=0.04; #intensity (ie mean density) of the Poisson process
      
     #Simulate Poisson point process
-    numbPoints = scipy.stats.poisson( lambda0*areaTotal ).rvs()#
+    numbPoints = scipy.stats.poisson(lambda0*areaTotal).rvs()#
     x = scipy.stats.uniform.rvs(0, areasize,((numbPoints,1)))
     y = scipy.stats.uniform.rvs(0, areasize, ((numbPoints,1)))
     P = np.hstack((x,y))
@@ -25,5 +25,15 @@ def generateUsersPPP(areasize, lambda0):
     # plt.savefig('ppp.png')
 
 # if __name__ == '__main__':
-#      print(generateUsersPPP(50, 0.04))
+#     fig = plt.figure(1)
+
+#     for l in np.arange(0.01, 1, 0.01):
+#          x, y = generateUsersPPP(50, l)
+#          plt.scatter(x, y, edgecolor='b', facecolor='none', alpha=0.5)
+#          print(len(y))
+
+
+#     plt.xlabel("x")
+#     plt.ylabel("y")
+#     plt.show()
 

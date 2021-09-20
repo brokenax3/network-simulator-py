@@ -54,8 +54,8 @@ def energyUseDistribute(energystats, array):
         totalenergy = totalenergy + item[1]
 
         # Use average of last ten energy use history
-        if len(item[3]) > 10:
-            _data_energyuse = sum(item[3][-10:]) 
+        if len(item[3]) > 12:
+            _data_energyuse = sum(item[3][-12:]) 
         else:
             _data_energyuse = sum(item[3])
 
@@ -87,7 +87,13 @@ def energyArrivalDistribute(energystats, array):
 
     for item in energystats:
         totalenergy = totalenergy + item[1]
-        energyarrival.append([item[0],  item[2][-1]])
+
+        if len(item[2]) > 12:
+            _data_energyarrival = sum(item[2][-12:])
+        else:
+            _data_energyarrival = sum(item[2])
+
+        energyarrival.append([item[0], _data_energyarrival])
 
     energyarrival.sort(key=itemgetter(1))
 

@@ -73,6 +73,16 @@ def readGeneratedComponents():
 
     return _init_vars, _aplist, _usrlist, _usrlist_ppp
 
+def writeSimCache(filename, data):
+    with open('sim_cache/' + filename + '.data', 'wb') as file:
+        pickle.dump(data, file)
+
+def readSimCache(filename):
+    with open('sim_cache/' + filename + '.data', 'rb') as file:
+        data = pickle.load(file)
+    return data
+
+
 def genDescendUnitArray(llength, sel, ratio):
 
     if sel == 0:

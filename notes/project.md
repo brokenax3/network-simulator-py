@@ -109,29 +109,40 @@ When the number of users is low, no energy sharing resulted in the highest numbe
 
 # Plots
 
-Planned Plots
+## Planned Plots
 
-- Load Balancing Access Points
-    - X: Number of Access Points
-    - X: Number of Users
-- Impact of Geometric Series Ratio Energy Distribution
-    - X: Geometric Series Ratio
-- Poisson Point Process
-    - X: Lambda
-- Impact of Percentage of Energy Shared
-- Energy Distribution
-    - Efficiency
-    - Energy Use
-    - Energy Arrival
-    - Even Distribution
-- Transmission Policy
-    - Cheapest User
-    - Cheapest Users
-    - No Policy
-
-- Energy Share Budget on Total Number of Serviced Users
+1. Effect of Energy Sharing Budget Percentage
     - X: Percentage of Energy Shared
+    - Transmission Policies
+        - No Transmission Policy
+        - Cheapest Users
+2. Impact of Geometric Series Ratio for Energy Sharing
+    - X: Geometric Series Ratio
+    - Transmission Policies
+        - No Transmission Policy
+        - Cheapest Users
+3. Impact of Lambda of Poisson Point Process User Placement
+    - X: Lambda
     - Transmission Policies
         - No Transmission Policy
         - Cheapest User
         - Cheapest Users
+4. Impact of Load Balancing
+    - X: User Limit for each AP
+    - Transmission Policies
+        - No Transmission Policy
+        - Cheapest User
+        - Cheapest Users
+5. Effect of Maximum User Movement Distance
+    - X: User Movement Limit
+    - Transmission Policies
+        - No Transmission Policy
+        - Cheapest User
+        - Cheapest Users
+
+TODO: Test Poisson Point Process for different Lambda Values
+    
+
+        
+
+
