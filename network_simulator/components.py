@@ -300,10 +300,6 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
-        # Ensure dataframe validity
-        if SHARE_ENERGY == 5 and time_unit % SMART_PARAM[1] != 0:
-            continue
-
         if SHARE_ENERGY > 0 and ENERGY_BUDGET > 0:
 
             energybudget_list = []

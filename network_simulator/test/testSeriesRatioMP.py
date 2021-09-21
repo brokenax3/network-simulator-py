@@ -1,24 +1,23 @@
 from multiprocessing import Pool
-from progress.bar import Bar
 import matplotlib.pyplot as plt
+import numpy as np
+from progress.bar import Bar
 from network_simulator.components import simulator
-from network_simulator.helpers import writeSimCache, readSimCache
+from network_simulator.helpers import writeSimCache, readSimCache, genDescendUnitArray
 
 def main():
     return simulator(g_init_vars, g_aplist, g_usrlist)
 
-def loadBalancing(init_vars, aplist, usrlist):
+def seriesRatioMP(init_vars, aplist, usrlist):
     global g_init_vars, g_aplist, g_usrlist
 
     g_init_vars = init_vars
     g_aplist = aplist
     g_usrlist = usrlist
-    
+
     plot_from_saved = 0
+    geometric_ratio = np.arange(0.01, 0.99, 0.01)
     total_runs = range(20)
-
-    usr_limit = range(10, 50)
-
     _output = {}
 
     if plot_from_saved == 0:
@@ -65,29 +64,7 @@ def loadBalancing(init_vars, aplist, usrlist):
             }
         }
 
-        bar = Bar('Load Balancing (Multiprocessing)', max=len(_sim_dict_axes.values()) + 1)
-
-        init_vars["LOAD_BALANCE"] = 0
-
-        # Run once for no Load Balancing
-        for axes in _sim_dict_axes.values():
-
-            for param in ["ENERGY_POLICY", "SHARE_ENERGY"]:
-                init_vars[param] = axes[param]
-
-            _avg_serviced_users = []
-
-
-            pool = Pool(10)
-
-            _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
-
-            _avg_serviced_users = sum([result.get() for result in _serviced_users]) / len(total_runs)
-            _output[axes["param"] + "No Balancing"] = { "result" : [_avg_serviced_users]*len(usr_limit) }
-        bar.next()
-        init_vars["LOAD_BALANCE"] = 1
-
-
+        bar = Bar("Geometric Ratio MP" , max=len(_sim_dict_axes.values()))
         for axes in _sim_dict_axes.values():
             
             for param in ["ENERGY_POLICY", "SHARE_ENERGY"]:
@@ -95,8 +72,9 @@ def loadBalancing(init_vars, aplist, usrlist):
 
             _avg_serviced_users = []
 
-            for num in usr_limit:
-                init_vars["USR_LIMIT"] = num
+            for ratio in geometric_ratio:
+                init_vars["SERIES_RATIO"] = ratio
+                init_vars["descendunit_arr"] = genDescendUnitArray(init_vars["AP_TOTAL"], 1, init_vars["SERIES_RATIO"])
 
                 pool = Pool(10)
 
@@ -107,15 +85,17 @@ def loadBalancing(init_vars, aplist, usrlist):
             _output[axes["param"]] = { "result" : _avg_serviced_users }
             bar.next()
         bar.finish()
-        writeSimCache("LoadBalanceM", _output)
+
+        writeSimCache("GeometricRatioMP", _output)
     else:
-        _output = readSimCache("LoadBalanceM")
+        _output = readSimCache("GeometricRatioMP")
+
 
     plt.figure(1, dpi=600, figsize=[10, 8])
     # print(_output.items())
     for key, value in _output.items():
 
-        plt.plot(usr_limit, value["result"], label=key)
+        plt.plot(geometric_ratio, value["result"], label=key)
 
     ax = plt.subplot(111)
     box = ax.get_position()
@@ -123,10 +103,13 @@ def loadBalancing(init_vars, aplist, usrlist):
                      box.width, box.height * 0.9])
 
     plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=3, prop={"size": 9})
-    plt.xlabel("Access Point User Limit")
-    plt.ylabel("Total Number of Serviced Users")
-    plt.title("Impact of Access Point User Limit on Total Number of Serviced Users")
+    plt.xlabel('Geometric Ratio')
+    plt.ylabel('Total Number of Serviced Users')
+    plt.title('Impact of Geometric Ratio of Energy Allocation on Total Number of Serviced Users')
     plt.grid()
-    plt.ylim(5000, 30000)
+    plt.ylim(5000, 40000)
+
+    # plt.show()
 
     return plt
+

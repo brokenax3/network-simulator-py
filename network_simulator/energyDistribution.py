@@ -135,16 +135,21 @@ def evenDistribute(energystats):
 
 def smartDistribute(energystats, aplist, epsilon, dataframe):
 
-    energydistributed = []
-    distribution = []
+    # energydistributed = []
+    distribution = [[ap.id, 0] for ap in aplist]
 
     actions = multiArmBandit(aplist, epsilon, dataframe)
 
-    for action in actions:
-        energydistributed.append([action[0], energystats[action[1]][1]]) 
+    # for action in actions:
+    #     energydistributed.append([action[1], energystats[action[0]][1]]) 
+    energydistributed = [[action[1], energystats[action[0]][1]] for action in actions]
 
-    distribution = sorted(energydistributed, key=itemgetter(0))
+    sorted(energydistributed, key=itemgetter(0))
 
+
+    for distribute in energydistributed:
+        distribution[distribute[0]][1] += distribute[1] 
+        
     return distribution
 
 

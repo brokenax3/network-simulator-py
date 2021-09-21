@@ -1,6 +1,7 @@
 from random import randint, uniform
 import matplotlib.pyplot as plt
 from pathlib import Path
+from os import remove
 # from network_simulator.components import simulator
 from network_simulator.components import Location
 from network_simulator.components import AccessPoint
@@ -11,8 +12,11 @@ from network_simulator.test.testTransmissionPolicy import transmissionPolicyTest
 from network_simulator.test.testLoadBalancing import loadBalancing
 from network_simulator.test.testSeriesRatio import seriesRatio
 from network_simulator.test.testShareBudget import shareBudget
+from network_simulator.test.testMultiArmBandit import mab
+from network_simulator.test.testMultiProcessing import multiSimulation
+from network_simulator.test.testSeriesRatioMP import seriesRatioMP
 from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
-# from progress.bar import Bar
+
 
 def initVariable():
     """ Initilise starting variables
@@ -20,6 +24,12 @@ def initVariable():
     A dict is generated and modified as needed. This modified dict is passed into the simulator.
     Time unit 5 minutes.
     """
+
+    if Path("sim_cache/test/mabactionhistory.data").exists():
+        remove("sim_cache/test/mabactionhistory.data")
+
+    if Path("sim_cache/test/mabscorehistory.data").exists():
+        remove("sim_cache/test/mabscorehistory.data")
 
     init_vars = {
         "GRID_SIZE" : 50,
@@ -38,6 +48,7 @@ def initVariable():
         "LOAD_BALANCE" : 0,
         "USR_LIMIT" : 10,
         "SERIES_RATIO" : 0.2,
+        "SMART_PARAM" : [0.01, 12]
     }
 
     init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 0.001
@@ -72,6 +83,7 @@ def main():
     save = 0
 
     file = Path('generated/init_vars.data')
+
     if file.exists() and gen_vars == 0:
         # Read Generated Components from File
         init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
@@ -92,11 +104,17 @@ def main():
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    # plt_seriesratio = seriesRatio(init_vars, aplist, usrlist_ppp)
-    # plt_seriesratio.savefig('figures/seriesratio.png')
+    plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
+    plt_seriesratio.savefig('figures/seriesratiomp.png')
 
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-if __name__ == '__main__':
+    # plt_mab = mab(init_vars, aplist, usrlist_ppp)
+    # plt_mab.savefig('figures/mab.png')
+
+    # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
+    # plt_mp.savefig('figures/mpsharebudget.png')
+
+if __name__ == "__main__":
     main()

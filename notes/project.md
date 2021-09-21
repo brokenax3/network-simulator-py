@@ -139,6 +139,8 @@ When the number of users is low, no energy sharing resulted in the highest numbe
         - No Transmission Policy
         - Cheapest User
         - Cheapest Users
+6. Effect of Epsilon for Epsilon Greedy Multi Arm Bandit Algorithm
+    - X: Epsilon
 
 TODO: Test Poisson Point Process for different Lambda Values
     
