@@ -44,6 +44,7 @@ class AccessPoint:
         # Logging
         self.data_energyarrival = []
         self.data_energyuse = []
+        self.data_serviced_users = []
         self.data_energy_shared = []
 
         """ ap_userlist item
@@ -95,6 +96,9 @@ class AccessPoint:
 
             self.energy_consumed = energy_consumed
             self.service_counter = self.service_counter + serviced_users
+
+            # Log additional users serviced in each timeslot
+            self.data_serviced_users.append(serviced_users)
             if energy_consumed >= self.energy_store:
                 self.energy_store = 0
                 self.state = 0
@@ -238,7 +242,7 @@ def initialiseEnv(init_vars):
     """
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
-    global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET
+    global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET, SMART_PARAM
     global markovstates, descendunit_arr
 
     GRID_SIZE = init_vars["GRID_SIZE"]
@@ -255,6 +259,7 @@ def initialiseEnv(init_vars):
     LOAD_BALANCE = init_vars["LOAD_BALANCE"]
     USR_LIMIT = init_vars["USR_LIMIT"]
     ENERGY_BUDGET = init_vars["ENERGY_BUDGET"]
+    SMART_PARAM = init_vars["SMART_PARAM"]
 
 
     markovstates = init_vars["markov"]
@@ -295,6 +300,10 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
+        # Ensure dataframe validity
+        if SHARE_ENERGY == 5 and time_unit % SMART_PARAM[1] != 0:
+            continue
+
         if SHARE_ENERGY > 0 and ENERGY_BUDGET > 0:
 
             energybudget_list = []
@@ -303,8 +312,11 @@ def simulator(init_vars, in_aplist, in_usrlist):
                 energybudget = ap.energy_store * ENERGY_BUDGET
                 energybudget_list.append(energybudget)
                 ap.energy_store = ap.energy_store - energybudget
+
+                # Logging
+                ap.data_energy_shared.append(energybudget)
             
-            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list)
+            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM)
 
             for i, ap in enumerate(aplist):
                 # ap.energy_store = 0

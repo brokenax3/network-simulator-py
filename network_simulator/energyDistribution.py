@@ -11,6 +11,7 @@ energydistributed:
 ["id", "energyin"]
 """
 from operator import itemgetter
+from network_simulator.multiArmBandit import multiArmBandit
 
 def efficiencyDistribute(energystats, array):
     """ Distribute Energy based on efficiency of AP
@@ -132,6 +133,21 @@ def evenDistribute(energystats):
     return energydistributed
 
 
+def smartDistribute(energystats, aplist, epsilon, dataframe):
+
+    energydistributed = []
+    distribution = []
+
+    actions = multiArmBandit(aplist, epsilon, dataframe)
+
+    for action in actions:
+        energydistributed.append([action[0], energystats[action[1]][1]]) 
+
+    distribution = sorted(energydistributed, key=itemgetter(0))
+
+    return distribution
+
+
 def genEnergyStats(aplist, energybudget):
     
     energystats = []
@@ -144,7 +160,7 @@ def genEnergyStats(aplist, energybudget):
     return energystats
 
 
-def energyDistributeSel(aplist, sel, descendunit_arr, energybudget) -> list[list[int]]:
+def energyDistributeSel(aplist, sel, descendunit_arr, energybudget, smart_param) -> list[list[int]]:
 
     # Generate energystats
     energystats = genEnergyStats(aplist, energybudget)
@@ -157,6 +173,11 @@ def energyDistributeSel(aplist, sel, descendunit_arr, energybudget) -> list[list
         energydistributed = energyUseDistribute(energystats, descendunit_arr)
     elif sel == 4:
         energydistributed = efficiencyDistribute(energystats, descendunit_arr)
+    elif sel == 5:
+        epsilon = smart_param[0]
+        dataframe = smart_param[1]
+
+        energydistributed = smartDistribute(energystats, aplist, epsilon, dataframe)
     else:
         energydistributed = [[0, 0]*len(aplist)]
 

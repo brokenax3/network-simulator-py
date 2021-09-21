@@ -82,7 +82,6 @@ def readSimCache(filename):
         data = pickle.load(file)
     return data
 
-
 def genDescendUnitArray(llength, sel, ratio):
 
     if sel == 0:

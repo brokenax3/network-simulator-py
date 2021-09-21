@@ -69,6 +69,7 @@ def main():
     Set to 0 to use existing parameters.
     """
     gen_vars = 0
+    save = 0
 
     file = Path('generated/init_vars.data')
     if file.exists() and gen_vars == 0:
@@ -77,23 +78,23 @@ def main():
     elif gen_vars == 1:
         # Generate Components to File
         init_vars, aplist, usrlist, usrlist_ppp = initVariable()
-        writeGeneratedComponents(init_vars, aplist, usrlist, usrlist_ppp)
+
+        if save == 1:
+            writeGeneratedComponents(init_vars, aplist, usrlist, usrlist_ppp)
     else:
         print("File does not exist and gen_vars = {}".format(gen_vars))
         exit()
 
-    plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
-    plt_poltest.savefig('figures/transmissionpolicy.png')
+    # plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
+    # plt_poltest.savefig('figures/transmissionpolicy.png')
 
     # plt.figure(2, dpi=600, figsize=[10, 12])
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    # plt.figure(3, dpi=600, figsize=[10, 12])
     # plt_seriesratio = seriesRatio(init_vars, aplist, usrlist_ppp)
     # plt_seriesratio.savefig('figures/seriesratio.png')
 
-    # plt.figure(4, dpi=1000, figsize=[100, 100])
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
