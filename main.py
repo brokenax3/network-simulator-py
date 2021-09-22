@@ -15,6 +15,7 @@ from network_simulator.test.testShareBudget import shareBudget
 from network_simulator.test.testMultiArmBandit import mab
 from network_simulator.test.testMultiProcessing import multiSimulation
 from network_simulator.test.testSeriesRatioMP import seriesRatioMP
+from network_simulator.test.testMultiArmBanditMP import mabMP
 from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
 
 
@@ -104,14 +105,14 @@ def main():
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
-    plt_seriesratio.savefig('figures/seriesratiomp.png')
+    # plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
+    # plt_seriesratio.savefig('figures/seriesratiomp.png')
 
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-    # plt_mab = mab(init_vars, aplist, usrlist_ppp)
-    # plt_mab.savefig('figures/mab.png')
+    plt_mab = mabMP(init_vars, aplist, usrlist_ppp)
+    plt_mab.savefig('figures/mab_epsilongreedyMP.png')
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')

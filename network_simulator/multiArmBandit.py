@@ -15,7 +15,6 @@ action_history = [[apid, targeted_ap] ... ]
 returns a list of actions
 """
 def epsilonGreedy(history, epsilon):
-    length = len(history.keys())
     _list_target_ap = []
     # print("running ep greedy")
     # print(history)
@@ -27,6 +26,7 @@ def epsilonGreedy(history, epsilon):
         # Unpack values
 
         if explore == 1 or history[_apid]["action"].get("now") == None:
+            length = len(history.keys())
 
             # Create a list of potential candidates (Cannot be itself)
             _choices = list(range(length))
@@ -55,60 +55,35 @@ def epsilonGreedy(history, epsilon):
     return _list_target_ap, history
 
 
-# def ucb1(score_ap):
+def ucb1(history):
+    # length = len(history.keys())
 
-# def multiArmBandit(aplist, epsilon, dataframe):
+    _list_target_ap = []
 
-#     _mab_score_cache = "test/mabscorehistory"
-#     _mab_action_cache = "test/mabactionhistory"
+    for _apid in history.keys():
+        _score = [[key, value] for key, value in history[_apid]["score"]["mean-ucb"].items()]
+        # print(_score)
 
-#     _list_target_ap = []
+        best_score = sorted(_score, key=itemgetter(1), reverse=True)
+        target_ap = best_score[0][0]
 
-#     if Path("sim_cache/test/mabscorehistory.data").exists() and Path("sim_cache/test/mabactionhistory.data").exists():
-#         score_history = readSimCache(_mab_score_cache)
-#         action_history = readSimCache(_mab_action_cache)
+        # Save history and increment counter
+        history[_apid]["action"]["now"] = target_ap
+        _prev_count = history[_apid]["action"]["count"][target_ap]
+        # print(_prev_count)
+        history[_apid]["action"]["count"][target_ap] = _prev_count + 1 
 
-#         inc_serviced_users = [ap.data_serviced_users[-dataframe:] for ap in aplist]
-#         # print(inc_serviced_users)
-#         # print(score_history)
+        _list_target_ap.append([_apid, target_ap])
 
-#         for history in action_history:
+    sorted(_list_target_ap, key=itemgetter(0))
+    # print(_list_target_ap)
 
-#             # Get score from increase of serviced users due to my choice
-#             _my_score = inc_serviced_users[history[1]]
-#             # print(history)
-#             # print(_my_score)
+    return _list_target_ap, history
 
-#             # Update score history with new data
-#             score_history[history[0]][1][history[1]] += sum(_my_score)
-#             _my_score_history = score_history[history[0]]
 
-#             _list_target_ap.append([history[0], epsilonGreedy(_my_score_history, epsilon, len(aplist))])
-#     else:
-#         # Create empty score history
-#         score_history = []
-
-#         for ap in aplist:
-#             # Generate an list of apids without the current one
-#             _empty_scores = list(range(len(aplist)))
-#             _empty_scores.remove(ap.id)
-
-#             _list_empty_scores = {}
-#             for _empty_score in _empty_scores:
-#                 _list_empty_scores[_empty_score] = 0
-
-#             score_history.append([ap.id, _list_empty_scores])
-
-#             _list_target_ap.append([ap.id, epsilonGreedy([ap.id, {}], epsilon, len(aplist))])
-
-#     # Cache Scores and Action
-#     writeSimCache(_mab_score_cache, score_history)
-#     writeSimCache(_mab_action_cache, _list_target_ap)
-
-#     return _list_target_ap
-
-def updateHistory(time, aplist, dataframe):
+def updateHistory(time, aplist, dataframe, sel, param):
     _mab_history = "test/_mab_history"
+
     # Create empty history dict when time == 1
     if time == 1:
         history = {}
@@ -126,15 +101,18 @@ def updateHistory(time, aplist, dataframe):
             history[_apid]["action"]["count"] = {}
             history[_apid]["score"]["list"] = {}
             history[_apid]["score"]["mean"] = {}
+            history[_apid]["score"]["mean-ucb"] = {}
 
             for target in _empty_history:
 
                 history[_apid]["action"]["count"][target] = 0
                 history[_apid]["score"]["list"][target] = []
                 history[_apid]["score"]["mean"][target] = 0
+                history[_apid]["score"]["mean-ucb"][target] = 0
 
     else:
-        history = readSimCache(_mab_history)
+        # history = readSimCache(_mab_history)
+        history = _history
 
         # list of increase in serviced users
         inc_serviced_users = [ap.data_serviced_users[-dataframe:] for ap in aplist]
@@ -152,25 +130,53 @@ def updateHistory(time, aplist, dataframe):
             history[_action[0]]["score"]["list"][_action[1]].append(sum(_my_score))
             history[_action[0]]["score"]["mean"][_action[1]] = mean(_prev_scores)
 
+            if sel == 1:
+                if time == 2:
+                    for i, item in enumerate(inc_serviced_users):
+                        if i == _action[0]:
+                            continue
+                        history[_action[0]]["score"]["list"][i].append(sum(item))
+                        history[_action[0]]["score"]["mean-ucb"][i] = sum(item) 
+
+                _my_count = history[_action[0]]["action"]["count"][_action[1]]
+                _prev_scores_dist = mean(_prev_scores) / 115
+                _ucb_scale = param["ucbscale"]
+
+                history[_action[0]]["score"]["mean-ucb"][_action[1]] = _prev_scores_dist + np.sqrt(
+                        ((_ucb_scale * np.log10(time)) / _my_count))
+
+
     return history
 
 
 def multiArmBanditSel(sel, time, param, aplist):
+    global _history
     _mab_history = "test/_mab_history"
 
     dataframe = param["dataframe"]
 
-    _history = updateHistory(time, aplist, dataframe)
+    _history = updateHistory(time, aplist, dataframe, sel, param)
     
     if sel == 0:
         epsilon = param["epsilon"]
-        _list_target, _new_history = epsilonGreedy(_history, epsilon)
+        _list_target, _history = epsilonGreedy(_history, epsilon)
+
+    elif sel == 1:
+        _list_target, _history = ucb1(_history)
+
+        # if time == 50:
+        #     print(_history)
+        #     exit()
+
     else:
-        _new_history = _history
+        # _new_history = _history
         _list_target = [[apid, 0] for apid in range(len(aplist))]
     # print(_new_history)
 
-    writeSimCache(_mab_history, _new_history)
+    # for ap in aplist:
+    #     print(ap.data_serviced_users)
+
+    # writeSimCache(_mab_history, _new_history)
 
     return _list_target
 

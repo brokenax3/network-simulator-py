@@ -8,6 +8,7 @@ from network_simulator.helpers import writeSimCache, readSimCache, genDescendUni
 def main():
     return simulator(g_init_vars, g_aplist, g_usrlist)
 
+
 def seriesRatioMP(init_vars, aplist, usrlist):
     global g_init_vars, g_aplist, g_usrlist
 

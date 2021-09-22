@@ -300,7 +300,14 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
+
         if SHARE_ENERGY > 0 and ENERGY_BUDGET > 0:
+
+            # if SHARE_ENERGY == 6 and time_unit < 20:
+            #     energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, [0]*len(aplist), SMART_PARAM, time_unit)
+            #     print("skipping timeslots")
+            #     print(energydistributed)
+            #     continue
 
             energybudget_list = []
             # Allocate Energy Sharing Budget
