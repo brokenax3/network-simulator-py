@@ -312,7 +312,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
                 # Logging
                 ap.data_energy_shared.append(energybudget)
             
-            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM)
+            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM, time_unit)
 
             for i, ap in enumerate(aplist):
                 # ap.energy_store = 0

@@ -6,7 +6,7 @@ from network_simulator.helpers import writeSimCache, readSimCache
 
 def mab(init_vars, aplist, usrlist):
 
-    total_runs = range(20)
+    total_runs = range(1)
     init_vars["SHARE_ENERGY"] = 5
     init_vars["SMART_PARAM"] = [0.05, 2]
     epsilons = np.arange(0.01, 0.5, 0.01)
@@ -29,6 +29,7 @@ def mab(init_vars, aplist, usrlist):
     plt.figure(1)
     plt.plot(epsilons, avg_serviced_user_mab)
     plt.show()
-    # simulator(init_vars, aplist, usrlist)
+
+    # print(simulator(init_vars, aplist, usrlist))
 
     return plt

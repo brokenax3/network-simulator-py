@@ -141,6 +141,7 @@ When the number of users is low, no energy sharing resulted in the highest numbe
         - Cheapest Users
 6. Effect of Epsilon for Epsilon Greedy Multi Arm Bandit Algorithm
     - X: Epsilon
+7. Comparison between Fixed Energy Sharing Algorithms and Smart Energy Sharing Algorithms
 
 TODO: Test Poisson Point Process for different Lambda Values
     
