@@ -14,7 +14,7 @@ def loadBalancing(init_vars, aplist, usrlist):
     g_aplist = aplist
     g_usrlist = usrlist
     
-    plot_from_saved = 0
+    plot_from_saved = 1
     total_runs = range(20)
 
     usr_limit = range(10, 50)
@@ -111,7 +111,7 @@ def loadBalancing(init_vars, aplist, usrlist):
     else:
         _output = readSimCache("LoadBalanceM")
 
-    plt.figure(1, dpi=600, figsize=[10, 8])
+    plt.figure(1, dpi=600, figsize=[12, 12])
     # print(_output.items())
     for key, value in _output.items():
 
@@ -127,6 +127,6 @@ def loadBalancing(init_vars, aplist, usrlist):
     plt.ylabel("Total Number of Serviced Users")
     plt.title("Impact of Access Point User Limit on Total Number of Serviced Users")
     plt.grid()
-    plt.ylim(5000, 30000)
+    plt.ylim(1000, 30000)
 
     return plt

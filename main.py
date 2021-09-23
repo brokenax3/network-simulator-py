@@ -101,9 +101,9 @@ def main():
     # plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
     # plt_poltest.savefig('figures/transmissionpolicy.png')
 
-    # plt.figure(2, dpi=600, figsize=[10, 12])
-    # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
-    # plt_loadbalance.savefig('figures/loadbalance.png')
+    plt.figure(2, dpi=600, figsize=[10, 12])
+    plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
+    plt_loadbalance.savefig('figures/loadbalance.png')
 
     # plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
     # plt_seriesratio.savefig('figures/seriesratiomp.png')
@@ -111,8 +111,8 @@ def main():
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-    plt_mab = mabMP(init_vars, aplist, usrlist_ppp)
-    plt_mab.savefig('figures/mab_epsilongreedyMP.png')
+    # plt_mab = mabMP(init_vars, aplist, usrlist_ppp)
+    # plt_mab.savefig('figures/mab_epsilongreedyMP.png')
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')

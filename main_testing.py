@@ -111,7 +111,7 @@ def main():
     # plt_budgettest.savefig('figures/sharebudget.png')
 
     plt_mabtest = mab(init_vars, aplist, usrlist_ppp)
-    # plt_mab.savefig('figures/mab.png')
+    plt_mabtest.savefig('figures/mab-ucb.png')
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
