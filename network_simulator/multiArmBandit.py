@@ -116,18 +116,21 @@ def updateHistory(time, aplist, dataframe, sel, param):
 
         # list of increase in serviced users
         inc_serviced_users = [ap.data_serviced_users[-dataframe:] for ap in aplist]
+        # print(inc_serviced_users)
 
         _prev_actionlist = [[key, history[key]["action"]["now"]] for key in history.keys()]
+        # print(_prev_actionlist)
 
         for _action in _prev_actionlist:
 
             # Find the effect of my decision
             _my_score = inc_serviced_users[_action[1]]
             # print()
-            # print(_action)
+            # print(_my_score)
             _prev_scores = history[_action[0]]["score"]["list"][_action[1]]
 
             history[_action[0]]["score"]["list"][_action[1]].append(sum(_my_score))
+            # history[_action[0]]["score"]["list"][_action[1]] = _my_score
             history[_action[0]]["score"]["mean"][_action[1]] = mean(_prev_scores)
 
             if sel == 1:
@@ -137,6 +140,7 @@ def updateHistory(time, aplist, dataframe, sel, param):
                             continue
                         history[_action[0]]["score"]["list"][i].append(sum(item))
                         history[_action[0]]["score"]["mean-ucb"][i] = sum(item) 
+                # print(_prev_scores)
 
                 _my_count = history[_action[0]]["action"]["count"][_action[1]]
                 _prev_scores_dist = mean(_prev_scores) / 115
@@ -164,7 +168,7 @@ def multiArmBanditSel(sel, time, param, aplist):
     elif sel == 1:
         _list_target, _history = ucb1(_history)
 
-        # if time == 50:
+        # if time == 5:
         #     print(_history)
         #     exit()
 
