@@ -16,15 +16,12 @@ returns a list of actions
 """
 def epsilonGreedy(history, epsilon):
     _list_target_ap = []
-    # print("running ep greedy")
-    # print(history)
 
     for _apid in history.keys():
 
         explore = np.random.binomial(1, epsilon)
         
         # Unpack values
-
         if explore == 1 or history[_apid]["action"].get("now") == None:
             length = len(history.keys())
 
@@ -56,13 +53,12 @@ def epsilonGreedy(history, epsilon):
 
 
 def ucb1(history):
-    # length = len(history.keys())
 
     _list_target_ap = []
+    # print(history)
 
     for _apid in history.keys():
         _score = [[key, value] for key, value in history[_apid]["score"]["mean-ucb"].items()]
-        # print(_score)
 
         best_score = sorted(_score, key=itemgetter(1), reverse=True)
         target_ap = best_score[0][0]
@@ -76,119 +72,111 @@ def ucb1(history):
         _list_target_ap.append([_apid, target_ap])
 
     sorted(_list_target_ap, key=itemgetter(0))
-    # print(_list_target_ap)
 
     return _list_target_ap, history
 
 
-def updateHistory(time, aplist, dataframe, sel, param):
-    _mab_history = "test/_mab_history"
+def updateHistory(history, time, aplist, dataframe, sel, param):
+    # history = readSimCache(_mab_history)
+    # history = _history
 
-    # Create empty history dict when time == 1
-    if time == 1:
-        history = {}
-        num_ap = len(aplist)
-        
-        for _apid in range(num_ap):
-            history[_apid] = {"action" : {},
-                    "score" : {}
-                    }
+    # list of increase in serviced users
+    inc_serviced_users = [ap.data_serviced_users[-dataframe:] for ap in aplist]
 
-            # Create an array without the current apid
-            _empty_history = list(range(num_ap))
-            _empty_history.remove(_apid)
+    if sel == 0 and time == 1:
+        return history
 
-            history[_apid]["action"]["count"] = {}
-            history[_apid]["score"]["list"] = {}
-            history[_apid]["score"]["mean"] = {}
-            history[_apid]["score"]["mean-ucb"] = {}
+    if sel == 1 and time == 1:
+        for _apid in history.keys():
+            for key in history[_apid]["action"]["count"].keys():
+                history[_apid]["action"]["count"][key] += 1
+                history[_apid]["score"]["list"][key].append(mean(inc_serviced_users[key]))
+                history[_apid]["score"]["mean"][key] = mean(inc_serviced_users[key])
+                history[_apid]["score"]["mean-ucb"][key] = mean(inc_serviced_users[key]) / 115
 
-            for target in _empty_history:
+        return history
 
-                history[_apid]["action"]["count"][target] = 0
-                history[_apid]["score"]["list"][target] = []
-                history[_apid]["score"]["mean"][target] = 0
-                history[_apid]["score"]["mean-ucb"][target] = 0
+    # Keep the last 5 scores when the list is too long
+    if len(history[0]["score"]["list"][1]) == 48:
 
-    else:
-        # history = readSimCache(_mab_history)
-        history = _history
+        for _apid in history.keys():
+            for key in history[_apid]["action"]["count"].keys():
+                history[_apid]["score"]["list"][key] = history[_apid]["score"]["list"][key][-5:]
 
-        # list of increase in serviced users
-        inc_serviced_users = [ap.data_serviced_users[-dataframe:] for ap in aplist]
-        # print(inc_serviced_users)
+    for _apid in history.keys():
 
-        _prev_actionlist = [[key, history[key]["action"]["now"]] for key in history.keys()]
-        # print(_prev_actionlist)
+        _prev_target = history[_apid]["action"]["now"]
+        _new_score = inc_serviced_users[_prev_target]
+        history[_apid]["score"]["list"][_prev_target].append(mean(_new_score))
 
-        for _action in _prev_actionlist:
+        _scores = history[_apid]["score"]["list"][_prev_target]
+        # print(_scores)
 
-            # Find the effect of my decision
-            _my_score = inc_serviced_users[_action[1]]
-            # print()
-            # print(_my_score)
-            _prev_scores = history[_action[0]]["score"]["list"][_action[1]]
+        # Calculate new mean
+        history[_apid]["score"]["mean"][_prev_target] = sum(_scores) / len(_scores)
 
-            history[_action[0]]["score"]["list"][_action[1]].append(sum(_my_score))
-            # history[_action[0]]["score"]["list"][_action[1]] = _my_score
-            history[_action[0]]["score"]["mean"][_action[1]] = mean(_prev_scores)
+        # Calculate UCB Mean
+        if sel == 1:
+            _ucb_scale = param["ucbscale"]
 
-            if sel == 1:
-                if time == 2:
-                    for i, item in enumerate(inc_serviced_users):
-                        if i == _action[0]:
-                            continue
-                        history[_action[0]]["score"]["list"][i].append(sum(item))
-                        history[_action[0]]["score"]["mean-ucb"][i] = sum(item) 
-                # print(_prev_scores)
+            for item in history[_apid]["score"]["mean-ucb"].keys():
+                _my_count = history[_apid]["action"]["count"][item]
 
-                _my_count = history[_action[0]]["action"]["count"][_action[1]]
-                _prev_scores_dist = mean(_prev_scores) / 115
-                _ucb_scale = param["ucbscale"]
-
-                history[_action[0]]["score"]["mean-ucb"][_action[1]] = _prev_scores_dist + np.sqrt(
-                        ((_ucb_scale * np.log10(time)) / _my_count))
-
+                history[_apid]["score"]["mean-ucb"][item] = (history[_apid]["score"]["mean"][item]) / 115 + np.sqrt(
+                    ((_ucb_scale * np.log10(time)) / _my_count))
 
     return history
 
 
-def multiArmBanditSel(sel, time, param, aplist):
-    global _history
-    _mab_history = "test/_mab_history"
+def generateHistory(length):
+    _history = {}
+    
+    for _apid in range(length):
+        _history[_apid] = { 
+            "action" : { 
+                "count" : {},
+                "now" : None
+            },
+            "score" : { 
+                "list" : {},
+                "mean" : {},
+                "mean-ucb" : {}
+            }
+        }
+
+        # Create an array without the current apid
+        _empty_history = list(range(length))
+        _empty_history.remove(_apid)
+
+        for target in _empty_history:
+
+            _history[_apid]["action"]["count"][target] = 0
+            _history[_apid]["score"]["list"][target] = []
+            _history[_apid]["score"]["mean"][target] = 0
+            _history[_apid]["score"]["mean-ucb"][target] = 0
+
+    return _history
+
+
+def multiArmBanditSel(sel, time, param, aplist, history):
 
     dataframe = param["dataframe"]
 
-    _history = updateHistory(time, aplist, dataframe, sel, param)
+    _history = updateHistory(history, time, aplist, dataframe, sel, param)
+
     
     if sel == 0:
         epsilon = param["epsilon"]
         _list_target, _history = epsilonGreedy(_history, epsilon)
-
     elif sel == 1:
         _list_target, _history = ucb1(_history)
-
-        # if time == 5:
-        #     print(_history)
-        #     exit()
-
     else:
         # _new_history = _history
         _list_target = [[apid, 0] for apid in range(len(aplist))]
-    # print(_new_history)
 
-    # for ap in aplist:
-    #     print(ap.data_serviced_users)
+    # if time == 100:
+    #     print(history)
 
-    # writeSimCache(_mab_history, _new_history)
+    #     exit()
+    return _list_target, _history
 
-    return _list_target
-
-
-# if __name__ == "__main__":
-
-#     print("Multiarm Bandit")
-
-#     for run in range(100):
-#         target = epsilonGreedy(0, [0, 1, 2, 3], 0.15)
-#         print(target)

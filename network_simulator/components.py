@@ -6,6 +6,7 @@ from .helpers import calcDistance
 from .discreteMarkov import energyArrivalOutput
 from .energyPolicy import energyPolicy
 from .energyDistribution import energyDistributeSel
+from .multiArmBandit import generateHistory
 
 class Location:
     def __init__(self, x, y):
@@ -261,12 +262,13 @@ def initialiseEnv(init_vars):
     ENERGY_BUDGET = init_vars["ENERGY_BUDGET"]
     SMART_PARAM = init_vars["SMART_PARAM"]
 
-
     markovstates = init_vars["markov"]
     descendunit_arr = init_vars["descendunit_arr"]
 
-    # Create Markov states
-    # markovstates = energyArrivalStates(TIME_MAX)
+    _history = generateHistory(AP_TOTAL)
+
+    return _history
+
 
 def simulator(init_vars, in_aplist, in_usrlist):
     """ Main simulator loop
@@ -277,7 +279,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
     usrlist = deepcopy(in_usrlist)
     aplist = deepcopy(in_aplist)
 
-    initialiseEnv(init_vars)
+    _history = initialiseEnv(init_vars)
     service_count = []
 
     for time_unit in range(0, TIME_MAX + 1):
@@ -303,12 +305,6 @@ def simulator(init_vars, in_aplist, in_usrlist):
 
         if SHARE_ENERGY > 0 and ENERGY_BUDGET > 0:
 
-            # if SHARE_ENERGY == 6 and time_unit < 20:
-            #     energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, [0]*len(aplist), SMART_PARAM, time_unit)
-            #     print("skipping timeslots")
-            #     print(energydistributed)
-            #     continue
-
             energybudget_list = []
             # Allocate Energy Sharing Budget
             for ap in aplist:
@@ -319,10 +315,9 @@ def simulator(init_vars, in_aplist, in_usrlist):
                 # Logging
                 ap.data_energy_shared.append(energybudget)
             
-            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM, time_unit)
+            energydistributed, _history = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM, time_unit, _history)
 
             for i, ap in enumerate(aplist):
-                # ap.energy_store = 0
                 tmpdistenergy = energydistributed[i][1]
                 # print(tmpdistenergy)
                 ap.energy_store = ap.energy_store + tmpdistenergy

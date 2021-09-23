@@ -16,6 +16,7 @@ from network_simulator.test.testMultiArmBandit import mab
 from network_simulator.test.testMultiProcessing import multiSimulation
 from network_simulator.test.testSeriesRatioMP import seriesRatioMP
 from network_simulator.test.testMultiArmBanditMP import mabMP
+from network_simulator.test.testAlgorithmCompare import algorithmCompare
 from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
 
 
@@ -101,9 +102,9 @@ def main():
     # plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
     # plt_poltest.savefig('figures/transmissionpolicy.png')
 
-    plt.figure(2, dpi=600, figsize=[10, 12])
-    plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
-    plt_loadbalance.savefig('figures/loadbalance.png')
+    # plt.figure(2, dpi=600, figsize=[10, 12])
+    # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
+    # plt_loadbalance.savefig('figures/loadbalance.png')
 
     # plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
     # plt_seriesratio.savefig('figures/seriesratiomp.png')
@@ -116,6 +117,9 @@ def main():
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
+
+    plt_compare = algorithmCompare(init_vars, aplist, usrlist_ppp)
+    plt_compare.savefig('figures/algorithmcompare.png')
 
 if __name__ == "__main__":
     main()
