@@ -1,6 +1,7 @@
 from random import randint, uniform
 import matplotlib.pyplot as plt
 from pathlib import Path
+from os import remove
 # from network_simulator.components import simulator
 from network_simulator.components import Location
 from network_simulator.components import AccessPoint
@@ -11,8 +12,13 @@ from network_simulator.test.testTransmissionPolicy import transmissionPolicyTest
 from network_simulator.test.testLoadBalancing import loadBalancing
 from network_simulator.test.testSeriesRatio import seriesRatio
 from network_simulator.test.testShareBudget import shareBudget
+from network_simulator.test.testMultiArmBandit import mab
+from network_simulator.test.testMultiProcessing import multiSimulation
+from network_simulator.test.testSeriesRatioMP import seriesRatioMP
+from network_simulator.test.testMultiArmBanditMP import mabMP
+from network_simulator.test.testAlgorithmCompare import algorithmCompare
 from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
-# from progress.bar import Bar
+
 
 def initVariable():
     """ Initilise starting variables
@@ -20,6 +26,12 @@ def initVariable():
     A dict is generated and modified as needed. This modified dict is passed into the simulator.
     Time unit 5 minutes.
     """
+
+    # if Path("sim_cache/test/mabactionhistory.data").exists():
+    #     remove("sim_cache/test/mabactionhistory.data")
+
+    # if Path("sim_cache/test/mabscorehistory.data").exists():
+    #     remove("sim_cache/test/mabscorehistory.data")
 
     init_vars = {
         "GRID_SIZE" : 50,
@@ -30,7 +42,7 @@ def initVariable():
         "AP_TOTAL" : 5,
         "USR_TOTAL" : 100,
         "POWER_RECEIVED_DBM" : -70, 
-        "TIME_MAX" : 8064,
+        "TIME_MAX" : 48384,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
@@ -38,6 +50,7 @@ def initVariable():
         "LOAD_BALANCE" : 0,
         "USR_LIMIT" : 10,
         "SERIES_RATIO" : 0.2,
+        "SMART_PARAM" : [0.01, 12]
     }
 
     init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 0.001
@@ -68,34 +81,45 @@ def main():
 
     Set to 0 to use existing parameters.
     """
-    gen_vars = 0
+    gen_vars = 1
+    save = 1
 
     file = Path('generated/init_vars.data')
+
     if file.exists() and gen_vars == 0:
         # Read Generated Components from File
         init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     elif gen_vars == 1:
         # Generate Components to File
         init_vars, aplist, usrlist, usrlist_ppp = initVariable()
-        writeGeneratedComponents(init_vars, aplist, usrlist, usrlist_ppp)
+
+        if save == 1:
+            writeGeneratedComponents(init_vars, aplist, usrlist, usrlist_ppp)
     else:
         print("File does not exist and gen_vars = {}".format(gen_vars))
         exit()
 
-    plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
-    plt_poltest.savefig('figures/transmissionpolicy.png')
+    # plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
+    # plt_poltest.savefig('figures/transmissionpolicy.png')
 
     # plt.figure(2, dpi=600, figsize=[10, 12])
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    # plt.figure(3, dpi=600, figsize=[10, 12])
-    # plt_seriesratio = seriesRatio(init_vars, aplist, usrlist_ppp)
-    # plt_seriesratio.savefig('figures/seriesratio.png')
+    # plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
+    # plt_seriesratio.savefig('figures/seriesratiomp.png')
 
-    # plt.figure(4, dpi=1000, figsize=[100, 100])
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-if __name__ == '__main__':
+    # plt_mab = mabMP(init_vars, aplist, usrlist_ppp)
+    # plt_mab.savefig('figures/mab_epsilongreedyMP.png')
+
+    # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
+    # plt_mp.savefig('figures/mpsharebudget.png')
+
+    plt_compare = algorithmCompare(init_vars, aplist, usrlist_ppp)
+    plt_compare.savefig('figures/algorithmcompare.png')
+
+if __name__ == "__main__":
     main()

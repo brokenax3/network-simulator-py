@@ -6,6 +6,7 @@ from .helpers import calcDistance
 from .discreteMarkov import energyArrivalOutput
 from .energyPolicy import energyPolicy
 from .energyDistribution import energyDistributeSel
+from .multiArmBandit import generateHistory
 
 class Location:
     def __init__(self, x, y):
@@ -44,6 +45,7 @@ class AccessPoint:
         # Logging
         self.data_energyarrival = []
         self.data_energyuse = []
+        self.data_serviced_users = []
         self.data_energy_shared = []
 
         """ ap_userlist item
@@ -95,6 +97,9 @@ class AccessPoint:
 
             self.energy_consumed = energy_consumed
             self.service_counter = self.service_counter + serviced_users
+
+            # Log additional users serviced in each timeslot
+            self.data_serviced_users.append(serviced_users)
             if energy_consumed >= self.energy_store:
                 self.energy_store = 0
                 self.state = 0
@@ -238,7 +243,7 @@ def initialiseEnv(init_vars):
     """
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
-    global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET
+    global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET, SMART_PARAM
     global markovstates, descendunit_arr
 
     GRID_SIZE = init_vars["GRID_SIZE"]
@@ -255,13 +260,15 @@ def initialiseEnv(init_vars):
     LOAD_BALANCE = init_vars["LOAD_BALANCE"]
     USR_LIMIT = init_vars["USR_LIMIT"]
     ENERGY_BUDGET = init_vars["ENERGY_BUDGET"]
-
+    SMART_PARAM = init_vars["SMART_PARAM"]
 
     markovstates = init_vars["markov"]
     descendunit_arr = init_vars["descendunit_arr"]
 
-    # Create Markov states
-    # markovstates = energyArrivalStates(TIME_MAX)
+    _history = generateHistory(AP_TOTAL)
+
+    return _history
+
 
 def simulator(init_vars, in_aplist, in_usrlist):
     """ Main simulator loop
@@ -272,7 +279,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
     usrlist = deepcopy(in_usrlist)
     aplist = deepcopy(in_aplist)
 
-    initialiseEnv(init_vars)
+    _history = initialiseEnv(init_vars)
     service_count = []
 
     for time_unit in range(0, TIME_MAX + 1):
@@ -295,6 +302,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
+
         if SHARE_ENERGY > 0 and ENERGY_BUDGET > 0:
 
             energybudget_list = []
@@ -303,11 +311,13 @@ def simulator(init_vars, in_aplist, in_usrlist):
                 energybudget = ap.energy_store * ENERGY_BUDGET
                 energybudget_list.append(energybudget)
                 ap.energy_store = ap.energy_store - energybudget
+
+                # Logging
+                ap.data_energy_shared.append(energybudget)
             
-            energydistributed = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list)
+            energydistributed, _history = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM, time_unit, _history)
 
             for i, ap in enumerate(aplist):
-                # ap.energy_store = 0
                 tmpdistenergy = energydistributed[i][1]
                 # print(tmpdistenergy)
                 ap.energy_store = ap.energy_store + tmpdistenergy

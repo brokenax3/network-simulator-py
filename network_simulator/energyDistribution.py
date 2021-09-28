@@ -11,6 +11,7 @@ energydistributed:
 ["id", "energyin"]
 """
 from operator import itemgetter
+from network_simulator.multiArmBandit import multiArmBanditSel
 
 def efficiencyDistribute(energystats, array):
     """ Distribute Energy based on efficiency of AP
@@ -132,6 +133,25 @@ def evenDistribute(energystats):
     return energydistributed
 
 
+def smartDistribute(energystats, aplist, sel, param, time, history):
+
+    # energydistributed = []
+    distribution = [[ap.id, 0] for ap in aplist]
+
+    actions, _history = multiArmBanditSel(sel, time, param, aplist, history)
+    # for action in actions:
+    #     energydistributed.append([action[1], energystats[action[0]][1]]) 
+    energydistributed = [[action[1], energystats[action[0]][1]] for action in actions]
+
+    sorted(energydistributed, key=itemgetter(0))
+
+
+    for distribute in energydistributed:
+        distribution[distribute[0]][1] += distribute[1] 
+        
+    return distribution, _history
+
+
 def genEnergyStats(aplist, energybudget):
     
     energystats = []
@@ -144,7 +164,7 @@ def genEnergyStats(aplist, energybudget):
     return energystats
 
 
-def energyDistributeSel(aplist, sel, descendunit_arr, energybudget) -> list[list[int]]:
+def energyDistributeSel(aplist, sel, descendunit_arr, energybudget, smart_param, time, history):
 
     # Generate energystats
     energystats = genEnergyStats(aplist, energybudget)
@@ -157,10 +177,23 @@ def energyDistributeSel(aplist, sel, descendunit_arr, energybudget) -> list[list
         energydistributed = energyUseDistribute(energystats, descendunit_arr)
     elif sel == 4:
         energydistributed = efficiencyDistribute(energystats, descendunit_arr)
+    elif sel == 5:
+        param = { "epsilon" : smart_param[0],
+                "dataframe": smart_param[1]
+                }
+
+        energydistributed, history = smartDistribute(energystats, aplist, 0, param, time, history)
+    elif sel == 6:
+        param = {
+                "ucbscale" : smart_param[0],
+                "dataframe": smart_param[1]
+                }
+
+        energydistributed, history = smartDistribute(energystats, aplist, 1, param, time, history)
     else:
         energydistributed = [[0, 0]*len(aplist)]
 
-    return energydistributed
+    return energydistributed, history
 
 
 

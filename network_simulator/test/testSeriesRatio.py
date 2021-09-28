@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from progress.bar import Bar
 from network_simulator.components import simulator
-from network_simulator.helpers import writeSimCache, readSimCache
+from network_simulator.helpers import writeSimCache, readSimCache, genDescendUnitArray
 
 def seriesRatio(init_vars, aplist, usrlist):
 
@@ -49,9 +49,9 @@ def seriesRatio(init_vars, aplist, usrlist):
             "SHARE_ENERGY" : 4,
         }
     }
-
     total_runs = np.arange(20)
     geometric_ratio = np.arange(0.01, 0.99, 0.01)
+    init_vars["ENERGY_BUDGET"] = 0.03
 
     if plot_from_saved == 0:
         for axes in _sim_dict_axes.values():
@@ -67,6 +67,7 @@ def seriesRatio(init_vars, aplist, usrlist):
 
             for ratio in geometric_ratio:
                 init_vars["SERIES_RATIO"] = ratio
+                init_vars["descendunit_arr"] = genDescendUnitArray(init_vars["AP_TOTAL"], 1, init_vars["SERIES_RATIO"])
             
                 serviced_users = []
 
@@ -81,14 +82,20 @@ def seriesRatio(init_vars, aplist, usrlist):
             print("\nTotal Serviced Users " + axes["param"] + "{}".format(avg_serviced))
             writeSimCache("GeometricRatio" + axes["param"].replace(" ",""), avg_serviced)
 
-    plot = plt.figure(1)
+    plt.figure(1, dpi=600, figsize=[10, 8])
     for axes in _sim_dict_axes.values():
         avg_serviced = readSimCache("GeometricRatio" + axes["param"].replace(" ",""))
         plt.plot(geometric_ratio, avg_serviced, label=axes["param"])
 
-    plt.legend()
+    ax = plt.subplot(111)
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0 + box.height * 0.1,
+                     box.width, box.height * 0.9])
+
+    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=3, prop={"size": 9})
     plt.xlabel('Geometric Ratio')
     plt.ylabel('Total Number of Serviced Users')
     plt.title('Impact of Geometric Ratio for Energy Sharing on Total Number of Serviced Users')
+    plt.grid()
 
     return plt

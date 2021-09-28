@@ -78,13 +78,13 @@ def shareBudget(init_vars, aplist, usrlist):
 
             bar.finish()
             print("\nTotal Serviced Users " + axes["param"] + "{}".format(avg_serviced))
-            writeSimCache(axes["param"], avg_serviced)
+            writeSimCache("ShareBudget" + axes["param"].replace(" ",""), avg_serviced)
 
     plt.figure(1, dpi=600, figsize=[10, 8])
     for axes in _sim_dict_axes.values():
         # if axes["param"] == "Cheapest Users - Share Evenly" or axes["param"] == "No Transmission Policy - Share Evenly":
         #     continue
-        avg_serviced = readSimCache(axes["param"])
+        avg_serviced = readSimCache("ShareBudget" + axes["param"].replace(" ",""))
         plt.plot(sharebudget, avg_serviced, label=axes["param"])
 
     ax = plt.subplot(111)

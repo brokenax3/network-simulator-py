@@ -64,12 +64,12 @@ def readGeneratedComponents():
         _usrlist_ppp = pickle.load(file)
 
     # Unpack some vars to show simulation parameters
-    print('\033[1;31mRunning Simulation with these parameters:\033[0;0m')
-    for key, value in _init_vars.items():
-        if key != "markov":
-            print('    \033[1;32m {}\033[0;0m : {}'.format(key, value))
+    # print('\033[1;31mRunning Simulation with these parameters:\033[0;0m')
+    # for key, value in _init_vars.items():
+    #     if key != "markov":
+    #         print('    \033[1;32m {}\033[0;0m : {}'.format(key, value))
 
-    print('Read Generated Components from Binary File.')
+    # print('Read Generated Components from Binary File.')
 
     return _init_vars, _aplist, _usrlist, _usrlist_ppp
 
@@ -81,7 +81,6 @@ def readSimCache(filename):
     with open('sim_cache/' + filename + '.data', 'rb') as file:
         data = pickle.load(file)
     return data
-
 
 def genDescendUnitArray(llength, sel, ratio):
 
