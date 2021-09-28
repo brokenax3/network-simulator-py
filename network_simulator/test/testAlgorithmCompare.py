@@ -17,7 +17,7 @@ def algorithmCompare(init_vars, aplist, usrlist):
     g_usrlist = usrlist
 
 
-    plot_from_saved = 0
+    plot_from_saved = 1
     total_runs = range(20)
     sharebudget = np.arange(0, 1.01, 0.01)
     _output = {}

@@ -81,8 +81,8 @@ def main():
 
     Set to 0 to use existing parameters.
     """
-    gen_vars = 1
-    save = 1
+    gen_vars = 0
+    save = 0
 
     file = Path('generated/init_vars.data')
 

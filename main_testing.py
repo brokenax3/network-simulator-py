@@ -15,6 +15,7 @@ from network_simulator.test.testShareBudget import shareBudget
 from network_simulator.test.testMultiArmBandit import mab
 from network_simulator.test.testMultiProcessing import multiSimulation
 from network_simulator.test.testSeriesRatioMP import seriesRatioMP
+from network_simulator.test.testPartialRuns import algorithmCompare 
 from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
 
 
@@ -110,11 +111,13 @@ def main():
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-    plt_mabtest = mab(init_vars, aplist, usrlist_ppp)
-    plt_mabtest.savefig('figures/mab-ucb.png')
+    # plt_mabtest = mab(init_vars, aplist, usrlist_ppp)
+    # plt_mabtest.savefig('figures/mab-ucb.png')
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
+
+    algorithmCompare(init_vars, aplist, usrlist_ppp)
 
 if __name__ == "__main__":
     main()
