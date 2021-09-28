@@ -27,11 +27,11 @@ def initVariable():
     Time unit 5 minutes.
     """
 
-    if Path("sim_cache/test/mabactionhistory.data").exists():
-        remove("sim_cache/test/mabactionhistory.data")
+    # if Path("sim_cache/test/mabactionhistory.data").exists():
+    #     remove("sim_cache/test/mabactionhistory.data")
 
-    if Path("sim_cache/test/mabscorehistory.data").exists():
-        remove("sim_cache/test/mabscorehistory.data")
+    # if Path("sim_cache/test/mabscorehistory.data").exists():
+    #     remove("sim_cache/test/mabscorehistory.data")
 
     init_vars = {
         "GRID_SIZE" : 50,
@@ -42,7 +42,7 @@ def initVariable():
         "AP_TOTAL" : 5,
         "USR_TOTAL" : 100,
         "POWER_RECEIVED_DBM" : -70, 
-        "TIME_MAX" : 8064,
+        "TIME_MAX" : 48384,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
@@ -81,8 +81,8 @@ def main():
 
     Set to 0 to use existing parameters.
     """
-    gen_vars = 0
-    save = 0
+    gen_vars = 1
+    save = 1
 
     file = Path('generated/init_vars.data')
 

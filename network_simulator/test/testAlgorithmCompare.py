@@ -1,5 +1,6 @@
 from multiprocessing import Pool
-from progress.bar import Bar
+# from progress.bar import Bar
+import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from network_simulator.components import simulator
@@ -58,7 +59,8 @@ def algorithmCompare(init_vars, aplist, usrlist):
 
     if plot_from_saved == 0:
         
-        bar = Bar("Algorithms" , max=len(_sim_dict_axes.keys()))
+        # bar = Bar("Algorithms" , max=len(_sim_dict_axes.keys()))
+        bar = tqdm.tqdm(total=len(_sim_dict_axes.keys()))
 
         for axes in _sim_dict_axes.values():
             print("Algorithms " + axes["param"])
@@ -74,14 +76,16 @@ def algorithmCompare(init_vars, aplist, usrlist):
             for ratio in sharebudget:
                 init_vars["ENERGY_BUDGET"] = ratio
 
-                pool = Pool(10)
+                pool = Pool()
                 _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
 
                 _avg_serviced_users.append(sum([result.get() for result in _serviced_users]) / len(total_runs))
 
             _output[axes["param"]] = { "result" : _avg_serviced_users }
-            bar.next()
-        bar.finish()
+            bar.update(1)
+            pool.close()
+            pool.join()
+        bar.close()
 
         _output["x-axis"] = { 
             "label" : "Share Budget",
@@ -95,7 +99,8 @@ def algorithmCompare(init_vars, aplist, usrlist):
     plt.figure(1, dpi=600, figsize=[10, 8])
 
     for key, value in _output.items():
-        plt.plot(_output["x-axis"]["values"], value["result"], label=key)
+        if value.get("result") != None:
+            plt.plot(_output["x-axis"]["values"], value["result"], label=key)
 
     ax = plt.subplot(111)
     box = ax.get_position()
