@@ -1,7 +1,8 @@
 from multiprocessing import Pool
 import matplotlib.pyplot as plt
 import numpy as np
-from progress.bar import Bar
+import tqdm
+# from progress.bar import Bar
 from network_simulator.components import simulator
 from network_simulator.helpers import writeSimCache, readSimCache, genDescendUnitArray
 
@@ -64,8 +65,9 @@ def seriesRatioMP(init_vars, aplist, usrlist):
                 "SHARE_ENERGY" : 4,
             }
         }
+        bar = tqdm.tqdm(total=len(_sim_dict_axes.keys()) * len(geometric_ratio))
 
-        bar = Bar("Geometric Ratio MP" , max=len(_sim_dict_axes.values()))
+        # bar = Bar("Geometric Ratio MP" , max=len(_sim_dict_axes.values()))
         for axes in _sim_dict_axes.values():
             
             for param in ["ENERGY_POLICY", "SHARE_ENERGY"]:
@@ -82,10 +84,12 @@ def seriesRatioMP(init_vars, aplist, usrlist):
                 _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
 
                 _avg_serviced_users.append(sum([result.get() for result in _serviced_users]) / len(total_runs))
+                bar.update(1)
+                pool.close()
+                pool.join()
 
             _output[axes["param"]] = { "result" : _avg_serviced_users }
-            bar.next()
-        bar.finish()
+        bar.close()
 
         writeSimCache("GeometricRatioMP", _output)
     else:
@@ -108,7 +112,7 @@ def seriesRatioMP(init_vars, aplist, usrlist):
     plt.ylabel('Total Number of Serviced Users')
     plt.title('Impact of Geometric Ratio of Energy Allocation on Total Number of Serviced Users')
     plt.grid()
-    plt.ylim(5000, 40000)
+    # plt.ylim(5000, 40000)
 
     # plt.show()
 

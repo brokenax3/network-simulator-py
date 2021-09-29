@@ -17,7 +17,7 @@ from network_simulator.test.testMultiProcessing import multiSimulation
 from network_simulator.test.testSeriesRatioMP import seriesRatioMP
 from network_simulator.test.testMultiArmBanditMP import mabMP
 from network_simulator.test.testAlgorithmCompare import algorithmCompare
-from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
+from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents, genUserMovementLoc
 
 
 def initVariable():
@@ -67,10 +67,13 @@ def initVariable():
 
     # Generating Users using Possion Point Process Placment
     usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
+    init_vars["usr_mov_loc_ppp"] = genUserMovementLoc(len(usr_x), init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 1, [usr_x, usr_y]) 
+
     gen_usrlist_ppp = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
 
     # Generating Users using Randint Placment
-    gen_usrlist = [User(index, Location(uniform(0, GRID_SIZE), uniform(0, GRID_SIZE))) for index in range(USR_TOTAL)]
+    init_vars["usr_mov_loc"] = genUserMovementLoc(USR_TOTAL, init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 0, [0, 0]) 
+    gen_usrlist = [User(index, Location(init_vars["usr_mov_loc"][index][0][0], init_vars["usr_mov_loc"][index][0][1])) for index in range(USR_TOTAL)]
 
     return init_vars, gen_aplist, gen_usrlist, gen_usrlist_ppp
 
@@ -81,7 +84,7 @@ def main():
 
     Set to 0 to use existing parameters.
     """
-    gen_vars = 0
+    gen_vars = 1
     save = 0
 
     file = Path('generated/init_vars.data')
@@ -106,8 +109,8 @@ def main():
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    # plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
-    # plt_seriesratio.savefig('figures/seriesratiomp.png')
+    plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
+    plt_seriesratio.savefig('figures/seriesratiomp.png')
 
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
@@ -118,8 +121,8 @@ def main():
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
 
-    plt_compare = algorithmCompare(init_vars, aplist, usrlist_ppp)
-    plt_compare.savefig('figures/algorithmcompare.png')
+    # plt_compare = algorithmCompare(init_vars, aplist, usrlist_ppp)
+    # plt_compare.savefig('figures/algorithmcompare.png')
 
 if __name__ == "__main__":
     main()

@@ -202,29 +202,9 @@ class User:
             return active_ap_list_sorted
 
     # Move the user to a new location
-    def moveUser(self):
-        # Generate two random movement numbers
-        n1 = randint(-DIST_MOVEUSER_MAX, DIST_MOVEUSER_MAX)
-        n2 = randint(-DIST_MOVEUSER_MAX, DIST_MOVEUSER_MAX)
-
-        # Store the old location
-        # oldloc = self.location
-
-        # Attempt to move the self to the new location
-        # For x coordinate
-        if(self.location.x + n1 > GRID_SIZE):
-            self.location.x = -(GRID_SIZE - self.location.x + n1 - GRID_SIZE)
-        elif(self.location.x + n1 < 0):
-            self.location.x = -(self.location.x + n1)
-        else:
-            self.location.x = self.location.x + n1
-        # For y coordinate
-        if(self.location.y + n2 > GRID_SIZE):
-            self.location.y = -(GRID_SIZE - self.location.y + n2 - GRID_SIZE)
-        elif(self.location.y + n2 < 0):
-            self.location.y = -(self.location.y + n2)
-        else:
-            self.location.y = self.location.y + n2
+    def moveUser(self, time):
+        self.location.x = usr_mov_loc[self.id][time][0]
+        self.location.y = usr_mov_loc[self.id][time][1]
 
     def getLoc(self):
         return [self.location.x, self.location.y]
@@ -244,7 +224,7 @@ def initialiseEnv(init_vars):
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
     global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET, SMART_PARAM
-    global markovstates, descendunit_arr
+    global markovstates, descendunit_arr, usr_mov_loc
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
@@ -264,11 +244,11 @@ def initialiseEnv(init_vars):
 
     markovstates = init_vars["markov"]
     descendunit_arr = init_vars["descendunit_arr"]
+    usr_mov_loc = init_vars["usr_mov_loc_ppp"]
 
     _history = generateHistory(AP_TOTAL)
 
     return _history
-
 
 def simulator(init_vars, in_aplist, in_usrlist):
     """ Main simulator loop
@@ -287,7 +267,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
             continue
 
         for user in usrlist:
-            user.moveUser()
+            user.moveUser(time_unit)
             user.connectAP(aplist)
 
         for ap in aplist:
@@ -299,6 +279,10 @@ def simulator(init_vars, in_aplist, in_usrlist):
             ap.charge(tmpenergy if tmpenergy > 0 else 0)
 
             # Logging
+            # if len(ap.data_energyuse) == 1000:
+            #     ap.data_energyuse = ap.data_energyuse[-24:].append(ap.energy_consumed)
+            #     ap.data_energyarrival = ap.data_energyarrival[-24:].append(tmpenergy if tmpenergy > 0 else 0)
+
             ap.data_energyuse.append(ap.energy_consumed)
             ap.data_energyarrival.append(tmpenergy if tmpenergy > 0 else 0)
 
@@ -313,7 +297,7 @@ def simulator(init_vars, in_aplist, in_usrlist):
                 ap.energy_store = ap.energy_store - energybudget
 
                 # Logging
-                ap.data_energy_shared.append(energybudget)
+                # ap.data_energy_shared.append(energybudget)
             
             energydistributed, _history = energyDistributeSel(aplist, SHARE_ENERGY, descendunit_arr, energybudget_list, SMART_PARAM, time_unit, _history)
 

@@ -2,10 +2,12 @@ from random import randint, uniform
 import matplotlib.pyplot as plt
 from pathlib import Path
 from os import remove
+import cProfile
 # from network_simulator.components import simulator
 from network_simulator.components import Location
 from network_simulator.components import AccessPoint
 from network_simulator.components import User
+from network_simulator.components import simulator
 from network_simulator.poissonPointProcess import generateUsersPPP
 from network_simulator.discreteMarkov import energyArrivalStates
 from network_simulator.test.testTransmissionPolicy import transmissionPolicyTest
@@ -15,8 +17,9 @@ from network_simulator.test.testShareBudget import shareBudget
 from network_simulator.test.testMultiArmBandit import mab
 from network_simulator.test.testMultiProcessing import multiSimulation
 from network_simulator.test.testSeriesRatioMP import seriesRatioMP
-from network_simulator.test.testPartialRuns import algorithmCompare 
-from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents
+# from network_simulator.test.testPartialRuns import algorithmCompare 
+from network_simulator.test.testAlgorithmCompare import algorithmCompare 
+from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents, genUserMovementLoc
 
 
 def initVariable():
@@ -66,10 +69,15 @@ def initVariable():
 
     # Generating Users using Possion Point Process Placment
     usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
+    init_vars["usr_mov_loc_ppp"] = genUserMovementLoc(len(usr_x), init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 1, [usr_x, usr_y]) 
+    # print(init_vars["usr_mov_loc_ppp"])
+
     gen_usrlist_ppp = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
 
+    init_vars["usr_mov_loc"] = genUserMovementLoc(USR_TOTAL, init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 0, [0, 0]) 
     # Generating Users using Randint Placment
-    gen_usrlist = [User(index, Location(uniform(0, GRID_SIZE), uniform(0, GRID_SIZE))) for index in range(USR_TOTAL)]
+    gen_usrlist = [User(index, Location(init_vars["usr_mov_loc"][index][0][0], init_vars["usr_mov_loc"][index][0][1])) for index in range(USR_TOTAL)]
+
 
     return init_vars, gen_aplist, gen_usrlist, gen_usrlist_ppp
 
@@ -80,7 +88,7 @@ def main():
 
     Set to 0 to use existing parameters.
     """
-    gen_vars = 0
+    gen_vars = 1
     save = 0
 
     file = Path('generated/init_vars.data')
@@ -116,8 +124,10 @@ def main():
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
+    # cProfile.run(algorithmCompare(init_vars, aplist, usrlist_ppp))
 
     algorithmCompare(init_vars, aplist, usrlist_ppp)
+    # print(simulator(init_vars, aplist, usrlist_ppp))
 
 if __name__ == "__main__":
     main()

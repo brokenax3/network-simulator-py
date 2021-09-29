@@ -154,10 +154,12 @@ def smartDistribute(energystats, aplist, sel, param, time, history):
 
 def genEnergyStats(aplist, energybudget):
     
-    energystats = []
+    # energystats = []
 
-    for ap in aplist:
-        energystats.append([ap.id, energybudget[ap.id], ap.data_energyarrival, ap.data_energyuse, ap.service_counter])
+    energystats = [[ap.id, energybudget[ap.id], ap.data_energyarrival, ap.data_energyuse, ap.service_counter] for ap in aplist]
+
+    # for ap in aplist:
+    #     energystats.append([ap.id, energybudget[ap.id], ap.data_energyarrival, ap.data_energyuse, ap.service_counter])
 
     # print(energystats)
 

@@ -17,7 +17,7 @@ def algorithmCompare(init_vars, aplist, usrlist):
     g_usrlist = usrlist
 
 
-    plot_from_saved = 1
+    plot_from_saved = 0
     total_runs = range(20)
     sharebudget = np.arange(0, 1.01, 0.01)
     _output = {}
@@ -60,7 +60,7 @@ def algorithmCompare(init_vars, aplist, usrlist):
     if plot_from_saved == 0:
         
         # bar = Bar("Algorithms" , max=len(_sim_dict_axes.keys()))
-        bar = tqdm.tqdm(total=len(_sim_dict_axes.keys()))
+        bar = tqdm.tqdm(total=len(_sim_dict_axes.keys()) * len(sharebudget))
 
         for axes in _sim_dict_axes.values():
             print("Algorithms " + axes["param"])
@@ -83,8 +83,8 @@ def algorithmCompare(init_vars, aplist, usrlist):
 
             _output[axes["param"]] = { "result" : _avg_serviced_users }
             bar.update(1)
-            pool.close()
-            pool.join()
+            # pool.close()
+            # pool.join()
         bar.close()
 
         _output["x-axis"] = { 
@@ -112,7 +112,7 @@ def algorithmCompare(init_vars, aplist, usrlist):
     plt.ylabel("Total Number of Serviced Users")
     plt.title("Impact of Energy Sharing Budget on Total Number of Serviced Users")
     plt.grid()
-    plt.ylim(5000, 40000)
+    # plt.ylim(5000, 40000)
 
     return plt
 

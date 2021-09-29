@@ -1,4 +1,5 @@
 from math import sqrt
+import numpy as np
 import datetime
 import pickle
 from . import envs
@@ -98,3 +99,62 @@ def genDescendUnitArray(llength, sel, ratio):
         array = [item / sum_tmp_array for item in tmp_array]
 
         return array
+
+
+def movementGiveCoord(movement, coordinate, GRID_SIZE):
+    n1 = movement[0]
+    n2 = movement[1]
+
+    new_coordinate = [0, 0]
+
+    if(coordinate[0] + n1 > GRID_SIZE):
+        new_coordinate[0] = GRID_SIZE + (GRID_SIZE - (coordinate[0] + n1))
+    elif(coordinate[0] + n1 < 0):
+        new_coordinate[0] = -(coordinate[0] + n1)
+    else:
+        new_coordinate[0] = coordinate[0] + n1
+    # For y coordinate
+    if(coordinate[1] + n2 > GRID_SIZE):
+        new_coordinate[1] = GRID_SIZE + (GRID_SIZE - (coordinate[1] + n2))
+    elif(coordinate[1] + n2 < 0):
+        new_coordinate[1] = -(coordinate[1] + n2)
+    else:
+        new_coordinate[1] = coordinate[1] + n2
+    
+    return new_coordinate
+
+
+def genUserMovementLoc(length, time, limit, GRID_SIZE, ppp, pppcoord):
+    _loc = []
+    time = time + 1
+
+    if ppp == 0:
+        # Starting Coordinates for Users
+        _x_start = np.random.uniform(0, GRID_SIZE, size=length)
+        _y_start = np.random.uniform(0, GRID_SIZE, size=length)
+    else: 
+        _x_start = pppcoord[0]
+        _y_start = pppcoord[1]
+
+    _coord_start = list(zip(_x_start, _y_start))
+    # print(_coord_start)
+    
+    _loc = [list(zip(np.random.uniform(-limit, limit, size=time), np.random.uniform(-limit, limit, size=time))) for item in range(length)] 
+
+    _new_coord_u = {}
+    for item in range(length):
+        _new_coord_u[item] = []
+
+    for i, _coord in enumerate(_coord_start):
+        _new_coord = [[_coord[0], _coord[1]]]
+        for t in range(time):
+            _new_coord.append(movementGiveCoord(_loc[i][t], _new_coord[-1:][0], GRID_SIZE))
+        _new_coord_u[i] = _new_coord
+
+    # for item in _new_coord_u:
+    #     print(item[0])
+
+    return _new_coord_u
+
+# if __name__ == "__main__":
+#     print(genUserMovementLoc(5, 10, 10, 30, 0, [0, 0]))
