@@ -1,4 +1,5 @@
 from random import randint, uniform
+from copy import deepcopy
 import matplotlib.pyplot as plt
 from pathlib import Path
 from os import remove
@@ -42,7 +43,7 @@ def initVariable():
         "AP_TOTAL" : 5,
         "USR_TOTAL" : 100,
         "POWER_RECEIVED_DBM" : -70, 
-        "TIME_MAX" : 48384,
+        "TIME_MAX" : 8064,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
@@ -84,7 +85,7 @@ def main():
 
     Set to 0 to use existing parameters.
     """
-    gen_vars = 1
+    gen_vars = 0
     save = 0
 
     file = Path('generated/init_vars.data')
@@ -109,19 +110,19 @@ def main():
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    plt_seriesratio = seriesRatioMP(init_vars, aplist, usrlist_ppp)
+    plt_seriesratio = seriesRatioMP(deepcopy(init_vars), aplist, usrlist_ppp)
     plt_seriesratio.savefig('figures/seriesratiomp.png')
 
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-    # plt_mab = mabMP(init_vars, aplist, usrlist_ppp)
-    # plt_mab.savefig('figures/mab_epsilongreedyMP.png')
+    plt_mab = mabMP(deepcopy(init_vars), aplist, usrlist_ppp)
+    plt_mab.savefig('figures/mab_epsilongreedyMP.png')
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
 
-    # plt_compare = algorithmCompare(init_vars, aplist, usrlist_ppp)
+    # plt_compare = algorithmCompare(deepcopy(init_vars), aplist, usrlist_ppp)
     # plt_compare.savefig('figures/algorithmcompare.png')
 
 if __name__ == "__main__":

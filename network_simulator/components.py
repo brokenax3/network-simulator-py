@@ -1,3 +1,4 @@
+import gc
 from random import randint
 from copy import deepcopy
 from operator import itemgetter
@@ -307,5 +308,9 @@ def simulator(init_vars, in_aplist, in_usrlist):
                 ap.energy_store = ap.energy_store + tmpdistenergy
 
     [service_count.append(ap.service_counter) for ap in aplist]
+
+    del usrlist
+    del aplist
+    gc.collect()
 
     return sum(service_count)

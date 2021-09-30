@@ -142,10 +142,7 @@ When the number of users is low, no energy sharing resulted in the highest numbe
 6. Effect of Epsilon for Epsilon Greedy Multi Arm Bandit Algorithm
     - X: Epsilon
 7. Comparison between Fixed Energy Sharing Algorithms and Smart Energy Sharing Algorithms
-
-TODO: Test Poisson Point Process for different Lambda Values
-    
-
-        
-
-
+    - X: Energy Sharing Budget
+8. Effect of total simulation time on the performance of Algorithms.
+9. Impact of total number of users
+10. 

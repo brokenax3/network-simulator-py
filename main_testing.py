@@ -124,7 +124,6 @@ def main():
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
-    # cProfile.run(algorithmCompare(init_vars, aplist, usrlist_ppp))
 
     algorithmCompare(init_vars, aplist, usrlist_ppp)
     # print(simulator(init_vars, aplist, usrlist_ppp))

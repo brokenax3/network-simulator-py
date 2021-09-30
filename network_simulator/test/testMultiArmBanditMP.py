@@ -1,7 +1,8 @@
 from multiprocessing import Pool
 import matplotlib.pyplot as plt
 import numpy as np
-from progress.bar import Bar
+# from progress.bar import Bar
+import tqdm
 from network_simulator.components import simulator
 from network_simulator.helpers import writeSimCache, readSimCache
 
@@ -38,11 +39,17 @@ def mabMP(init_vars, aplist, usrlist):
                 "ENERGY_BUDGET" : 0.6,
                 "ENERGY_POLICY" : 2,
             },
+            "axes4" : {
+                "param" : "Epsilon Greedy - Budget @ 0.9",
+                "ENERGY_BUDGET" : 0.9,
+                "ENERGY_POLICY" : 2,
+            },
         }
 
         init_vars["SHARE_ENERGY"] = 5
+        bar = tqdm.tqdm(total=len(_sim_dict_axes.keys()) * len(epsilons))
 
-        bar = Bar("MultiArmBandit Epsilon Greedy" , max=len(epsilons))
+        # bar = Bar("MultiArmBandit Epsilon Greedy" , max=len(epsilons))
         for axes in _sim_dict_axes.values():
             
             for param in ["ENERGY_POLICY", "ENERGY_BUDGET"]:
@@ -58,10 +65,12 @@ def mabMP(init_vars, aplist, usrlist):
                 _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
 
                 _avg_serviced_users.append(sum([result.get() for result in _serviced_users]) / len(total_runs))
-            bar.next()
+                bar.update(1)
+                pool.close()
+                pool.join()
 
             _output[axes["param"]] = { "result" : _avg_serviced_users }
-        bar.finish()
+        bar.close()
 
         writeSimCache("epsilonGreedyMAB", _output)
     else:

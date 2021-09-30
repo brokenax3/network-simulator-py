@@ -22,6 +22,7 @@ def seriesRatioMP(init_vars, aplist, usrlist):
     total_runs = range(20)
     _output = {}
 
+
     if plot_from_saved == 0:
         _sim_dict_axes = {
             "axes1" : {
