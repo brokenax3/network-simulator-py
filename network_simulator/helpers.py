@@ -157,4 +157,4 @@ def genUserMovementLoc(length, time, limit, GRID_SIZE, ppp, pppcoord):
     return _new_coord_u
 
 # if __name__ == "__main__":
-#     print(genUserMovementLoc(5, 10, 10, 30, 0, [0, 0]))
+#     genUserMovementLoc(5, 8064, 5, 50, 0, [0, 0])

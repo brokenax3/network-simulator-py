@@ -19,7 +19,7 @@ def seriesRatioMP(init_vars, aplist, usrlist):
 
     plot_from_saved = 0
     geometric_ratio = np.arange(0.01, 0.99, 0.01)
-    total_runs = range(20)
+    total_runs = range(10)
     _output = {}
 
 

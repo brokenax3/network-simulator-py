@@ -43,7 +43,7 @@ def initVariable():
         "AP_TOTAL" : 5,
         "USR_TOTAL" : 100,
         "POWER_RECEIVED_DBM" : -70, 
-        "TIME_MAX" : 8064,
+        "TIME_MAX" : 24192,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
@@ -68,13 +68,15 @@ def initVariable():
 
     # Generating Users using Possion Point Process Placment
     usr_x, usr_y = generateUsersPPP(GRID_SIZE, USR_TOTAL / GRID_SIZE / GRID_SIZE)
-    init_vars["usr_mov_loc_ppp"] = genUserMovementLoc(len(usr_x), init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 1, [usr_x, usr_y]) 
+    init_vars["coord_start_x"] = usr_x 
+    init_vars["coord_start_y"] = usr_y 
+    # init_vars["usr_mov_loc_ppp"] = genUserMovementLoc(len(usr_x), init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 1, [usr_x, usr_y]) 
 
     gen_usrlist_ppp = [User(i, Location(usr_x[i], usr_y[i])) for i in range(len(usr_x))]
 
     # Generating Users using Randint Placment
-    init_vars["usr_mov_loc"] = genUserMovementLoc(USR_TOTAL, init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 0, [0, 0]) 
-    gen_usrlist = [User(index, Location(init_vars["usr_mov_loc"][index][0][0], init_vars["usr_mov_loc"][index][0][1])) for index in range(USR_TOTAL)]
+    usr_mov_loc = genUserMovementLoc(USR_TOTAL, init_vars["TIME_MAX"], init_vars["DIST_MOVEUSER_MAX"], init_vars["GRID_SIZE"], 0, [0, 0]) 
+    gen_usrlist = [User(index, Location(usr_mov_loc[index][0][0], usr_mov_loc[index][0][1])) for index in range(USR_TOTAL)]
 
     return init_vars, gen_aplist, gen_usrlist, gen_usrlist_ppp
 
@@ -110,20 +112,20 @@ def main():
     # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
     # plt_loadbalance.savefig('figures/loadbalance.png')
 
-    plt_seriesratio = seriesRatioMP(deepcopy(init_vars), aplist, usrlist_ppp)
-    plt_seriesratio.savefig('figures/seriesratiomp.png')
+    # plt_seriesratio = seriesRatioMP(deepcopy(init_vars), aplist, usrlist_ppp)
+    # plt_seriesratio.savefig('figures/seriesratiomp.png')
 
     # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
     # plt_budgettest.savefig('figures/sharebudget.png')
 
-    plt_mab = mabMP(deepcopy(init_vars), aplist, usrlist_ppp)
-    plt_mab.savefig('figures/mab_epsilongreedyMP.png')
+    # plt_mab = mabMP(deepcopy(init_vars), aplist, usrlist_ppp)
+    # plt_mab.savefig('figures/mab_epsilongreedyMP.png')
 
     # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
     # plt_mp.savefig('figures/mpsharebudget.png')
 
-    # plt_compare = algorithmCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # plt_compare.savefig('figures/algorithmcompare.png')
+    plt_compare = algorithmCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    plt_compare.savefig('figures/algorithmcompare3mth.png')
 
 if __name__ == "__main__":
     main()

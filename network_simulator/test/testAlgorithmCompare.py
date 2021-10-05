@@ -76,15 +76,16 @@ def algorithmCompare(init_vars, aplist, usrlist):
             for ratio in sharebudget:
                 init_vars["ENERGY_BUDGET"] = ratio
 
-                pool = Pool()
+                pool = Pool(10)
                 _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
 
                 _avg_serviced_users.append(sum([result.get() for result in _serviced_users]) / len(total_runs))
+                bar.update(1)
+                pool.close()
+                pool.join()
 
             _output[axes["param"]] = { "result" : _avg_serviced_users }
-            bar.update(1)
-            # pool.close()
-            # pool.join()
+
         bar.close()
 
         _output["x-axis"] = { 

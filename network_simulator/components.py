@@ -3,7 +3,7 @@ from random import randint
 from copy import deepcopy
 from operator import itemgetter
 from . import envs
-from .helpers import calcDistance
+from .helpers import calcDistance, genUserMovementLoc
 from .discreteMarkov import energyArrivalOutput
 from .energyPolicy import energyPolicy
 from .energyDistribution import energyDistributeSel
@@ -204,8 +204,8 @@ class User:
 
     # Move the user to a new location
     def moveUser(self, time):
-        self.location.x = usr_mov_loc[self.id][time][0]
-        self.location.y = usr_mov_loc[self.id][time][1]
+        self.location.x = usr_mov_loc_sim[self.id][time][0]
+        self.location.y = usr_mov_loc_sim[self.id][time][1]
 
     def getLoc(self):
         return [self.location.x, self.location.y]
@@ -225,7 +225,7 @@ def initialiseEnv(init_vars):
 
     global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
     global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET, SMART_PARAM
-    global markovstates, descendunit_arr, usr_mov_loc
+    global markovstates, descendunit_arr, usr_mov_loc_sim
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
@@ -245,9 +245,10 @@ def initialiseEnv(init_vars):
 
     markovstates = init_vars["markov"]
     descendunit_arr = init_vars["descendunit_arr"]
-    usr_mov_loc = init_vars["usr_mov_loc_ppp"]
+    # usr_mov_loc = init_vars["usr_mov_loc_ppp"]
 
     _history = generateHistory(AP_TOTAL)
+    usr_mov_loc_sim = genUserMovementLoc(len(init_vars["coord_start_x"]), TIME_MAX, DIST_MOVEUSER_MAX, GRID_SIZE, 1, [init_vars["coord_start_x"], init_vars["coord_start_y"]]) 
 
     return _history
 
