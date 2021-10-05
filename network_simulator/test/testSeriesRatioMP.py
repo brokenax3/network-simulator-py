@@ -1,4 +1,5 @@
 from multiprocessing import Pool
+from bokeh.plotting import figure, show
 import matplotlib.pyplot as plt
 import numpy as np
 import tqdm
@@ -96,26 +97,12 @@ def seriesRatioMP(init_vars, aplist, usrlist):
     else:
         _output = readSimCache("GeometricRatioMP")
 
+    p = figure(x_axis_label='Geometric Ratio', y_axis_label='Total Number of Serviced Users')
 
-    plt.figure(1, dpi=600, figsize=[10, 8])
-    # print(_output.items())
     for key, value in _output.items():
+        p.line(geometric_ratio, value["result"], legend_label=key)
 
-        plt.plot(geometric_ratio, value["result"], label=key)
+    show(p)
 
-    ax = plt.subplot(111)
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.1,
-                     box.width, box.height * 0.9])
-
-    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=3, prop={"size": 9})
-    plt.xlabel('Geometric Ratio')
-    plt.ylabel('Total Number of Serviced Users')
-    plt.title('Impact of Geometric Ratio of Energy Allocation on Total Number of Serviced Users')
-    plt.grid()
-    # plt.ylim(5000, 40000)
-
-    # plt.show()
-
-    return plt
+    return p
 
