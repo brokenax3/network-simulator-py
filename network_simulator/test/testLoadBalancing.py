@@ -1,6 +1,9 @@
 from multiprocessing import Pool
-from progress.bar import Bar
-import matplotlib.pyplot as plt
+from bokeh.plotting import figure, show, output_file
+from bokeh.palettes import Category20 as palette
+import itertools
+import tqdm
+import numpy as np
 from network_simulator.components import simulator
 from network_simulator.helpers import writeSimCache, readSimCache
 
@@ -16,56 +19,79 @@ def loadBalancing(init_vars, aplist, usrlist):
     
     plot_from_saved = 1
     total_runs = range(20)
-
-    usr_limit = range(10, 50)
-
+    usr_limit = np.arange(30, 120, 5)
     _output = {}
 
-    if plot_from_saved == 0:
-        _sim_dict_axes = {
-            "axes1" : {
-                "param" : "No Transmission Policy - Share Evenly",
-                "ENERGY_POLICY" : 0,
-                "SHARE_ENERGY" : 1,
-            },
-            "axes2" : {
-                "param" : "Cheapest Users - Share Evenly",
-                "ENERGY_POLICY" : 2,
-                "SHARE_ENERGY" : 1,
-            },
-            "axes3" : {
-                "param" : "No Transmission Policy - AP Energy Arrival",
-                "ENERGY_POLICY" : 0,
-                "SHARE_ENERGY" : 2,
-            },
-            "axes4" : {
-                "param" : "Cheapest Users - AP Energy Arrival",
-                "ENERGY_POLICY" : 2,
-                "SHARE_ENERGY" : 2,
-            },
-            "axes5" : {
-                "param" : "No Transmission Policy - AP Energy Use",
-                "ENERGY_POLICY" : 0,
-                "SHARE_ENERGY" : 3,
-            },
-            "axes6" : {
-                "param" : "Cheapest Users - AP Energy Use",
-                "ENERGY_POLICY" : 2,
-                "SHARE_ENERGY" : 3,
-            },
-            "axes7" : {
-                "param" : "No Transmission Policy - AP Efficiency",
-                "ENERGY_POLICY" : 0,
-                "SHARE_ENERGY" : 4,
-            },
-            "axes8" : {
-                "param" : "Cheapest Users - AP Efficiency",
-                "ENERGY_POLICY" : 2,
-                "SHARE_ENERGY" : 4,
-            }
+    _sim_dict_axes = {
+        "axes1" : {
+            "param" : "No Policy - Epsilon Greedy",
+            "ENERGY_POLICY" : 0,
+            "SHARE_ENERGY" : 5,
+            "SMART_PARAM" : [0.01, 12]
+        },
+        "axes2" : {
+            "param" : "Cheapest Users - Epsilon Greedy",
+            "ENERGY_POLICY" : 2,
+            "SHARE_ENERGY" : 5,
+            "SMART_PARAM" : [0.01, 12]
+        },
+        "axes3" : {
+            "param" : "No Policy - UCB1",
+            "ENERGY_POLICY" : 0,
+            "SHARE_ENERGY" : 6,
+            "SMART_PARAM" : [0.001, 12]
+        },
+        "axes4" : {
+            "param" : "Cheapest Users - UCB1",
+            "ENERGY_POLICY" : 2,
+            "SHARE_ENERGY" : 6,
+            "SMART_PARAM" : [0.001, 12]
+        },
+        "axes5" : {
+            "param" : "No Transmission Policy - Shared Evenly",
+            "ENERGY_POLICY" : 0,
+            "SHARE_ENERGY" : 1,
+        },
+        "axes6" : {
+            "param" : "Cheapest Users - Shared Evenly",
+            "ENERGY_POLICY" : 2,
+            "SHARE_ENERGY" : 1,
+        },
+        "axes7" : {
+            "param" : "No Transmission Policy - AP Energy Arrival",
+            "ENERGY_POLICY" : 0,
+            "SHARE_ENERGY" : 2,
+        },
+        "axes8" : {
+            "param" : "Cheapest Users - AP Energy Arrival",
+            "ENERGY_POLICY" : 2,
+            "SHARE_ENERGY" : 2,
+        },
+        "axes9" : {
+            "param" : "No Transmission Policy - AP Energy Use",
+            "ENERGY_POLICY" : 0,
+            "SHARE_ENERGY" : 3,
+        },
+        "axes10" : {
+            "param" : "Cheapest Users - AP Energy Use",
+            "ENERGY_POLICY" : 2,
+            "SHARE_ENERGY" : 3,
+        },
+        "axes11" : {
+            "param" : "No Transmission Policy - AP Energy Efficiency",
+            "ENERGY_POLICY" : 0,
+            "SHARE_ENERGY" : 4,
+        },
+        "axes12" : {
+            "param" : "Cheapest Users - AP Energy Efficiency",
+            "ENERGY_POLICY" : 2,
+            "SHARE_ENERGY" : 4,
         }
+    }
 
-        bar = Bar('Load Balancing (Multiprocessing)', max=len(_sim_dict_axes.values()) + 1)
+    if plot_from_saved == 0:
+
+        bar = tqdm.tqdm(desc="Load Balancing", total=len(_sim_dict_axes.keys()) * len(usr_limit))
 
         init_vars["LOAD_BALANCE"] = 0
 
@@ -75,18 +101,19 @@ def loadBalancing(init_vars, aplist, usrlist):
             for param in ["ENERGY_POLICY", "SHARE_ENERGY"]:
                 init_vars[param] = axes[param]
 
-            _avg_serviced_users = []
+            if init_vars["SHARE_ENERGY"] == 6 or init_vars["SHARE_ENERGY"] == 5:
+                init_vars["SMART_PARAM"] == axes["SMART_PARAM"]
 
+            _avg_serviced_users = []
 
             pool = Pool(10)
 
             _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
 
             _avg_serviced_users = sum([result.get() for result in _serviced_users]) / len(total_runs)
-            _output[axes["param"] + "No Balancing"] = { "result" : [_avg_serviced_users]*len(usr_limit) }
-        bar.next()
+            _output[axes["param"] + " No Balancing"] = { "result" : [_avg_serviced_users]*len(usr_limit) }
+        bar.update(1)
         init_vars["LOAD_BALANCE"] = 1
-
 
         for axes in _sim_dict_axes.values():
             
@@ -105,28 +132,43 @@ def loadBalancing(init_vars, aplist, usrlist):
                 _avg_serviced_users.append(sum([result.get() for result in _serviced_users]) / len(total_runs))
 
             _output[axes["param"]] = { "result" : _avg_serviced_users }
-            bar.next()
-        bar.finish()
+            bar.update(1)
+        bar.close()
         writeSimCache("LoadBalanceM", _output)
     else:
         _output = readSimCache("LoadBalanceM")
 
-    plt.figure(1, dpi=600, figsize=[12, 12])
-    # print(_output.items())
+    output_file("interactive/loadbalancing.html")
+
+    TOOLTIPS = [
+            ("(x, y)", "($x, $y)"),
+            ("desc", "$name")
+            ]
+    
+    # Plot colours
+    colors = itertools.cycle(palette[12])
+
+    p = figure(width=1200, height=800, x_axis_label='Total Number of Users', y_axis_label='Total Number of Serviced Users', tooltips=TOOLTIPS)
+    count = 0
+
     for key, value in _output.items():
 
-        plt.plot(usr_limit, value["result"], label=key)
+        count += 1
 
-    ax = plt.subplot(111)
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.1,
-                     box.width, box.height * 0.9])
+        print(key + " : " + str(sum(value["result"])/len(value["result"])))
+        if count >= 13:
+            p.line(usr_limit, value["result"], legend_label=key, name=key, color=next(colors), line_width=3, line_dash="dashed")
+        else:
+            p.line(usr_limit, value["result"], legend_label=key, name=key, color=next(colors), line_width=3)
 
-    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=3, prop={"size": 9})
-    plt.xlabel("Access Point User Limit")
-    plt.ylabel("Total Number of Serviced Users")
-    plt.title("Impact of Access Point User Limit on Total Number of Serviced Users")
-    plt.grid()
-    plt.ylim(1000, 30000)
+    p.legend[0].orientation = "vertical"
+    legend_ref = p.legend[0] 
+    # p.legend[0] = None
 
-    return plt
+    p.add_layout(legend_ref, "right")
+
+    show(p)
+    p.toolbar.logo = None
+    p.toolbar_location = None
+
+    return p

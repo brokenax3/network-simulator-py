@@ -188,7 +188,8 @@ def energyDistributeSel(aplist, sel, descendunit_arr, energybudget, smart_param,
     elif sel == 6:
         param = {
                 "ucbscale" : smart_param[0],
-                "dataframe": smart_param[1]
+                "dataframe": smart_param[1],
+                "numusr" : smart_param[2]
                 }
 
         energydistributed, history = smartDistribute(energystats, aplist, 1, param, time, history)

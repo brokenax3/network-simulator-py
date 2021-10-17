@@ -1,6 +1,7 @@
 from random import randint, uniform
 from copy import deepcopy
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+from bokeh.io import export_png
 from pathlib import Path
 from os import remove
 # from network_simulator.components import simulator
@@ -18,6 +19,14 @@ from network_simulator.test.testMultiProcessing import multiSimulation
 from network_simulator.test.testSeriesRatioMP import seriesRatioMP
 from network_simulator.test.testMultiArmBanditMP import mabMP
 from network_simulator.test.testAlgorithmCompare import algorithmCompare
+from network_simulator.test.testAPnumber import APNumberCompare
+from network_simulator.test.testUserNumber import UserNumberCompare
+from network_simulator.test.testPPPlambda import PPPlambdaCompare
+from network_simulator.test.testStorageCapacity import energyStoreMaxCompare
+from network_simulator.test.testUserMovement import userMovementDist
+from network_simulator.test.testDataframeSize import dataframeSize
+from network_simulator.test.testUCB1scale import mabUcbScale
+from network_simulator.test.testPanelSize import panelSizeCompare
 from network_simulator.helpers import genDescendUnitArray, writeGeneratedComponents, readGeneratedComponents, genUserMovementLoc
 
 
@@ -42,8 +51,8 @@ def initVariable():
         "ENERGY_USE_BASE" : 1950, # Joules every 5 minutes
         "AP_TOTAL" : 5,
         "USR_TOTAL" : 100,
-        "POWER_RECEIVED_DBM" : -70, 
-        "TIME_MAX" : 24192,
+        # "POWER_RECEIVED_DBM" : -70, 
+        "TIME_MAX" : 8064,
         "DIST_MOVEUSER_MAX" : 5,
         "ENERGY_POLICY" : 0,
         "SHARE_ENERGY" : 0,
@@ -54,7 +63,7 @@ def initVariable():
         "SMART_PARAM" : [0.01, 12]
     }
 
-    init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 0.001
+    # init_vars["POWER_RECEIVED_REQUIRED"] = 1 * pow(10, init_vars["POWER_RECEIVED_DBM"]/10) * 0.001
 
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
@@ -105,27 +114,64 @@ def main():
         print("File does not exist and gen_vars = {}".format(gen_vars))
         exit()
 
-    # plt_poltest = transmissionPolicyTest(init_vars, aplist, usrlist_ppp)
-    # plt_poltest.savefig('figures/transmissionpolicy.png')
+    # init_vars["ppp"] = 1
+    # plt_apnum = APNumberCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_apnum, filename="figures/totalapnum.png")
 
-    # plt.figure(2, dpi=600, figsize=[10, 12])
-    # plt_loadbalance = loadBalancing(init_vars, aplist, usrlist_ppp)
-    # plt_loadbalance.savefig('figures/loadbalance.png')
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 0
+    # plt_usernum = UserNumberCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_usernum, filename="figures/totalusernum.png")
 
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_energystoremax = energyStoreMaxCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_energystoremax, filename="figures/energystoremax.png")
+
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_ppp = PPPlambdaCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_ppp, filename="figures/ppplambda.png")
+
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_loadbalance = loadBalancing(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_loadbalance, filename="figures/loadbalance.png")
+
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_usermovement = userMovementDist(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_usermovement, filename="figures/usermovement.png")
+
+    init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    init_vars["ppp"] = 1
+    plt_dataframe = dataframeSize(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_png(plt_dataframe, filename="figures/dataframesize.png")
+
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
     # plt_seriesratio = seriesRatioMP(deepcopy(init_vars), aplist, usrlist_ppp)
-    # plt_seriesratio.savefig('figures/seriesratiomp.png')
+    # export_png(plt_seriesratio, filename="figures/seriesratio.png")
 
-    # plt_budgettest = shareBudget(init_vars, aplist, usrlist_ppp)
-    # plt_budgettest.savefig('figures/sharebudget.png')
-
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
     # plt_mab = mabMP(deepcopy(init_vars), aplist, usrlist_ppp)
-    # plt_mab.savefig('figures/mab_epsilongreedyMP.png')
+    # export_png(plt_mab, filename="figures/epsilongreedy.png")
 
-    # plt_mp = multiSimulation(init_vars, aplist, usrlist_ppp)
-    # plt_mp.savefig('figures/mpsharebudget.png')
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_ucbtest = mabUcbScale(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_ucbtest, filename="figures/ucbtest.png")
 
-    plt_compare = algorithmCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    plt_compare.savefig('figures/algorithmcompare3mth.png')
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_panelsize = panelSizeCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_panelsize, filename="figures/panelsize.png")
+
+    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    # init_vars["ppp"] = 1
+    # plt_compare = algorithmCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_png(plt_compare, filename="figures/algorithmCompare.png")
 
 if __name__ == "__main__":
     main()

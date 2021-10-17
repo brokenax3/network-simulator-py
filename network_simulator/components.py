@@ -223,16 +223,16 @@ def initialiseEnv(init_vars):
     Create aplist and usrlist.
     """
 
-    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, POWER_RECEIVED_REQUIRED, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
+    global GRID_SIZE, ENERGY_STORE_MAX, ENERGY_GEN_MAX, AP_TOTAL, USR_TOTAL, DIST_MOVEUSER_MAX, TIME_MAX, PANEL_SIZE, USR_LIMIT
     global ENERGY_POLICY, SHARE_ENERGY, LOAD_BALANCE, ENERGY_BUDGET, SMART_PARAM
     global markovstates, descendunit_arr, usr_mov_loc_sim
-
+    
     GRID_SIZE = init_vars["GRID_SIZE"]
     ENERGY_STORE_MAX = init_vars["ENERGY_STORE_MAX"]
     ENERGY_GEN_MAX = init_vars["ENERGY_GEN_MAX"]
     AP_TOTAL = init_vars["AP_TOTAL"]
     USR_TOTAL = init_vars["USR_TOTAL"]
-    POWER_RECEIVED_REQUIRED = init_vars["POWER_RECEIVED_REQUIRED"]
+    # POWER_RECEIVED_REQUIRED = init_vars["POWER_RECEIVED_REQUIRED"]
     DIST_MOVEUSER_MAX = init_vars["DIST_MOVEUSER_MAX"]
     TIME_MAX = init_vars["TIME_MAX"]
     PANEL_SIZE = init_vars["PANEL_SIZE"]
@@ -242,13 +242,19 @@ def initialiseEnv(init_vars):
     USR_LIMIT = init_vars["USR_LIMIT"]
     ENERGY_BUDGET = init_vars["ENERGY_BUDGET"]
     SMART_PARAM = init_vars["SMART_PARAM"]
-
+    
     markovstates = init_vars["markov"]
     descendunit_arr = init_vars["descendunit_arr"]
     # usr_mov_loc = init_vars["usr_mov_loc_ppp"]
 
     _history = generateHistory(AP_TOTAL)
-    usr_mov_loc_sim = genUserMovementLoc(len(init_vars["coord_start_x"]), TIME_MAX, DIST_MOVEUSER_MAX, GRID_SIZE, 1, [init_vars["coord_start_x"], init_vars["coord_start_y"]]) 
+    if "ppp" in init_vars.keys() and init_vars["ppp"] == 1:
+        usr_mov_loc_sim = genUserMovementLoc(len(init_vars["coord_start_x"]), TIME_MAX, DIST_MOVEUSER_MAX, GRID_SIZE, 1, [init_vars["coord_start_x"], init_vars["coord_start_y"]]) 
+    else:
+        usr_mov_loc_sim = init_vars["usr_mov_loc"]
+
+    if SHARE_ENERGY == 6:
+        SMART_PARAM.append(len(init_vars["coord_start_x"]))
 
     return _history
 

@@ -21,7 +21,6 @@ def calcPowerTransmit(distance):
     """
 
     alpha = 2
-    # Pu = envs.POWER_RECEIVED_REQUIRED * (pow(distance, alpha))
     Pu = envs.POWER_RECEIVED_REQUIRED * (distance ** alpha)
 
     return Pu * 60 * 5
@@ -98,7 +97,7 @@ def genDescendUnitArray(llength, sel, ratio):
         sum_tmp_array = sum(tmp_array)
         array = [item / sum_tmp_array for item in tmp_array]
 
-        return array
+    return array
 
 
 def movementGiveCoord(movement, coordinate, GRID_SIZE):
@@ -157,4 +156,11 @@ def genUserMovementLoc(length, time, limit, GRID_SIZE, ppp, pppcoord):
     return _new_coord_u
 
 # if __name__ == "__main__":
-#     genUserMovementLoc(5, 8064, 5, 50, 0, [0, 0])
+#     print(genDescendUnitArray(40, 1, 0.2))
+#     print(genDescendUnitArray(5, 1, 0.2))
+
+#     print(genDescendUnitArray(40, 1, 0.6))
+#     print(genDescendUnitArray(5, 1, 0.6))
+
+#     print(genDescendUnitArray(40, 0, 0.6))
+#     print(genDescendUnitArray(5, 0, 0.6))

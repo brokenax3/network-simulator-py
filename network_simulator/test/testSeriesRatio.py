@@ -6,15 +6,15 @@ from network_simulator.helpers import writeSimCache, readSimCache, genDescendUni
 
 def seriesRatio(init_vars, aplist, usrlist):
 
-    plot_from_saved = 0
+    plot_from_saved = 1
     _sim_dict_axes = {
         "axes1" : {
-            "param" : "No Transmission Policy - Share Evenly",
+            "param" : "No Transmission Policy - Shared Evenly",
             "ENERGY_POLICY" : 0,
             "SHARE_ENERGY" : 1,
         },
         "axes2" : {
-            "param" : "Cheapest Users - Share Evenly",
+            "param" : "Cheapest Users - Shared Evenly",
             "ENERGY_POLICY" : 2,
             "SHARE_ENERGY" : 1,
         },
@@ -39,12 +39,12 @@ def seriesRatio(init_vars, aplist, usrlist):
             "SHARE_ENERGY" : 3,
         },
         "axes7" : {
-            "param" : "No Transmission Policy - AP Efficiency",
+            "param" : "No Transmission Policy - AP Energy Efficiency",
             "ENERGY_POLICY" : 0,
             "SHARE_ENERGY" : 4,
         },
         "axes8" : {
-            "param" : "Cheapest Users - AP Efficiency",
+            "param" : "Cheapest Users - AP Energy Efficiency",
             "ENERGY_POLICY" : 2,
             "SHARE_ENERGY" : 4,
         }

@@ -1,6 +1,9 @@
 from multiprocessing import Pool
-from bokeh.plotting import figure, show
-import matplotlib.pyplot as plt
+from bokeh.io import export_png
+from bokeh.plotting import figure, show, output_file
+from bokeh.palettes import Category10 as palette
+import itertools
+# import matplotlib.pyplot as plt
 import numpy as np
 import tqdm
 # from progress.bar import Bar
@@ -18,9 +21,9 @@ def seriesRatioMP(init_vars, aplist, usrlist):
     g_aplist = aplist
     g_usrlist = usrlist
 
-    plot_from_saved = 0
+    plot_from_saved = 1
     geometric_ratio = np.arange(0.01, 0.99, 0.01)
-    total_runs = range(10)
+    total_runs = range(20)
     _output = {}
 
 
@@ -97,12 +100,28 @@ def seriesRatioMP(init_vars, aplist, usrlist):
     else:
         _output = readSimCache("GeometricRatioMP")
 
-    p = figure(x_axis_label='Geometric Ratio', y_axis_label='Total Number of Serviced Users')
+    # output_file("interactive/geometricratio.html")
+
+    TOOLTIPS = [
+            ("(x, y)", "($x, $y)"),
+            ("desc", "$name")
+            ]
+    
+    # Plot colours
+    colors = itertools.cycle(palette[8])
+
+    p = figure(width=700, height=800, x_axis_label='Geometric Ratio', y_axis_label='Total Number of Serviced Users', tooltips=TOOLTIPS)
 
     for key, value in _output.items():
-        p.line(geometric_ratio, value["result"], legend_label=key)
+        print(key + " : " + str(sum(value["result"])/len(value["result"])))
+        p.line(geometric_ratio, value["result"], legend_label=key, name=key, color=next(colors), line_width=3)
 
-    show(p)
+    p.legend.location = (20, 100)
+    # export_png(p, filename="test.png")
+
+    # show(p)
+    p.toolbar.logo = None
+    p.toolbar_location = None
 
     return p
 

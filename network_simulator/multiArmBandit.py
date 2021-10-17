@@ -27,7 +27,7 @@ def epsilonGreedy(history, epsilon):
 
             # Create a list of potential candidates (Cannot be itself)
             _choices = list(range(length))
-            _choices.remove(_apid)
+            # _choices.remove(_apid)
 
             # Pick a candidate among the list
             target_ap = np.random.choice(_choices, 1)
@@ -92,7 +92,7 @@ def updateHistory(history, time, aplist, dataframe, sel, param):
                 history[_apid]["action"]["count"][key] += 1
                 history[_apid]["score"]["list"][key].append(mean(inc_serviced_users[key]))
                 history[_apid]["score"]["mean"][key] = mean(inc_serviced_users[key])
-                history[_apid]["score"]["mean-ucb"][key] = mean(inc_serviced_users[key]) / 115
+                history[_apid]["score"]["mean-ucb"][key] = mean(inc_serviced_users[key]) / param["numusr"]
 
         return history
 
@@ -118,11 +118,12 @@ def updateHistory(history, time, aplist, dataframe, sel, param):
         # Calculate UCB Mean
         if sel == 1:
             _ucb_scale = param["ucbscale"]
+            _numusr = param["numusr"]
 
             for item in history[_apid]["score"]["mean-ucb"].keys():
                 _my_count = history[_apid]["action"]["count"][item]
 
-                history[_apid]["score"]["mean-ucb"][item] = (history[_apid]["score"]["mean"][item]) / 115 + np.sqrt(
+                history[_apid]["score"]["mean-ucb"][item] = (history[_apid]["score"]["mean"][item]) / _numusr + np.sqrt(
                     ((_ucb_scale * np.log10(time)) / _my_count))
 
     return history
@@ -144,9 +145,8 @@ def generateHistory(length):
             }
         }
 
-        # Create an array without the current apid
         _empty_history = list(range(length))
-        _empty_history.remove(_apid)
+        # _empty_history.remove(_apid)
 
         for target in _empty_history:
 
