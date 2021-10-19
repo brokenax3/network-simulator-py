@@ -179,4 +179,3 @@ def multiArmBanditSel(sel, time, param, aplist, history):
 
     #     exit()
     return _list_target, _history
-

@@ -20,7 +20,7 @@ def algorithmCompare(init_vars, aplist, usrlist):
     g_usrlist = usrlist
 
 
-    plot_from_saved = 0
+    plot_from_saved = 1
     total_runs = range(20)
     sharebudget = np.arange(0, 1, 0.02)
     _output = {}
@@ -137,19 +137,20 @@ def algorithmCompare(init_vars, aplist, usrlist):
     # Plot colours
     colors = itertools.cycle(palette[20])
 
-    p = figure(width=1000, height=800, x_axis_label='Energy Share Budget', y_axis_label='Total Number of Serviced Users', tooltips=TOOLTIPS)
+    p = figure(width=1200, height=800, x_axis_label='Energy Share Budget', y_axis_label='Total Number of Serviced Users', tooltips=TOOLTIPS, output_backend='svg')
 
     for key, value in _output.items():
 
         print(key + " : " + str(sum(value["result"])/len(value["result"])))
         p.line(sharebudget, value["result"], legend_label=key, name=key, color=next(colors), line_width=3)
 
-    # p.legend.location = (20, 100)
-
+    p.xaxis.axis_label_text_font_size='20px'
+    p.xaxis.major_label_text_font_size='20px'
+    p.yaxis.axis_label_text_font_size='20px'
+    p.yaxis.major_label_text_font_size='20px'
+    p.legend.label_text_font_size='18px' 
     p.legend[0].orientation = "vertical"
     legend_ref = p.legend[0] 
-    # p.legend[0] = None
-
     p.add_layout(legend_ref, "right")
 
     show(p)

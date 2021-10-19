@@ -1,7 +1,7 @@
 from random import randint, uniform
 from copy import deepcopy
 # import matplotlib.pyplot as plt
-from bokeh.io import export_png
+from bokeh.io import export_png, export_svg
 from pathlib import Path
 from os import remove
 # from network_simulator.components import simulator
@@ -114,49 +114,50 @@ def main():
         print("File does not exist and gen_vars = {}".format(gen_vars))
         exit()
 
-    # init_vars["ppp"] = 1
-    # plt_apnum = APNumberCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_apnum, filename="figures/totalapnum.png")
+    init_vars["ppp"] = 1
+    plt_apnum = APNumberCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_svg(plt_apnum, filename="figures/totalapnum.svg")
 
-    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
-    # init_vars["ppp"] = 0
-    # plt_usernum = UserNumberCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_usernum, filename="figures/totalusernum.png")
+    init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    init_vars["ppp"] = 0
+    plt_usernum = UserNumberCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_svg(plt_usernum, filename="figures/totalusernum.svg")
 
-    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
-    # init_vars["ppp"] = 1
-    # plt_energystoremax = energyStoreMaxCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_energystoremax, filename="figures/energystoremax.png")
+    init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    init_vars["ppp"] = 1
+    plt_energystoremax = energyStoreMaxCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_svg(plt_energystoremax, filename="figures/energystoremax.svg")
 
-    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
-    # init_vars["ppp"] = 1
-    # plt_ppp = PPPlambdaCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_ppp, filename="figures/ppplambda.png")
+    init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    init_vars["ppp"] = 1
+    plt_ppp = PPPlambdaCompare(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_svg(plt_ppp, filename="figures/ppplambda.svg")
 
     # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     # init_vars["ppp"] = 1
     # plt_loadbalance = loadBalancing(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_loadbalance, filename="figures/loadbalance.png")
-
-    # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
-    # init_vars["ppp"] = 1
-    # plt_usermovement = userMovementDist(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_usermovement, filename="figures/usermovement.png")
+    # export_svg(plt_loadbalance, filename="figures/loadbalance.svg")
+    # export_png(plt_loadbalance, filename="figures/loadbalance.png", width=50, height=70)
 
     init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     init_vars["ppp"] = 1
-    plt_dataframe = dataframeSize(deepcopy(init_vars), aplist, usrlist_ppp)
-    export_png(plt_dataframe, filename="figures/dataframesize.png")
+    plt_usermovement = userMovementDist(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_svg(plt_usermovement, filename="figures/usermovement.svg")
 
     # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     # init_vars["ppp"] = 1
-    # plt_seriesratio = seriesRatioMP(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_seriesratio, filename="figures/seriesratio.png")
+    # plt_dataframe = dataframeSize(deepcopy(init_vars), aplist, usrlist_ppp)
+    # export_svg(plt_dataframe, filename="figures/dataframesize.svg")
+
+    init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
+    init_vars["ppp"] = 1
+    plt_seriesratio = seriesRatioMP(deepcopy(init_vars), aplist, usrlist_ppp)
+    export_svg(plt_seriesratio, filename="figures/seriesratio.svg")
 
     # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     # init_vars["ppp"] = 1
     # plt_mab = mabMP(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_mab, filename="figures/epsilongreedy.png")
+    # export_svg(plt_mab, filename="figures/epsilongreedy.svg")
 
     # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     # init_vars["ppp"] = 1
@@ -166,12 +167,12 @@ def main():
     # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     # init_vars["ppp"] = 1
     # plt_panelsize = panelSizeCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_panelsize, filename="figures/panelsize.png")
+    # export_svg(plt_panelsize, filename="figures/panelsize.svg")
 
     # init_vars, aplist, usrlist, usrlist_ppp = readGeneratedComponents()
     # init_vars["ppp"] = 1
     # plt_compare = algorithmCompare(deepcopy(init_vars), aplist, usrlist_ppp)
-    # export_png(plt_compare, filename="figures/algorithmCompare.png")
+    # export_svg(plt_compare, filename="figures/algorithmCompare.svg")
 
 if __name__ == "__main__":
     main()
