@@ -20,8 +20,8 @@ def algorithmCompare(init_vars, aplist, usrlist):
     g_usrlist = usrlist
 
 
-    plot_from_saved = 1
-    total_runs = range(20)
+    plot_from_saved = 0
+    total_runs = range(1)
     sharebudget = np.arange(0, 1, 0.02)
     _output = {}
 
@@ -104,14 +104,13 @@ def algorithmCompare(init_vars, aplist, usrlist):
 
             if "SMART_PARAM" in axes.keys():
                 init_vars["SMART_PARAM"] = axes["SMART_PARAM"]
-                print("Smart parm set at : + axes['SMART_PARAM']")
 
             _avg_serviced_users = []
 
             for ratio in sharebudget:
                 init_vars["ENERGY_BUDGET"] = ratio
 
-                pool = Pool(10)
+                pool = Pool(1)
                 _serviced_users = [pool.apply_async(main, ()) for run in total_runs]
 
                 _avg_serviced_users.append(sum([result.get() for result in _serviced_users]) / len(total_runs))
